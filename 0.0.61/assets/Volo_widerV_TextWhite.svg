@@ -1,33 +1,78 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="9 15 261 223">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
 
- <!-- Define a linear gradient going from color #35CC38 to #53CBB3 and then to #66CCFE -->
-  <defs xmlns="http://www.w3.org/2000/svg">
-    <linearGradient id="tickGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#35CC38; stop-opacity:1"/>
-      <stop offset="50%" style="stop-color:#53CBB3; stop-opacity:1"/>
-      <stop offset="100%" style="stop-color:#66CCFE; stop-opacity:1"/>
+<svg
+   width="589.70569"
+   height="490.8894"
+   viewBox="0 0 589.70569 490.8894"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <linearGradient
+       id="tickGradient"
+       x1="14.868113"
+       y1="15.078469"
+       x2="216.65581"
+       y2="15.078469"
+       gradientTransform="scale(0.96269654,1.0387489)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         style="stop-color:#35CC38; stop-opacity:1"
+         id="stop1" />
+      <stop
+         offset="50%"
+         style="stop-color:#53CBB3; stop-opacity:1"
+         id="stop2" />
+      <stop
+         offset="100%"
+         style="stop-color:#66CCFE; stop-opacity:1"
+         id="stop3" />
     </linearGradient>
   </defs>
-
-  <!-- Define the Raleway font-family -->
-  <style xmlns="http://www.w3.org/2000/svg" type="text/css">
-    @import url('http://fonts.googleapis.com/css?family=Raleway');
-  </style>
-
-  <!-- Border -->
-
-  <!--rect x="9" y="15" width="100%" height="100%" fill="none" stroke="#25274D" stroke-width="1"/-->
-
-
-  
-  <!-- Circle -->
-  <circle id="circle" cx="75" cy="172" r="65" stroke="#white" fill="none" stroke-width="2"/>
-
-  <g transform="translate(-460 -75)">
-    <path d="M45.5368 224.824C40.9198 224.157 36.9041 223.227 36.6111 222.755 36.3181 222.283 34.9601 220.102 33.5937 217.922 29.7529 211.799 27.073 205.175 22.7587 191.151 15.0702 166.156 13.5733 159.658 14.6022 155.714 16.1921 149.632 29.9695 141.051 38.5495 140.787 45.4729 140.579 46.2783 141.176 50.3052 149.494 52.6824 154.395 56.1691 162.213 58.052 166.851 59.9349 171.489 62.6912 175.279 64.177 175.279 65.6614 175.279 71.2573 168.364 76.6116 159.908 81.966 151.451 87.1884 143.578 88.2187 142.426 89.249 141.259 91.2416 138.139 92.6455 135.48 98.6677 124.079 147.452 57.1605 161.977 40.388 165.282 36.5694 167.989 32.7856 167.989 31.9774 167.989 31.1707 172.683 27.4743 178.404 23.764 186.235 18.6943 191.776 16.7365 200.732 15.8894 217.298 14.3231 218.853 15.8255 211.882 26.6175 208.744 31.4636 204.495 37.2151 202.426 39.3965 200.357 41.578 194.219 49.1665 188.776 56.258 183.347 63.3494 177.932 70.0437 176.723 71.1351 175.529 72.2265 172.461 76.2437 169.878 80.0622 167.309 83.8808 164.712 87.4508 164.115 87.9966 158.936 92.7274 103.276 170.197 98.5677 179.251 97.1472 181.972 95.4504 184.652 94.795 185.194 94.1396 185.735 88.4339 193.97 82.1159 203.481 75.7966 212.993 69.666 221.366 68.4913 222.088 64.1867 224.754 53.7155 226.004 45.5368 224.824Z" 
-          fill="url(#tickGradient)" transform="matrix(1.2428 0 0 1 461 75)" clip-path="url(#tickClip)"/>
+  <g
+     id="layer1"
+     transform="translate(-239.80193,-8.5076751)">
+    <g
+       id="layer1-6"
+       transform="matrix(2.3481667,0,0,2.3895528,200.29221,-59.713758)">
+      <text
+         x="125.79765"
+         y="220.48932"
+         font-family="Raleway, sans-serif"
+         font-size="98.57px"
+         fill="#274685"
+         id="text3"
+         transform="scale(1.0021112,0.99789324)"
+         style="fill:#000000;fill-opacity:0;stroke-width:0.9857">olo</text>
+      <ellipse
+         id="circle"
+         cx="78.595627"
+         cy="170.83672"
+         stroke="#white"
+         fill="none"
+         stroke-width="1.89253"
+         style="fill:none;stroke:#000000;stroke-opacity:0"
+         rx="60.823589"
+         ry="62.198387" />
+    </g>
+    <g
+       id="layer3"
+       transform="matrix(2.2232919,0,0,2.2429551,203.80059,-27.064318)">
+      <g
+         transform="translate(-450.69368,-77.115073)"
+         id="g3">
+        <path
+           d="m 45.5368,224.824 c -4.617,-0.667 -8.6327,-1.597 -8.9257,-2.069 -6.486476,-9.1938 -10.324491,-20.31941 -13.8524,-31.604 -7.6885,-24.995 -9.1854,-31.493 -8.1565,-35.437 1.5899,-6.082 15.3673,-14.663 23.9473,-14.927 6.9234,-0.208 7.7288,0.389 11.7557,8.707 2.3772,4.901 5.8639,12.719 7.7468,17.357 1.8829,4.638 3.867144,9.92511 4.933697,8.63951 C 90.491745,142.33529 136.52779,87.284341 173.20928,42.291566 185.0121,29.290368 192.89564,17.295069 204.30591,18.004473 220.63212,19.072204 134.17034,120.08313 82.796644,197.13578 67.61161,217.35942 67.024074,225.06295 45.5368,224.824 Z"
+           fill="url(#tickGradient)"
+           transform="matrix(1.2428,0,0,1,461,75)"
+           clip-path="url(#tickClip)"
+           id="path3"
+           style="fill:url(#tickGradient)" />
+      </g>
+    </g>
   </g>
-
-  <!-- Text with Raleway font -->
-  <text x="128" y="220" font-family="Raleway, sans-serif" font-size="100" fill="white">olo</text>
 </svg>
