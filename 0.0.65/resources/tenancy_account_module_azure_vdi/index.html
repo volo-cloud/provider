@@ -22,7 +22,7 @@
     
     
       
-        <title>volocloud_tenancy_account_module_azure_vdi - Volo Provider Documentation</title>
+        <title>volocloud_tenancy_account_module_azure_vdi (Resource) - Volo Provider Documentation</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#volocloud_tenancy_account_module_azure_vdi" class="md-skip">
+        <a href="#volocloud_tenancy_account_module_azure_vdi-resource" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              volocloud_tenancy_account_module_azure_vdi
+              volocloud_tenancy_account_module_azure_vdi (Resource)
             
           </span>
         </div>
@@ -382,6 +382,48 @@
   
   
     <li class="md-nav__item">
+      <a href="../../data-sources/tenancy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-sources/tenancy_account/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../data-sources/tenancy_account_aws/" class="md-nav__link">
         
   
@@ -428,7 +470,7 @@
         
   
   <span class="md-ellipsis">
-    volocloud_tenancy_account_module_azure_vdi
+    volocloud_tenancy_account_module_azure_vdi (Data Source)
   </span>
   
 
@@ -558,6 +600,48 @@
   
   
     <li class="md-nav__item">
+      <a href="../tenancy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tenancy_account/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tenancy_account_aws/" class="md-nav__link">
         
   
@@ -613,7 +697,7 @@
           
   
   <span class="md-ellipsis">
-    volocloud_tenancy_account_module_azure_vdi
+    volocloud_tenancy_account_module_azure_vdi (Resource)
   </span>
   
 
@@ -624,7 +708,7 @@
         
   
   <span class="md-ellipsis">
-    volocloud_tenancy_account_module_azure_vdi
+    volocloud_tenancy_account_module_azure_vdi (Resource)
   </span>
   
 
@@ -644,15 +728,6 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#example-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example Usage
-    </span>
-  </a>
-  
-</li>
       
         <li class="md-nav__item">
   <a href="#schema" class="md-nav__link">
@@ -711,15 +786,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#import" class="md-nav__link">
-    <span class="md-ellipsis">
-      Import
-    </span>
-  </a>
   
 </li>
       
@@ -810,15 +876,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#example-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example Usage
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#schema" class="md-nav__link">
     <span class="md-ellipsis">
       Schema
@@ -878,15 +935,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#import" class="md-nav__link">
-    <span class="md-ellipsis">
-      Import
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -902,80 +950,23 @@
                   
 
 
-<h1 id="volocloud_tenancy_account_module_azure_vdi">volocloud_tenancy_account_module_azure_vdi</h1>
+<h1 id="volocloud_tenancy_account_module_azure_vdi-resource">volocloud_tenancy_account_module_azure_vdi (Resource)</h1>
 <p>Tenancy Account Module Azure VDI resource configuration main schema.</p>
-<h2 id="example-usage">Example Usage</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Example using Azure Existing Billing account of type MPA</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;volocloud_tenancy_account_azure&quot;</span><span class="w"> </span><span class="nv">&quot;example&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nb">configuration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="na">abbreviation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;expl&quot;</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nb">billing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="na">account_type</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mpa&quot;</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="na">existing_subscription_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nb">geographies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="nb">geo_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="na">primary</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;small&quot;</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="na">secondary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;small&quot;</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="nb">keyvault</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">      </span><span class="na">soft_delete_retention_days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="nb">vnet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">      </span><span class="nb">subnets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">        </span><span class="nb">paas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">          </span><span class="nb">agw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">            </span><span class="na">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">            </span><span class="na">service_endpoints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">              </span><span class="s2">&quot;Microsoft.KeyVault&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">            </span><span class="p">]</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">          </span><span class="p">}</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">        </span><span class="nb">standard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">          </span><span class="nb">secured</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">            </span><span class="nb">delegation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">              </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">                </span><span class="s2">&quot;Microsoft.Network/virtualNetworks/subnets/join/action&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">              </span><span class="p">]</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">              </span><span class="na">name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;psqlfs&quot;</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">              </span><span class="na">service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Microsoft.DBforPostgreSQL/flexibleServers&quot;</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">            </span><span class="p">}</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">            </span><span class="na">service_endpoints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">              </span><span class="s2">&quot;Microsoft.KeyVault&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">              </span><span class="s2">&quot;Microsoft.Storage&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">            </span><span class="p">]</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">          </span><span class="p">}</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="w">      </span><span class="na">vnet_link_to_private_dns_zones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="w">        </span><span class="s2">&quot;privatelink.postgres.database.azure.com&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="w">      </span><span class="p">]</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="w">    </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="w">      </span><span class="na">key1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;value1&quot;</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a><span class="w">  </span><span class="na">environment</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a><span class="w">  </span><span class="na">name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;example&quot;</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a><span class="w">  </span><span class="na">volo_tenancy_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a><span class="p">}</span>
-</code></pre></div>
 <!-- schema generated by tfplugindocs -->
 <h2 id="schema">Schema</h2>
 <h3 id="required">Required</h3>
 <ul>
-<li><code>account_id</code> (String) (Required) Volocloud Account ID associated with this tenancy_account_module.</li>
 <li><code>configuration</code> (Attributes) (Required) Provides configuration required to setup Azure Virtual Desktop VDI solution. (see <a href="#nestedatt--configuration">below for nested schema</a>)</li>
 <li><code>name</code> (String) (Required) Name of the Azure Virtual Desktop environment.</li>
-<li><code>tenancy_account_id</code> (String) (Required) Volocloud Tenancy Account ID.</li>
-<li><code>tenancy_id</code> (String) (Required) Volocloud Tenancy ID.</li>
+<li><code>volo_tenancy_account_id</code> (String) (Required) Volocloud Tenancy Account ID.</li>
+<li><code>volo_tenancy_id</code> (String) (Required) Volocloud Tenancy ID.</li>
 </ul>
 <h3 id="read-only">Read-Only</h3>
 <ul>
-<li><code>id</code> (String) (Computed) ID of the resource computed from the account_id, tenancy_id, tenancy_account_id and module_id separated by : .</li>
+<li><code>id</code> (String) (Computed) ID of the resource computed from the account_id, tenancy_id, tenancy_account_id and tenancy_account_module_azure_vdi_id separated by : .</li>
 <li><code>last_updated</code> (String) (Computed) Timestamp when create/update have ran.</li>
-<li><code>module_id</code> (String) (Computed) Volocloud Tenancy Account Module Azure VDI ID.</li>
+<li><code>volo_account_id</code> (String) (Computed) Volocloud Account ID associated with this tenancy_account.</li>
+<li><code>volo_tenancy_account_module_azure_vdi_id</code> (String) (Computed) Volocloud Tenancy Account Module Azure VDI ID.</li>
 </ul>
 <p><a id="nestedatt--configuration"></a></p>
 <h3 id="nested-schema-for-configuration">Nested Schema for <code>configuration</code></h3>
@@ -1022,14 +1013,6 @@
 <ul>
 <li><code>ad_join_type</code> (String) (Optional) Provide the AD that will be used to join the Session Host VMs. Can be one of: <code>microsoft_entra_domain_services</code> or <code>microsoft_entra_id</code>. Defaults to <code>microsoft_entra_domain_services</code>.</li>
 </ul>
-<h2 id="import">Import</h2>
-<p>Import is supported using the following syntax:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="err">$</span><span class="w"> </span><span class="err">terraform</span><span class="w"> </span><span class="err">import</span><span class="w"> </span><span class="nv">volocloud_tenancy_account_azure.example</span><span class="w"> </span><span class="err">&lt;resource</span><span class="w"> </span><span class="err">ID&gt;</span>
-</code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The <resource ID> format is: "account_id:tenancy_id:tenancy_account_id"</p>
-</div>
 
 
 
