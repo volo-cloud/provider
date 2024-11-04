@@ -1,0 +1,1726 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../tenancy_account_azure/">
+      
+      
+        <link rel="next" href="../tenancy_aws/">
+      
+      
+      <link rel="icon" href="../../assets/volo_favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.26">
+    
+    
+      
+        <title>volocloud_tenancy_account_module_azure_vdi - Volo Provider Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6543a935.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#volocloud_tenancy_account_module_azure_vdi" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Volo Provider Documentation" class="md-header__button md-logo" aria-label="Volo Provider Documentation" data-md-component="logo">
+      
+  <img src="../../assets/Volo_widerV_TextWhite.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Volo Provider Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              volocloud_tenancy_account_module_azure_vdi
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="light-blue" data-md-color-accent="deep-orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Volocloud Provider
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../account/" class="md-tabs__link">
+          
+  
+  Data sources
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../resources/account/" class="md-tabs__link">
+          
+  
+  Resources
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Volo Provider Documentation" class="md-nav__button md-logo" aria-label="Volo Provider Documentation" data-md-component="logo">
+      
+  <img src="../../assets/Volo_widerV_TextWhite.svg" alt="logo">
+
+    </a>
+    Volo Provider Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Volocloud Provider
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Data sources
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Data sources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../account/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_account
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tenancy_account_aws/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_aws
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tenancy_account_azure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_azure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_module_azure_vdi
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_module_azure_vdi
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example Usage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      Schema
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Read-Only
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_pools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_identity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_identitymicrosoft_entra_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_identity.microsoft_entra_id
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_identitymicrosoft_entra_id_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_identity.microsoft_entra_id
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsfile_shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.file_shares
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsfile_sharesstandard_access_tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.file_shares.standard_access_tier
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsscaling_plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.scaling_plan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsscaling_plantimezone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.scaling_plan.timezone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsscheduled_agent_updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.scheduled_agent_updates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsscheduled_agent_updatestimezone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.scheduled_agent_updates.timezone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomize" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeout_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.vm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsvmspot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.vm.spot
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsvmspot_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.vm.spot
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationstorage_account" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.storage_account
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationstorage_accountfile_shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.storage_account.file_shares
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationstorage_accountfile_sharesstandard_access_tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.storage_account.file_shares.standard_access_tier
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tenancy_aws/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_aws
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tenancy_azure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_azure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Resources
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Resources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/account/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_account
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/tenancy_account_aws/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_aws
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/tenancy_account_azure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_azure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/tenancy_account_module_azure_vdi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_module_azure_vdi
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/tenancy_aws/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_aws
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/tenancy_azure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_azure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example Usage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      Schema
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Read-Only
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_pools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_identity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_identitymicrosoft_entra_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_identity.microsoft_entra_id
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_identitymicrosoft_entra_id_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_identity.microsoft_entra_id
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsfile_shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.file_shares
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsfile_sharesstandard_access_tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.file_shares.standard_access_tier
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsscaling_plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.scaling_plan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsscaling_plantimezone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.scaling_plan.timezone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsscheduled_agent_updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.scheduled_agent_updates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsscheduled_agent_updatestimezone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.scheduled_agent_updates.timezone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomize" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeout_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.vm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsvmspot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.vm.spot
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationhost_poolsvmspot_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.host_pools.vm.spot
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationstorage_account" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.storage_account
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationstorage_accountfile_shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.storage_account.file_shares
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationstorage_accountfile_sharesstandard_access_tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.storage_account.file_shares.standard_access_tier
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="volocloud_tenancy_account_module_azure_vdi">volocloud_tenancy_account_module_azure_vdi</h1>
+<h2 id="example-usage">Example Usage</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kr">data</span><span class="w"> </span><span class="nc">&quot;volocloud_tenancy_account_module_azure_vdi&quot;</span><span class="w"> </span><span class="nv">&quot;example&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="na">module_id</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="na">tenancy_account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">}</span>
+</code></pre></div>
+<!-- schema generated by tfplugindocs -->
+<h2 id="schema">Schema</h2>
+<h3 id="required">Required</h3>
+<ul>
+<li><code>module_id</code> (String) Volocloud module_azure_vdi ID.</li>
+<li><code>tenancy_account_id</code> (String) Volocloud tenancy_account ID.</li>
+</ul>
+<h3 id="read-only">Read-Only</h3>
+<ul>
+<li><code>account_id</code> (String) Volocloud Account ID associated with this tenancy_account.</li>
+<li><code>configuration</code> (Attributes) Provides configuration required to setup Azure Virtual Desktop VDI solution. (see <a href="#nestedatt--configuration">below for nested schema</a>)</li>
+<li><code>id</code> (String) ID of the resource computed from the account_id, tenancy_id, tenancy_account_id and module_id separated by ':' .</li>
+<li><code>name</code> (String) Name of the Azure Virtual Desktop environment.</li>
+<li><code>tenancy_id</code> (String) Volocloud tenancy ID associated with this tenancy_account.</li>
+</ul>
+<p><a id="nestedatt--configuration"></a></p>
+<h3 id="nested-schema-for-configuration">Nested Schema for <code>configuration</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>host_pools</code> (Attributes List) Azure Virtual Desktop Host Pools configuration. (see <a href="#nestedatt--configuration--host_pools">below for nested schema</a>)</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>storage_account</code> (Attributes) Settings for the storage account used for AVD User Profiles and other data file shares. (see <a href="#nestedatt--configuration--storage_account">below for nested schema</a>)</li>
+<li><code>tags</code> (Map of String) Key-value map of resource tags for all the resources created by this.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools"></a></p>
+<h3 id="nested-schema-for-configurationhost_pools">Nested Schema for <code>configuration.host_pools</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>abbreviation</code> (String) This abbreviation will be used in combination with module abbreviation to uniquily identify Session Host VMs created by this module and joined in the same AD and as such MUST be unique across all host pools deployed in the same Active Directory domain.</li>
+<li><code>number_of_session_hosts</code> (Number) How many Session Host VMs should be deployed in the host pool.</li>
+<li><code>session_host_identity</code> (Attributes) Session hosts can be joined to the same Microsoft Entra tenant, or to an Active Directory domain using Microsoft Entra Domain Services. (see <a href="#nestedatt--configuration--host_pools--session_host_identity">below for nested schema</a>)</li>
+<li><code>type</code> (String) The host pool type to use. Can be one of: <code>personal</code> and <code>pooled</code>.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>file_shares</code> (Attributes List) A list of file share objects to create and associated with all host pools part of this module. (see <a href="#nestedatt--configuration--host_pools--file_shares">below for nested schema</a>)</li>
+<li><code>maximum_sessions_allowed</code> (Number) A valid integer value from 0 to 999999 for the maximum number of users that have concurrent sessions on a session host. Should only be set if the type of your Azure Virtual Desktop Host Pool is <code>pooled</code>. Defaults to <code>999999</code>.</li>
+<li><code>password_rotation_days</code> (Number) Provides the Session Host VMs local admin password rotation in days. Can be a number between <code>0</code> and <code>365</code> days. If <code>0</code> is provided, the password never rotates. Defaults to <code>90</code> days.</li>
+<li><code>scaling_plan</code> (Attributes) Settings for AVD auto-scaling plan. To learn more about how scaling plans work see <a href="https://learn.microsoft.com/en-us/azure/virtual-desktop/autoscale-scenarios">AVD Autoscale scenarios</a>. (see <a href="#nestedatt--configuration--host_pools--scaling_plan">below for nested schema</a>)</li>
+<li><code>scheduled_agent_updates</code> (Attributes) Disabling scheduled updates means that agent updates will automatically be installed by AVD when they become available. (see <a href="#nestedatt--configuration--host_pools--scheduled_agent_updates">below for nested schema</a>)</li>
+<li><code>session_host_image</code> (Attributes) Details for the image to be used for the host pool session hosts. MUST provide one of <code>existing_gallery_image</code> or <code>new_gallery_image</code> (see <a href="#nestedatt--configuration--host_pools--session_host_image">below for nested schema</a>)</li>
+<li><code>validate_environment</code> (Boolean) If true, the host pool will be used for validation the environemt. For more details see <a href="https://learn.microsoft.com/en-us/azure/virtual-desktop/configure-validation-environment?WT.mc_id=Portal-Microsoft_Azure_WVD&amp;tabs=azure-portal">here</a>. Defaults to <code>false</code>.</li>
+<li><code>vm</code> (Attributes) Settings related to the VM used as a session host in the AVD host pool. (see <a href="#nestedatt--configuration--host_pools--vm">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_identity"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_identity">Nested Schema for <code>configuration.host_pools.session_host_identity</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>microsoft_entra_domain_services</code> (Attributes) In order to allow identities to login, the session hosts that provide desktops and applications need to be joined to an Active Directory domain using Microsoft Entra Domain Services. Conficts with <code>microsoft_entra_id</code>. (see <a href="#nestedatt--configuration--host_pools--session_host_identity--microsoft_entra_domain_services">below for nested schema</a>)</li>
+<li><code>microsoft_entra_id</code> (Attributes) In order to allow identities to login, the session hosts that provide desktops and applications need to be joined to the same Microsoft Entra tenant. Conficts with <code>microsoft_entra_domain_services</code>. (see <a href="#nestedatt--configuration--host_pools--session_host_identity--microsoft_entra_id">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_identity--microsoft_entra_domain_services"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_identitymicrosoft_entra_id">Nested Schema for <code>configuration.host_pools.session_host_identity.microsoft_entra_id</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, the session hosts will be joined to an Active Directory domain using Microsoft Entra Domain Services, deployed in the Identity subscription. MUST be enabled part of the tenancy resource.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_identity--microsoft_entra_id"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_identitymicrosoft_entra_id_1">Nested Schema for <code>configuration.host_pools.session_host_identity.microsoft_entra_id</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, the session hosts will be joined to the same Microsoft Entra tenant.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--file_shares"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolsfile_shares">Nested Schema for <code>configuration.host_pools.file_shares</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>name</code> (String) The name of the file share.</li>
+<li><code>network_drive_mapping_letter</code> (String) Creates a network drive mapping using the provided letter in the session hosts associated with all the host pools created by this module. MUST be capital letter from E to Z.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>folders</code> (Attributes List) A list of first level folders and their NTFS permissions to create inside the file share. (see <a href="#nestedatt--configuration--host_pools--file_shares--folders">below for nested schema</a>)</li>
+<li><code>quota</code> (Number) The size of the file share in <code>GB</code>. If the tier is premium this is the allocation which will be paid for. If the tier is standard this is just an upper limit and will only be charged per consumed storage. Defaults to <code>100</code>.</li>
+<li><code>standard_access_tier</code> (String) The access tier of the File Share where the storage account is configured with a standard performance tier. This is ignored if the storage account is configured with a premium performance tier. Possible values are  <code>Cool</code>, <code>Hot</code> or <code>TransactionOptimized</code>. Default to <code>Hot</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--file_shares--folders"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolsfile_sharesstandard_access_tier">Nested Schema for <code>configuration.host_pools.file_shares.standard_access_tier</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>name</code> (String) The name of the folder to create inside the file share.</li>
+<li><code>ntfs_permissions</code> (Map of List of String) NTFS permissions to associate with the folder. The map key is a Microsoft Entra ID group name (has been created in advance in the Microsoft Entra ID tenant) and the map value is a list of strings that MUST match the fields provided <a href="https://learn.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.filesystemrights?view=net-8.0#fields">here</a>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--scaling_plan"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolsscaling_plan">Nested Schema for <code>configuration.host_pools.scaling_plan</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, enables AVD scaling plan. Defaults to <code>true</code>.</li>
+<li><code>schedules</code> (Attributes List) The schedule defines how autoscaling will behave around these phases: Ramp-up, Peak hours, Ramp-down, Off-peak hours. Can have multiple schedules to differentiate between days (e.g. weekdays vs weekends). Defaults to (see <a href="#nestedatt--configuration--host_pools--scaling_plan--schedules">below for nested schema</a>)</li>
+<li><code>timezone</code> (String) Specifies the Time Zone which should be used by the Scaling Plan for time based events, the possible values are defined <a href="https://jackstromberg.com/2017/01/list-of-time-zones-consumed-by-azure/">here</a>. Defaults to <code>UTC</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--scaling_plan--schedules"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolsscaling_plantimezone">Nested Schema for <code>configuration.host_pools.scaling_plan.timezone</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>days_of_week</code> (List of String) A list of days of the week on which this schedule will be used. Possible values are <code>Monday</code>, <code>Tuesday</code>, <code>Wednesday</code>, <code>Thursday</code>, <code>Friday</code>, <code>Saturday</code>, and <code>Sunday</code>. Defaults to all.</li>
+<li><code>name</code> (String) The name of the schedule. Defaults to <code>week-schedule</code></li>
+<li><code>off_peak_load_balancing_algorithm</code> (String) The load Balancing Algorithm to use during Off-Peak Hours. Possible values are <code>DepthFirst</code> and <code>BreadthFirst</code>. Defaults to <code>DepthFirst</code>.</li>
+<li><code>off_peak_start_time</code> (String) The time at which Off-Peak scaling will begin. This is also the end-time for the Ramp-Down period. The time must be specified in "HH:MM" format. Defaults to <code>22:00</code>.</li>
+<li><code>peak_load_balancing_algorithm</code> (String) The load Balancing Algorithm to use during Peak Hours. Possible values are <code>DepthFirst</code> and <code>BreadthFirst</code>. Defaults to <code>BreadthFirst</code>.</li>
+<li><code>peak_start_time</code> (String) The time at which Peak scaling will begin. This is also the end-time for the Ramp-Up period. The time must be specified in "HH:MM" format. Defaults to <code>09:00</code>.</li>
+<li><code>ramp_down_capacity_threshold_percent</code> (Number) This is the value in percentage of used host pool capacity that will be considered to evaluate whether to turn on/off virtual machines during the ramp-down and off-peak hours. For example, if capacity threshold is specified as 60% and your total host pool capacity is 100 sessions, autoscale will turn on additional session hosts once the host pool exceeds a load of 60 sessions. Defaults to <code>90</code>.</li>
+<li><code>ramp_down_force_logoff_users</code> (Boolean) Whether users will be forced to log-off session hosts once the ramp_down_wait_time_minutes value has been exceeded during the Ramp-Down period. Defaults to <code>true</code>.</li>
+<li><code>ramp_down_load_balancing_algorithm</code> (String) The load Balancing Algorithm to use during the Ramp-Down period. Possible values are <code>DepthFirst</code> and <code>BreadthFirst</code>. Defaults to <code>DepthFirst</code>.</li>
+<li><code>ramp_down_minimum_hosts_percent</code> (Number) The minimum percentage of session host virtual machines that you would like to get to for ramp-down and off-peak hours. For example, if Minimum percentage of hosts is specified as 10% and total number of session hosts in your host pool is 10, autoscale will ensure a minimum of 1 session host is available to take user connections. Defaults to <code>10</code>.</li>
+<li><code>ramp_down_notification_message</code> (String) The notification message to send to users during Ramp-Down period when they are required to log-off.</li>
+<li><code>ramp_down_start_time</code> (String) The time at which Ramp-Down scaling will begin. This is also the end-time for the Ramp-Up period. The time must be specified in "HH:MM" format. Defaults to <code>18:00</code>.</li>
+<li><code>ramp_down_stop_hosts_when</code> (String) Controls Session Host shutdown behaviour during Ramp-Down period. Session Hosts can either be shutdown when all sessions on the Session Host have ended, or when there are no Active sessions left on the Session Host. Possible values are <code>ZeroSessions</code> and <code>ZeroActiveSessions</code>. Defaults to <code>ZeroActiveSessions</code>.</li>
+<li><code>ramp_down_wait_time_minutes</code> (Number) The number of minutes during Ramp-Down period that autoscale will wait after setting the session host VMs to drain mode, notifying any currently signed in users to save their work before forcing the users to logoff. Once all user sessions on the session host VM have been logged off, Autoscale will shut down the VM. Defaults to <code>30</code>.</li>
+<li><code>ramp_up_capacity_threshold_percent</code> (Number) This is the value of percentage of used host pool capacity that will be considered to evaluate whether to turn on/off virtual machines during the ramp-up and peak hours. For example, if capacity threshold is specified as 60% and your total host pool capacity is 100 sessions, autoscale will turn on additional session hosts once the host pool exceeds a load of 60 sessions. Defaults to <code>60</code>.</li>
+<li><code>ramp_up_load_balancing_algorithm</code> (String) The load Balancing Algorithm to use during the Ramp-Up period. Possible values are <code>DepthFirst</code> and <code>BreadthFirst</code>.</li>
+<li><code>ramp_up_minimum_hosts_percent</code> (Number) This is the value of percentage of used host pool capacity that will be considered to evaluate whether to turn on/off virtual machines during the ramp-up and peak hours. For example, if capacity threshold is specified as 60% and your total host pool capacity is 100 sessions, autoscale will turn on additional session hosts once the host pool exceeds a load of 60 sessions. Defaults to <code>20</code>.</li>
+<li><code>ramp_up_start_time</code> (String) The time at which Ramp-Up scaling will begin. This is also the end-time for the Ramp-Up period. The time must be specified in "HH:MM" format. Defaults to <code>08:00</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--scheduled_agent_updates"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolsscheduled_agent_updates">Nested Schema for <code>configuration.host_pools.scheduled_agent_updates</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, enables AVD agents scheduled updates. Defaults to <code>true</code>.</li>
+<li><code>schedules</code> (Attributes List) Primary and alternate maintance windows for AVD agents schedules updates. Defaults to <code>Saturday</code> at <code>3am</code>. (see <a href="#nestedatt--configuration--host_pools--scheduled_agent_updates--schedules">below for nested schema</a>)</li>
+<li><code>timezone</code> (String) Specifies the time zone in which the agent update schedule will apply, the possible values are defined <a href="https://jackstromberg.com/2017/01/list-of-time-zones-consumed-by-azure/">here</a>. Default is <code>UTC</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--scheduled_agent_updates--schedules"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolsscheduled_agent_updatestimezone">Nested Schema for <code>configuration.host_pools.scheduled_agent_updates.timezone</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>day_of_week</code> (String) Maintenance window day of the week. Can be one of the week days using title format. Defauts to <code>Saturday</code>.</li>
+<li><code>hour_of_day</code> (Number) Maintenance window hour of the day. Must be a number in 24h format. Defaults to <code>3</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_image"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_image">Nested Schema for <code>configuration.host_pools.session_host_image</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>existing_gallery_image</code> (String) The name of a gallery image present in the shared Azure compute gallery in the management account. The image MUST have at least one version. Conflicts with <code>new_gallery_image</code> and should be used if the desired image is already in the Gallery and it's not built part of this module.</li>
+<li><code>new_gallery_image</code> (Attributes) Details to create a new Azure Compute Gallery image. The publisher is <code>MicrosoftWindowsDesktop</code> and cannot be changed. Conflicts with <code>existing_gallery_image</code>. (see <a href="#nestedatt--configuration--host_pools--session_host_image--new_gallery_image">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_image--new_gallery_image"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_image">Nested Schema for <code>configuration.host_pools.session_host_image.new_gallery_image</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>name</code> (String) The name of the gallery image definition and image template that will be appended with the <code>sku</code> value. Needs to be unique across multiple images in the gallery.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>customize</code> (Attributes) This is the customize section of an Azure Image Builder definition file to create a custom image. For more details see <a href="https://learn.microsoft.com/en-gb/azure/virtual-machines/image-builder-overview">Azure Image Builder</a>. (see <a href="#nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize">below for nested schema</a>)</li>
+<li><code>offer</code> (String) The Azure Marketplace VM Offer for <code>MicrosoftWindowsDesktop</code> publisher. Can be one of: <code>office-365</code>, <code>windows-10</code> or <code>windows-11</code>. Defaults to <code>windows-11</code>.</li>
+<li><code>sku</code> (String) The Azure Marketplace VM SKU for <code>MicrosoftWindowsDesktop</code> publisher. It can be obtained using azure cli or api. Azure CLI example: <code>az vm image list-skus --location southcentralus --offer windows-11 --publisher MicrosoftWindowsDesktop | jq .[].name</code>. Defaults to <code>win11-23h2-avd</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomize">Nested Schema for <code>configuration.host_pools.session_host_image.new_gallery_image.customize</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>add_on_scripts</code> (Attributes List) A list of objects, where the object has details for running a custom powershell script. Due to limitations on Windows Desktop SKUs (e.g. Windows 10/11), the script will always run as system user and elevated. If a software installation cannot run as system user, the script MUST create a local admin user and execute the installation under that user then delete the user at the end of the installation. (see <a href="#nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--add_on_scripts">below for nested schema</a>)</li>
+<li><code>built_in_scripts</code> (Attributes) These scripts are published in <a href="https://github.com/Azure/RDS-Templates/tree/master/CustomImageTemplateScripts">GitHub</a> by Microsoft. (see <a href="#nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--built_in_scripts">below for nested schema</a>)</li>
+<li><code>retain_build_vm</code> (Boolean) Retains the Azure Image Builder build VM for troubleshooting purposes. For more details see <a href="https://learn.microsoft.com/en-us/azure/virtual-machines/linux/image-builder-connect-to-build-vm">AIB Connect to Build VM</a>. Defaults to <code>false</code>.</li>
+<li><code>timeout</code> (Number) Maximum duration to wait while building the image template (includes all customizations, validations, and distributions). This needs to be updated based on how much time is needed to customize your image. Defaults to <code>120</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--add_on_scripts"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeout">Nested Schema for <code>configuration.host_pools.session_host_image.new_gallery_image.customize.timeout</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>name</code> (String) Name of the script to use and save on the image as .ps1 script file.</li>
+<li><code>url</code> (String) This can be a public or private URL. The private blob MUST be hosted in the Compute Gallery storage account part of the Management subscription created by Volo Cloud Foundations. If the content of the script requires downloading private files/folders, these need to be uploaded to the same Compute Gallery storage account first and the script MUST use <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10?toc=%2Fazure%2Fstorage%2Ffiles%2Ftoc.json&amp;tabs=dnf">azcopy</a> command to download the files/folder locally and then remove them once finished.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>parameters</code> (Map of String) A map of key/value pairs for the powershell script if it supports any input parameters. The key is the parameter name and the value is the parameter value as encoded as string. The script will be called using the parameter value encapsulated in single quotes.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--built_in_scripts"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeout_1">Nested Schema for <code>configuration.host_pools.session_host_image.new_gallery_image.customize.timeout</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>multimedia_redirection</code> (Attributes) Install and enable multimedia redirection. (see <a href="#nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--multimedia_redirection">below for nested schema</a>)</li>
+<li><code>rdp_shortpath</code> (Attributes) RDP Shortpath for AVD. (see <a href="#nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--rdp_shortpath">below for nested schema</a>)</li>
+<li><code>screen_capture_protection</code> (Attributes) RDP Shortpath for AVD. (see <a href="#nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--screen_capture_protection">below for nested schema</a>)</li>
+<li><code>session_timeouts</code> (Attributes) Session timeouts for AVD. (see <a href="#nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--session_timeouts">below for nested schema</a>)</li>
+<li><code>teams_optimization</code> (Attributes) MS Teams optimizations for AVD. (see <a href="#nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--teams_optimization">below for nested schema</a>)</li>
+<li><code>user_profile</code> (Attributes) User Profile setup for AVD (see <a href="#nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--user_profile">below for nested schema</a>)</li>
+<li><code>version</code> (String) The version of the published CustomImageTemplateScripts in date format YYYY-MM-DD. Check the <a href="https://github.com/Azure/RDS-Templates/tree/master/CustomImageTemplateScripts">GitHub</a> repository to find out which version. Defaults to <code>2024-03-27</code>.</li>
+<li><code>windows_optimization</code> (Attributes) Windows optimizations for AVD. (see <a href="#nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--windows_optimization">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--multimedia_redirection"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization">Nested Schema for <code>configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, install and enable multimedia redirection (x64 architecture). Defaults to <code>true</code>.</li>
+<li><code>parameters</code> (Map of String) A map with ONLY <code>browsers</code> key and it's values the JSON encoded string containing a list with elements: <code>chrome</code> and/or <code>edge</code>. Defaults to <code>["edge"]</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--rdp_shortpath"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_1">Nested Schema for <code>configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, enable RDP Shortpath for AVD. Defaults to <code>true</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--screen_capture_protection"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_2">Nested Schema for <code>configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, enable RDP Shortpath for AVD. Defaults to <code>true</code>.</li>
+<li><code>parameters</code> (Map of String) A map with ONLY <code>block</code> key and it's value either <code>BlockBoth</code> or <code>BlockClient</code>. Defaults to <code>BlockClient</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--session_timeouts"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_3">Nested Schema for <code>configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, configure session timeouts for AVD. Defaults to <code>true</code>.</li>
+<li><code>parameters</code> (Map of String) A map with ONLY <code>active</code>, <code>disconnected</code>, <code>idle</code> and <code>logoff</code> keys and their values are numbers as string. Defaults to <code>{active:"1440",disconnected:"120",idle:"60",logoff:"1440"}</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--teams_optimization"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_4">Nested Schema for <code>configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, enable MS Teams optimizations for AVD (x64 architecture). Defaults to <code>true</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--user_profile"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_5">Nested Schema for <code>configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, enable user profile for AVD. Defaults to <code>true</code>.</li>
+<li><code>parameters</code> (Map of String) A map with ONLY <code>size</code> keys and their values are numbers as string. Defaults to <code>{size:"30000"}</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--session_host_image--new_gallery_image--customize--timeout--windows_optimization"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolssession_host_imagenew_gallery_imagecustomizetimeoutwindows_optimization_6">Nested Schema for <code>configuration.host_pools.session_host_image.new_gallery_image.customize.timeout.windows_optimization</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, enable Windows optimizations for AVD. Defaults to <code>true</code>.</li>
+<li><code>parameters</code> (Map of String) A map with ONLY <code>optimizations</code> key and it's values the JSON encoded string containing a list with elements: <code>Autologgers</code>, <code>DefaultUserSettings</code>, <code>DiskCleanup</code>, <code>Edge</code>, <code>LGPO</code>, <code>NetworkOptimizations</code>, <code>RemoveLegacyIE</code>. <code>RemoveOneDrive</code>, <code>ScheduledTasks</code>, <code>Services</code>, <code>WindowsMediaPlayer</code>. Defaults to all except <code>RemoveOneDrive</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--vm"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolsvm">Nested Schema for <code>configuration.host_pools.vm</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>os_disk</code> (Attributes) Settings related to the VM OS disk. (see <a href="#nestedatt--configuration--host_pools--vm--os_disk">below for nested schema</a>)</li>
+<li><code>sku</code> (String) Provide the Session Host VMs SKU to be used for the Host Pool. Can be one of the Azure official <code>Standard_B</code>, <code>Standard_D</code>, <code>Standard_E</code> SKUs.</li>
+<li><code>spot</code> (Attributes) Use Azure Spot pricing for the session host VMs. (see <a href="#nestedatt--configuration--host_pools--vm--spot">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--vm--os_disk"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolsvmspot">Nested Schema for <code>configuration.host_pools.vm.spot</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>redundancy</code> (String) Redundancy level for the storage account. Can be one of: <code>lrs</code> or <code>zrs</code>. Defaults to <code>lrs</code>.</li>
+<li><code>size</code> (Number) The size of the OS disk. Marketplace images require at least <code>127</code> and Azure supports a maximum of <code>65536</code> for OS disk. For more details see <a href="https://learn.microsoft.com/en-us/azure/virtual-machines/disks-types#disk-type-comparison">here</a>. Defaults to <code>127</code>.</li>
+<li><code>type</code> (String) The type of disk to use for VM OS. Can be one of <code>premium</code> or <code>standard</code>. Defaults to <code>standard</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--host_pools--vm--spot"></a></p>
+<h3 id="nested-schema-for-configurationhost_poolsvmspot_1">Nested Schema for <code>configuration.host_pools.vm.spot</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, enables Azure Spot princing for the session host VMs. Defaults to <code>false</code>. The SKU provided MUST be supported for Spot pricing, otherwise the creation of the VM will fail. Please double check Azure Region and Spot princing before selecting the SKU.</li>
+<li><code>eviction_policy</code> (String) Specifies what should happen when the Virtual Machine is evicted for price reasons when using a Spot instance. Possible values are <code>Deallocate</code> and <code>Delete</code>. Changing this forces a new resource to be created. Defaults to <code>Deallocate</code>.</li>
+<li><code>max_bid_price</code> (Number) The maximum price you're willing to pay for this Virtual Machine, in US Dollars; which must be greater than the current spot price. If this bid price falls below the current spot price the Virtual Machine will be evicted using the eviction_policy. Defaults to -1, which means that the Virtual Machine should not be evicted for price reasons.</li>
+</ul>
+<p><a id="nestedatt--configuration--storage_account"></a></p>
+<h3 id="nested-schema-for-configurationstorage_account">Nested Schema for <code>configuration.storage_account</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>file_share_authentication</code> (String) Specifies the directory service used for authentication.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>file_share_backup_policy</code> (String) The name of an existing Recovery Vault File Share Backup Policy to use for backing up all the file shares in the storage account created by this module. If not specified, the default backup policy created by Volo Cloud Foundations will be used.</li>
+<li><code>file_share_profiles_quota</code> (Number) The size of the file share in <code>GB</code>. If the tier is premium this is the allocation which will be paid for. If the tier is standard this is just an upper limit and will only be charged per consumed storage. Defaults to <code>100</code>.</li>
+<li><code>file_shares</code> (Attributes List) A list of file share objects to create and associated with all host pools part of this module. (see <a href="#nestedatt--configuration--storage_account--file_shares">below for nested schema</a>)</li>
+<li><code>redundancy</code> (String) Redundancy level for the storage account. Can be one of:<code>lrs</code> or <code>zrs</code>. Defaults to <code>lrs</code>.</li>
+<li><code>tier</code> (String) The storage account tier. Can be one of: <code>Standard</code> or <code>Premium</code>. Defaults to <code>Standard</code>.</li>
+</ul>
+<div class="admonition danger">
+<p class="admonition-title">tier</p>
+<p>Changing this value causes the storage account to be re-created. CANNOT be changed after creation without destroying the storage account and its data.</p>
+</div>
+<p><a id="nestedatt--configuration--storage_account--file_shares"></a></p>
+<h3 id="nested-schema-for-configurationstorage_accountfile_shares">Nested Schema for <code>configuration.storage_account.file_shares</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>name</code> (String) The name of the file share.</li>
+<li><code>network_drive_mapping_letter</code> (String) Creates a network drive mapping using the provided letter in the session hosts associated with all the host pools created by this module. MUST be capital letter from E to Z.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>folders</code> (Attributes List) A list of first level folders and their NTFS permissions to create inside the file share. (see <a href="#nestedatt--configuration--storage_account--file_shares--folders">below for nested schema</a>)</li>
+<li><code>quota</code> (Number) The size of the file share in <code>GB</code>. If the tier is premium this is the allocation which will be paid for. If the tier is standard this is just an upper limit and will only be charged per consumed storage. Defaults to <code>100</code>.</li>
+<li><code>standard_access_tier</code> (String) The access tier of the File Share where the storage account is configured with a standard performance tier. This is ignored if the storage account is configured with a premium performance tier. Possible values are  <code>Cool</code>, <code>Hot</code> or <code>TransactionOptimized</code>. Default to <code>Hot</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--storage_account--file_shares--folders"></a></p>
+<h3 id="nested-schema-for-configurationstorage_accountfile_sharesstandard_access_tier">Nested Schema for <code>configuration.storage_account.file_shares.standard_access_tier</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>name</code> (String) The name of the folder to create inside the file share.</li>
+<li><code>ntfs_permissions</code> (Map of List of String) NTFS permissions to associate with the folder. The map key is a Microsoft Entra ID group name (has been created in advance in the Microsoft Entra ID tenant) and the map value is a list of strings that MUST match the fields provided <a href="https://learn.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.filesystemrights?view=net-8.0#fields">here</a>.</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/company/volotechnologies/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.tabs", "navigation.tabs.sticky", "navigation.path", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+    
+  </body>
+</html>
