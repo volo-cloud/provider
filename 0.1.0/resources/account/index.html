@@ -6,10 +6,12 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="Volocloud Account configuration. This resource MUST be created first as it returns the AWS CloudFormation and Azure ARM templates to create the roles required by the Volocloud provider to configure the rest of the resources.">
       
       
       
-        <link rel="prev" href="../..">
+      
+        <link rel="prev" href="../../data-sources/tenancy_azure/">
       
       
         <link rel="next" href="../tenancy_account_aws/">
@@ -219,13 +221,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../data-sources/account/" class="md-tabs__link">
           
   
   Data sources
@@ -239,11 +239,13 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../resources/account/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
   Resources
@@ -318,6 +320,177 @@
       
   
   
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Data sources
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Data sources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-sources/account/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_account
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-sources/tenancy_account_aws/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_aws
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-sources/tenancy_account_azure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_azure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-sources/tenancy_account_module_azure_vdi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_module_azure_vdi
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-sources/tenancy_aws/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_aws
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-sources/tenancy_azure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_azure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -336,24 +509,24 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   <span class="md-ellipsis">
-    Data sources
+    Resources
   </span>
   
 
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            Data sources
+            Resources
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -438,54 +611,18 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#read-only" class="md-nav__link">
     <span class="md-ellipsis">
       Read-Only
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      Nested Schema for resources
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-resourcesaws" class="md-nav__link">
-    <span class="md-ellipsis">
-      Nested Schema for resources.aws
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-resourcesawsmanagement_accounts" class="md-nav__link">
-    <span class="md-ellipsis">
-      Nested Schema for resources.aws.management_accounts
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-resourcesazure" class="md-nav__link">
-    <span class="md-ellipsis">
-      Nested Schema for resources.azure
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-resourcesazuretenants" class="md-nav__link">
-    <span class="md-ellipsis">
-      Nested Schema for resources.azure.tenants
     </span>
   </a>
   
@@ -536,8 +673,62 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-resourcesaws" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for resources.aws
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-resourcesawsmanagement_accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for resources.aws.management_accounts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-resourcesazure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for resources.azure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-resourcesazuretenants" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for resources.azure.tenants
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#import" class="md-nav__link">
+    <span class="md-ellipsis">
+      Import
+    </span>
+  </a>
   
 </li>
       
@@ -662,177 +853,6 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-    Resources
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            Resources
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../resources/account/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    volocloud_account
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../resources/tenancy_account_aws/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    volocloud_tenancy_account_aws
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../resources/tenancy_account_azure/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    volocloud_tenancy_account_azure
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../resources/tenancy_account_module_azure_vdi/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    volocloud_tenancy_account_module_azure_vdi
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../resources/tenancy_aws/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    volocloud_tenancy_aws
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../resources/tenancy_azure/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    volocloud_tenancy_azure
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -890,54 +910,18 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#read-only" class="md-nav__link">
     <span class="md-ellipsis">
       Read-Only
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      Nested Schema for resources
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-resourcesaws" class="md-nav__link">
-    <span class="md-ellipsis">
-      Nested Schema for resources.aws
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-resourcesawsmanagement_accounts" class="md-nav__link">
-    <span class="md-ellipsis">
-      Nested Schema for resources.aws.management_accounts
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-resourcesazure" class="md-nav__link">
-    <span class="md-ellipsis">
-      Nested Schema for resources.azure
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-resourcesazuretenants" class="md-nav__link">
-    <span class="md-ellipsis">
-      Nested Schema for resources.azure.tenants
     </span>
   </a>
   
@@ -988,8 +972,62 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-resourcesaws" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for resources.aws
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-resourcesawsmanagement_accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for resources.aws.management_accounts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-resourcesazure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for resources.azure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-resourcesazuretenants" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for resources.azure.tenants
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#import" class="md-nav__link">
+    <span class="md-ellipsis">
+      Import
+    </span>
+  </a>
   
 </li>
       
@@ -1009,25 +1047,100 @@
 
 
 <h1 id="volocloud_account">volocloud_account</h1>
+<p>Volocloud Account configuration. This resource MUST be created first as it returns the AWS CloudFormation and Azure ARM templates to create the roles required by the Volocloud provider to configure the rest of the resources.</p>
 <h2 id="example-usage">Example Usage</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kr">data</span><span class="w"> </span><span class="nc">&quot;volocloud_account&quot;</span><span class="w"> </span><span class="nv">&quot;example&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="na">account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Volocloud account with tenancies procured outside of CSP marketplace</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;volocloud_account&quot;</span><span class="w"> </span><span class="nv">&quot;example&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="na">account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="na">email</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;example@example.com&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="na">name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;example&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nb">tenancies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nb">non_marketplace_onboarding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="na">aws_management_accounts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;123456789012&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="na">azure_tenants</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">}</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Volocloud account with tenancies procured from CSP marketplace</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;volocloud_account&quot;</span><span class="w"> </span><span class="nv">&quot;example&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="na">account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="na">email</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;example@example.com&quot;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="na">name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;example&quot;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span><span class="nb">tenancies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="nb">marketplace_onboarding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">      </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">        </span><span class="nb">management_accounts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">          </span><span class="s2">&quot;123456789012&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;business_plan&quot;</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">        </span><span class="nb">azure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">          </span><span class="nb">tenants</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">            </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;startup_plan&quot;</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">          </span><span class="p">}</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">      </span><span class="nb">azure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">        </span><span class="nb">tenants</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">          </span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;subscription name defined during Azure procurement&gt;&quot;</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="p">}</span>
 </code></pre></div>
 <!-- schema generated by tfplugindocs -->
 <h2 id="schema">Schema</h2>
 <h3 id="required">Required</h3>
 <ul>
-<li><code>id</code> (String) Volocloud Account ID.</li>
+<li><code>account_id</code> (String) Volocloud Account ID associated with this account.</li>
+<li><code>email</code> (String) Volocloud account email.</li>
+<li><code>name</code> (String) Volocloud account name.</li>
+<li><code>tenancies</code> (Attributes) The Cloud Service Providers to be used with this account and their onboarding method. MUST specify at least one of: <code>non_marketplace_onboarding</code>, <code>marketplace_onboarding</code>. (see <a href="#nestedatt--tenancies">below for nested schema</a>)</li>
+</ul>
+<h3 id="optional">Optional</h3>
+<ul>
+<li><code>trigger_update</code> (String) This attribute provides a mechanism to trigger an update on the account resouce when there is no change to the other attributes.</li>
+<li><code>volo_support_enabled</code> (Boolean) If enabled, it adds the Volo Tf Execution Role ARN details to the AWS CloudFormation template, which is used by Volo support personnel to access resources created by this terraform provider. Defaults to <code>true</code>.</li>
 </ul>
 <h3 id="read-only">Read-Only</h3>
 <ul>
-<li><code>email</code> (String) The Volocloud account email address.</li>
-<li><code>name</code> (String) The Volocloud Account Name.</li>
-<li><code>provider_version</code> (String) The provider version which is used by this resource.</li>
+<li><code>id</code> (String) Volocloud Account ID associated with this account.</li>
+<li><code>provider_version</code> (String) The provider version which is used by this resource. It gets automatically updated whent he provider version is changed. It triggers an update on the account resource.</li>
 <li><code>resources</code> (Attributes) Returns details of the Volocloud resources created by this resource. (see <a href="#nestedatt--resources">below for nested schema</a>)</li>
-<li><code>tenancies</code> (Attributes) Returns details of the Volocloud resources created by <code>volocloud_account</code> resource. (see <a href="#nestedatt--tenancies">below for nested schema</a>)</li>
-<li><code>volo_support_enabled</code> (Boolean) If enabled, it adds the Volo Tf Execution Role ARN details to the AWS CloudFormation template, which is used by Volo support personnel to access resources created by this terraform provider. Defaults to <code>true</code>.</li>
+</ul>
+<p><a id="nestedatt--tenancies"></a></p>
+<h3 id="nested-schema-for-tenancies">Nested Schema for <code>tenancies</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>marketplace_onboarding</code> (Attributes) Volocloud CSP used for tenancy resource onboarded on AWS/Azure marketplace. (see <a href="#nestedatt--tenancies--marketplace_onboarding">below for nested schema</a>)</li>
+<li><code>non_marketplace_onboarding</code> (Attributes) Volocloud CSP used for tenancy resource onboarded outside of CSP marketplace. (see <a href="#nestedatt--tenancies--non_marketplace_onboarding">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--tenancies--marketplace_onboarding"></a></p>
+<h3 id="nested-schema-for-tenanciesmarketplace_onboarding">Nested Schema for <code>tenancies.marketplace_onboarding</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>aws</code> (Attributes) Procurement from AWS marketplace for both AWS management account(s) and Azure tenant(s). (see <a href="#nestedatt--tenancies--marketplace_onboarding--aws">below for nested schema</a>)</li>
+<li><code>azure</code> (Attributes) Procurement from Azure marketplace for Azure tenant(s). (see <a href="#nestedatt--tenancies--marketplace_onboarding--azure">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--tenancies--marketplace_onboarding--aws"></a></p>
+<h3 id="nested-schema-for-tenanciesmarketplace_onboardingaws">Nested Schema for <code>tenancies.marketplace_onboarding.aws</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>management_accounts</code> (Map of String) A map of AWS Management Account IDs with their respective AWS marketplace entitlement plan name.</li>
+<li><code>tenants</code> (Map of String) A map of Azure Tenant IDs with their respective AWS marketplace entitlement plan name.</li>
+</ul>
+<p><a id="nestedatt--tenancies--marketplace_onboarding--azure"></a></p>
+<h3 id="nested-schema-for-tenanciesmarketplace_onboardingazure">Nested Schema for <code>tenancies.marketplace_onboarding.azure</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>tenants</code> (Map of String) A map of Azure Tenant IDs with their respective Azure marketplace SaaS subscription name setup during registration process.</li>
+</ul>
+<p><a id="nestedatt--tenancies--non_marketplace_onboarding"></a></p>
+<h3 id="nested-schema-for-tenanciesnon_marketplace_onboarding">Nested Schema for <code>tenancies.non_marketplace_onboarding</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>aws_management_accounts</code> (List of String) A list of AWS Management Account IDs where Volocloud AWS tenancy resources will be created.</li>
+<li><code>azure_tenants</code> (List of String) A list of Azure Tenant IDs where Volocloud Azure tenancy resources will be created.</li>
 </ul>
 <p><a id="nestedatt--resources"></a></p>
 <h3 id="nested-schema-for-resources">Nested Schema for <code>resources</code></h3>
@@ -1068,40 +1181,14 @@
 <li><code>identity_oidc_issuer</code> (String) OIDC Token Issuer Claim provided by Volocloud IdP.</li>
 <li><code>identity_oidc_subject</code> (String) OIDC Token Subject Claim provided by Volocloud IdP.</li>
 </ul>
-<p><a id="nestedatt--tenancies"></a></p>
-<h3 id="nested-schema-for-tenancies">Nested Schema for <code>tenancies</code></h3>
-<p>Read-Only:</p>
-<ul>
-<li><code>marketplace_onboarding</code> (Attributes) Volocloud CSP used for tenancy resource onboarded on AWS/Azure marketplace. (see <a href="#nestedatt--tenancies--marketplace_onboarding">below for nested schema</a>)</li>
-<li><code>non_marketplace_onboarding</code> (Attributes) Volocloud CSP used for tenancy resource onboarded outside of CSP marketplace. (see <a href="#nestedatt--tenancies--non_marketplace_onboarding">below for nested schema</a>)</li>
-</ul>
-<p><a id="nestedatt--tenancies--marketplace_onboarding"></a></p>
-<h3 id="nested-schema-for-tenanciesmarketplace_onboarding">Nested Schema for <code>tenancies.marketplace_onboarding</code></h3>
-<p>Read-Only:</p>
-<ul>
-<li><code>aws</code> (Attributes) Procurement from CSP marketplace for both AWS management account(s) and Azure tenant(s). (see <a href="#nestedatt--tenancies--marketplace_onboarding--aws">below for nested schema</a>)</li>
-<li><code>azure</code> (Attributes) Procurement from CSP marketplace for Azure tenant(s). (see <a href="#nestedatt--tenancies--marketplace_onboarding--azure">below for nested schema</a>)</li>
-</ul>
-<p><a id="nestedatt--tenancies--marketplace_onboarding--aws"></a></p>
-<h3 id="nested-schema-for-tenanciesmarketplace_onboardingaws">Nested Schema for <code>tenancies.marketplace_onboarding.aws</code></h3>
-<p>Read-Only:</p>
-<ul>
-<li><code>management_accounts</code> (Map of String) A map of AWS Management Account IDs with their respective AWS marketplace entitlement plan name.</li>
-<li><code>tenants</code> (Map of String) A map of Azure Tenant IDs with their respective AWS marketplace entitlement plan name.</li>
-</ul>
-<p><a id="nestedatt--tenancies--marketplace_onboarding--azure"></a></p>
-<h3 id="nested-schema-for-tenanciesmarketplace_onboardingazure">Nested Schema for <code>tenancies.marketplace_onboarding.azure</code></h3>
-<p>Read-Only:</p>
-<ul>
-<li><code>tenants</code> (Map of String) A map of Azure Tenant IDs with their respective Azure marketplace SaaS subscription name setup during registration process.</li>
-</ul>
-<p><a id="nestedatt--tenancies--non_marketplace_onboarding"></a></p>
-<h3 id="nested-schema-for-tenanciesnon_marketplace_onboarding">Nested Schema for <code>tenancies.non_marketplace_onboarding</code></h3>
-<p>Read-Only:</p>
-<ul>
-<li><code>aws_management_accounts</code> (List of String) A list of AWS Management Account IDs where Volocloud AWS tenancy resources are created.</li>
-<li><code>azure_tenants</code> (List of String) A list of Azure Tenant IDs where Volocloud Azure tenancy resources are created.</li>
-</ul>
+<h2 id="import">Import</h2>
+<p>Import is supported using the following syntax:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="err">$</span><span class="w"> </span><span class="err">terraform</span><span class="w"> </span><span class="err">import</span><span class="w"> </span><span class="nv">volocloud_account.example</span><span class="w"> </span><span class="err">&lt;resource</span><span class="w"> </span><span class="err">ID&gt;</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <resource ID> format is: "account_id"</p>
+</div>
 
 
 
