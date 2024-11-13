@@ -1826,7 +1826,7 @@
 <li><code>city</code> (String) The city of the primary contact address.</li>
 <li><code>country_code</code> (String) The ISO-3166 two-letter country code for the primary contact address.</li>
 <li><code>full_name</code> (String) The full name of the primary contact address.</li>
-<li><code>phone_number</code> (String) The phone number of the primary contact information. The number will be validated and, in some countries, checked for activation.</li>
+<li><code>phone</code> (String) The phone number of the primary contact information. The number will be validated and, in some countries, checked for activation.</li>
 <li><code>postal_code</code> (String) The postal code of the primary contact address.</li>
 </ul>
 <p>Optional:</p>
@@ -1835,7 +1835,7 @@
 <li><code>address_line_3</code> (String) The third line of the primary contact address, if any.</li>
 <li><code>company_name</code> (String) The name of the company associated with the primary contact information, if any.</li>
 <li><code>district_or_county</code> (String) The district or county of the primary contact address, if any.</li>
-<li><code>state_or_region</code> (String) The state or region of the primary contact address. This field is required in selected countries.</li>
+<li><code>state_or_region</code> (String) The state or region of the primary contact address. If the mailing address is within the United States (US), the value in this field can be either a two character state code (for example, <code>NJ</code>) or the full state name (for example, <code>New Jersey</code>). This field is required in the following countries: <code>US, CA, GB, DE, JP, IN, and BR</code>.</li>
 <li><code>website_url</code> (String) The URL of the website associated with the primary contact information, if any.</li>
 </ul>
 <p><a id="nestedatt--configuration--regions"></a></p>
