@@ -1,0 +1,15 @@
+# Direnv config file
+.envrc
+.env
+
+# Go Release
+bin
+distribution
+docs
+mike-site
+release
+vendor
+item.json
+
+# Mac OS
+.DS_Store
