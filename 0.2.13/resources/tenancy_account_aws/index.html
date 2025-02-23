@@ -1,0 +1,1667 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Volocloud Tenancy Account configuration.">
+      
+      
+        <meta name="author" content="Volo support@volo.co.nz">
+      
+      
+        <link rel="canonical" href="https://tf.volo-global.com/v1/providers/volo/volocloud/0.2.13/resources/tenancy_account_aws/">
+      
+      
+        <link rel="prev" href="../account/">
+      
+      
+        <link rel="next" href="../tenancy_account_azure/">
+      
+      
+      <link rel="icon" href="../../assets/volo_favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
+    
+    
+      
+        <title>volocloud_tenancy_account_aws - Volo Provider Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#volocloud_tenancy_account_aws" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Volo Provider Documentation" class="md-header__button md-logo" aria-label="Volo Provider Documentation" data-md-component="logo">
+      
+  <img src="../../assets/Volo_widerV_TextWhite.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Volo Provider Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              volocloud_tenancy_account_aws
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="light-blue" data-md-color-accent="deep-orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Volo Provider Documentation" class="md-nav__button md-logo" aria-label="Volo Provider Documentation" data-md-component="logo">
+      
+  <img src="../../assets/Volo_widerV_TextWhite.svg" alt="logo">
+
+    </a>
+    Volo Provider Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Volocloud Provider
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../data-sources/account/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Data sources
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Resources
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Resources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../account/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_account
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_aws
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_aws
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example Usage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      Schema
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Read-Only
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationalternate_contacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.alternate_contacts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationprimary_contact" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.primary_contact
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationregions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.regions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationregionshome" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.regions.home
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationregionshomeprimary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.regions.home.primary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationregionshomeprimarynetwork" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.regions.home.primary.network
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationregionshomesecondary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.regions.home.secondary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationregionshomesecondarynetwork" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.regions.home.secondary.network
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationregionsother" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.regions.other
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationregionsotherprimary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.regions.other.primary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationregionsotherprimarynetwork" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.regions.other.primary.network
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationregionsothersecondary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.regions.other.secondary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationregionsothersecondarynetwork" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.regions.other.secondary.network
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationsecurityhub" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.securityhub
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationsecurityhubstandards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.securityhub.standards
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationsecurityhubstandardsaws_foundational_security_best_practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.securityhub.standards.aws_foundational_security_best_practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationsecurityhubstandardsaws_foundational_security_best_practicescontrols" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.securityhub.standards.aws_foundational_security_best_practices.controls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationsecurityhubstandardscis_aws_foundations_benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.securityhub.standards.cis_aws_foundations_benchmark
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationsecurityhubstandardscis_aws_foundations_benchmarkcontrols" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.securityhub.standards.cis_aws_foundations_benchmark.controls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationsecurityhubstandardsnist_special_publication_800_53" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.securityhub.standards.nist_special_publication_800_53
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationsecurityhubstandardsnist_special_publication_800_53controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.securityhub.standards.nist_special_publication_800_53.controls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationsecurityhubstandardspci_dss" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.securityhub.standards.pci_dss
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationsecurityhubstandardspci_dsscontrols" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.securityhub.standards.pci_dss.controls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationauditmanager_assessments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.auditmanager_assessments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationauditmanager_assessmentsframework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.auditmanager_assessments.framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationaws_account_org_unit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.aws_account_org_unit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationbackup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.backup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationbackuppolicies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.backup.policies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationbackuppoliciesdaily" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.backup.policies.daily
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationbackuppoliciesmonthly" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.backup.policies.monthly
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationbackuppoliciesweekly" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.backup.policies.weekly
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationbackuppoliciesyearly" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.backup.policies.yearly
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationbackuprestore_testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.backup.restore_testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationbackuprestore_testingprotected_resource_selection_tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.backup.restore_testing.protected_resource_selection_tags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationbackuprestore_testingrecovery_point_selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.backup.restore_testing.recovery_point_selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationbackupvault_lock" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.backup.vault_lock
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationbackupvault_notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.backup.vault_notifications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationbackupvault_notificationsrecipients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.backup.vault_notifications.recipients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurations3_account_public_access_block" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.s3_account_public_access_block
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationvpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.vpc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationvpcdeployment_architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.vpc.deployment_architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationvpcdeployment_architectureprivate_endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.vpc.deployment_architecture.private_endpoints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationvpcnetwork_firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.vpc.network_firewall
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationvpcnetwork_firewallvendor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.vpc.network_firewall.vendor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationvpcnetwork_firewallvendoraws" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.vpc.network_firewall.vendor.aws
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested-schema-for-configurationvpcnetwork_firewallvendorawsmanaged_rule_groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Schema for configuration.vpc.network_firewall.vendor.aws.managed_rule_groups
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#import" class="md-nav__link">
+    <span class="md-ellipsis">
+      Import
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tenancy_account_azure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_azure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tenancy_account_module_azure_vdi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_account_module_azure_vdi
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tenancy_aws/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_aws
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tenancy_azure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    volocloud_tenancy_azure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="volocloud_tenancy_account_aws">volocloud_tenancy_account_aws</h1>
+<p>Volocloud Tenancy Account configuration.</p>
+<h2 id="example-usage">Example Usage</h2>
+<pre><code class="language-terraform"># Create AWS Application Subscriptions on top of Landing Zone
+resource &quot;volocloud_tenancy_account_aws&quot; &quot;example&quot; {
+  account_id = volocloud_account.example.account_id
+  configuration = {
+    abbreviation                = &quot;expl&quot;
+    aws_account_close_on_delete = false
+    backup = {
+      restore_testing = {
+        enabled = true
+      }
+    }
+    regions = {
+      home = {
+        primary = {
+          location = &quot;ap-southeast-2&quot;
+          network = {
+            enabled = true
+          }
+          region = &quot;apse2&quot;
+        }
+      }
+    }
+    securityhub = {
+      enabled = true
+      standards = {
+        aws_foundational_security_best_practices = {
+          controls = {
+            &quot;iam.6&quot; = {
+              disable_control = true
+              disable_reason  = &quot;We have virtual MFA and don't plan to have hardware MFA.&quot;
+            }
+          }
+          enabled = true
+          version = &quot;v1.0.0&quot;
+        }
+        cis_aws_foundations_benchmark = {
+          controls = {
+            &quot;1.6&quot; = {
+              disable_control = true
+              disable_reason  = &quot;We have virtual MFA and don't plan to have hardware MFA.&quot;
+            }
+          }
+          enabled = true
+          version = &quot;v1.4.0&quot;
+        }
+      }
+    }
+    vpc_template = &quot;standard&quot;
+  }
+  environment = &quot;dev&quot;
+  name        = &quot;example&quot;
+  tenancy_id  = volocloud_tenancy_aws.example.tenancy_id
+}
+</code></pre>
+<!-- schema generated by tfplugindocs -->
+<h2 id="schema">Schema</h2>
+<h3 id="required">Required</h3>
+<ul>
+<li><code>account_id</code> (String) Volocloud Account ID associated with this tenancy_account.</li>
+<li><code>configuration</code> (Attributes) It contains tenancy_account configuration. (see <a href="#nestedatt--configuration">below for nested schema</a>)</li>
+<li><code>environment</code> (String) Environment for the tenancy_account. MUST be one of <code>dev</code>, <code>test</code>, <code>qa</code> or <code>prod</code>.</li>
+<li><code>name</code> (String) Volocloud tenancy_account Name.</li>
+<li><code>tenancy_id</code> (String) Volocloud Tenancy ID.</li>
+</ul>
+<h3 id="optional">Optional</h3>
+<ul>
+<li><code>trigger_update</code> (String) This attribute provides a mechanism to trigger an update on the tenancy_account resouce when there is no change to the other attributes.</li>
+</ul>
+<h3 id="read-only">Read-Only</h3>
+<ul>
+<li><code>id</code> (String) ID of the resource computed from the account_id, tenancy_id and tenancy_account_id separated by : .</li>
+<li><code>resources</code> (Map of String) These are all the resources created in the tenancy_account.</li>
+<li><code>tenancy_account_id</code> (String) Volocloud Tenancy Account ID.</li>
+</ul>
+<p><a id="nestedatt--configuration"></a></p>
+<h3 id="nested-schema-for-configuration">Nested Schema for <code>configuration</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>abbreviation</code> (String) This abbreviation will be used to uniquily identify resources created. Only applies to resources that require Azure global uniqueness.</li>
+<li><code>alternate_contacts</code> (Attributes Map) Configuration of AWS Account alternate contacts. (see <a href="#nestedatt--configuration--alternate_contacts">below for nested schema</a>)</li>
+<li><code>primary_contact</code> (Attributes) Configuration of AWS Account primary contact. (see <a href="#nestedatt--configuration--primary_contact">below for nested schema</a>)</li>
+<li><code>regions</code> (Attributes) Defines which regions to deploy into. (see <a href="#nestedatt--configuration--regions">below for nested schema</a>)</li>
+<li><code>securityhub</code> (Attributes) Manages the Security Hub Configuration for AWS Account. (see <a href="#nestedatt--configuration--securityhub">below for nested schema</a>)</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>auditmanager_assessments</code> (Attributes List) A list of Audit Manager assessments. For more info about assessments see <a href="https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html">AWS documentation</a>. (see <a href="#nestedatt--configuration--auditmanager_assessments">below for nested schema</a>)</li>
+<li><code>aws_account_close_on_delete</code> (Boolean) If <code>true</code>, this will close the AWS account on resource deletion, beginning the 90-day suspension period. Otherwise, the account will just be unenrolled from Control Tower. Defaults to <code>false</code>.</li>
+<li><code>aws_account_org_unit</code> (Attributes) Provides details for deploying this account in a particular Org Unit. If not provided, the account will be deployed in the default environment workloads OU created by Volo Cloud Foundations. (see <a href="#nestedatt--configuration--aws_account_org_unit">below for nested schema</a>)</li>
+<li><code>backup</code> (Attributes) AWS Backup configuration settings for the local account. (see <a href="#nestedatt--configuration--backup">below for nested schema</a>)</li>
+<li><code>ebs_encryption_by_default</code> (Boolean) Whether or not default EBS encryption is enabled. Defaults to <code>true</code>.</li>
+<li><code>s3_account_public_access_block</code> (Attributes) Manages S3 account-level Public Access Block configuration. (see <a href="#nestedatt--configuration--s3_account_public_access_block">below for nested schema</a>)</li>
+<li><code>vpc</code> (Attributes) Configuration for the account VPC. (see <a href="#nestedatt--configuration--vpc">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--alternate_contacts"></a></p>
+<h3 id="nested-schema-for-configurationalternate_contacts">Nested Schema for <code>configuration.alternate_contacts</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>email</code> (String) An email address for the alternate contact.</li>
+<li><code>name</code> (String) Name of the alternate contact.</li>
+<li><code>phone</code> (String) Phone number for the alternate contact.</li>
+<li><code>title</code> (String) Title for the alternate contact.</li>
+</ul>
+<p><a id="nestedatt--configuration--primary_contact"></a></p>
+<h3 id="nested-schema-for-configurationprimary_contact">Nested Schema for <code>configuration.primary_contact</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>address_line_1</code> (String) The first line of the primary contact address.</li>
+<li><code>city</code> (String) The city of the primary contact address.</li>
+<li><code>country_code</code> (String) The ISO-3166 two-letter country code for the primary contact address.</li>
+<li><code>full_name</code> (String) The full name of the primary contact address.</li>
+<li><code>phone</code> (String) The phone number of the primary contact information. The number will be validated and, in some countries, checked for activation.</li>
+<li><code>postal_code</code> (String) The postal code of the primary contact address.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>address_line_2</code> (String) The second line of the primary contact address, if any.</li>
+<li><code>address_line_3</code> (String) The third line of the primary contact address, if any.</li>
+<li><code>company_name</code> (String) The name of the company associated with the primary contact information, if any.</li>
+<li><code>district_or_county</code> (String) The district or county of the primary contact address, if any.</li>
+<li><code>state_or_region</code> (String) The state or region of the primary contact address. If the mailing address is within the United States (US), the value in this field can be either a two character state code (for example, <code>NJ</code>) or the full state name (for example, <code>New Jersey</code>). This field is required in the following countries: <code>US, CA, GB, DE, JP, IN, and BR</code>.</li>
+<li><code>website_url</code> (String) The URL of the website associated with the primary contact information, if any.</li>
+</ul>
+<p><a id="nestedatt--configuration--regions"></a></p>
+<h3 id="nested-schema-for-configurationregions">Nested Schema for <code>configuration.regions</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>home</code> (Attributes) Home geography containing a pair of primary/secondary regions. (see <a href="#nestedatt--configuration--regions--home">below for nested schema</a>)</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>other</code> (Attributes List) A list of Non-Home geographies containing a pair of primary/secondary regions in each geography. (see <a href="#nestedatt--configuration--regions--other">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--regions--home"></a></p>
+<h3 id="nested-schema-for-configurationregionshome">Nested Schema for <code>configuration.regions.home</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>primary</code> (Attributes) Primary Aws Region details. (see <a href="#nestedatt--configuration--regions--home--primary">below for nested schema</a>)</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>secondary</code> (Attributes) Secondary Aws Region details. (see <a href="#nestedatt--configuration--regions--home--secondary">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--regions--home--primary"></a></p>
+<h3 id="nested-schema-for-configurationregionshomeprimary">Nested Schema for <code>configuration.regions.home.primary</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>location</code> (String) The Aws location of the region. Must be one of the Aws supported locations.</li>
+<li><code>network</code> (Attributes) This information is used to deploy a network in this tenancy account associated with the landing zone. (see <a href="#nestedatt--configuration--regions--home--primary--network">below for nested schema</a>)</li>
+<li><code>region</code> (String) The Aws region code of the location. Must be one of the region codes associated with Aws supported locations.</li>
+</ul>
+<p><a id="nestedatt--configuration--regions--home--primary--network"></a></p>
+<h3 id="nested-schema-for-configurationregionshomeprimarynetwork">Nested Schema for <code>configuration.regions.home.primary.network</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If enabled, it will deploy a network in this tenancy account associated with the landing zone.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>ip_address_mask</code> (Number) The base IP Network Mask for this tenancy account. If provided, it MUST be between <code>22</code> and <code>26</code>. Check the documentation for the VPC template to make sure you create the correct network mask. Defaults to <code>24</code>.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Changing this value causes the VPC to be re-created.
+ CANNOT be changed after creation without destroying everything running on top of the VPC.<br></p>
+</div>
+<p><a id="nestedatt--configuration--regions--home--secondary"></a></p>
+<h3 id="nested-schema-for-configurationregionshomesecondary">Nested Schema for <code>configuration.regions.home.secondary</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>location</code> (String) The Aws location of the region. Must be one of the Aws supported locations.</li>
+<li><code>network</code> (Attributes) This information is used to deploy a network in this tenancy account associated with the landing zone. (see <a href="#nestedatt--configuration--regions--home--secondary--network">below for nested schema</a>)</li>
+<li><code>region</code> (String) The Aws region code of the location. Must be one of the region codes associated with Aws supported locations.</li>
+</ul>
+<p><a id="nestedatt--configuration--regions--home--secondary--network"></a></p>
+<h3 id="nested-schema-for-configurationregionshomesecondarynetwork">Nested Schema for <code>configuration.regions.home.secondary.network</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If enabled, it will deploy a network in this tenancy account associated with the landing zone.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>ip_address_mask</code> (Number) The base IP Network Mask for this tenancy account. If provided, it MUST be between <code>22</code> and <code>26</code>. Check the documentation for the VPC template to make sure you create the correct network mask. Defaults to <code>24</code>.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Changing this value causes the VPC to be re-created.
+ CANNOT be changed after creation without destroying everything running on top of the VPC.<br></p>
+</div>
+<p><a id="nestedatt--configuration--regions--other"></a></p>
+<h3 id="nested-schema-for-configurationregionsother">Nested Schema for <code>configuration.regions.other</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>primary</code> (Attributes) Primary Aws Region details. (see <a href="#nestedatt--configuration--regions--other--primary">below for nested schema</a>)</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>secondary</code> (Attributes) Secondary Aws Region details. (see <a href="#nestedatt--configuration--regions--other--secondary">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--regions--other--primary"></a></p>
+<h3 id="nested-schema-for-configurationregionsotherprimary">Nested Schema for <code>configuration.regions.other.primary</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>location</code> (String) The Aws location of the region. Must be one of the Aws supported locations.</li>
+<li><code>network</code> (Attributes) This information is used to deploy a network in this tenancy account associated with the landing zone. (see <a href="#nestedatt--configuration--regions--other--primary--network">below for nested schema</a>)</li>
+<li><code>region</code> (String) The Aws region code of the location. Must be one of the region codes associated with Aws supported locations.</li>
+</ul>
+<p><a id="nestedatt--configuration--regions--other--primary--network"></a></p>
+<h3 id="nested-schema-for-configurationregionsotherprimarynetwork">Nested Schema for <code>configuration.regions.other.primary.network</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If enabled, it will deploy a network in this tenancy account associated with the landing zone.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>ip_address_mask</code> (Number) The base IP Network Mask for this tenancy account. If provided, it MUST be between <code>22</code> and <code>26</code>. Check the documentation for the VPC template to make sure you create the correct network mask. Defaults to <code>24</code>.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Changing this value causes the VPC to be re-created.
+ CANNOT be changed after creation without destroying everything running on top of the VPC.<br></p>
+</div>
+<p><a id="nestedatt--configuration--regions--other--secondary"></a></p>
+<h3 id="nested-schema-for-configurationregionsothersecondary">Nested Schema for <code>configuration.regions.other.secondary</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>location</code> (String) The Aws location of the region. Must be one of the Aws supported locations.</li>
+<li><code>network</code> (Attributes) This information is used to deploy a network in this tenancy account associated with the landing zone. (see <a href="#nestedatt--configuration--regions--other--secondary--network">below for nested schema</a>)</li>
+<li><code>region</code> (String) The Aws region code of the location. Must be one of the region codes associated with Aws supported locations.</li>
+</ul>
+<p><a id="nestedatt--configuration--regions--other--secondary--network"></a></p>
+<h3 id="nested-schema-for-configurationregionsothersecondarynetwork">Nested Schema for <code>configuration.regions.other.secondary.network</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If enabled, it will deploy a network in this tenancy account associated with the landing zone.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>ip_address_mask</code> (Number) The base IP Network Mask for this tenancy account. If provided, it MUST be between <code>22</code> and <code>26</code>. Check the documentation for the VPC template to make sure you create the correct network mask. Defaults to <code>24</code>.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Changing this value causes the VPC to be re-created.
+ CANNOT be changed after creation without destroying everything running on top of the VPC.<br></p>
+</div>
+<p><a id="nestedatt--configuration--securityhub"></a></p>
+<h3 id="nested-schema-for-configurationsecurityhub">Nested Schema for <code>configuration.securityhub</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>enabled</code> (Boolean) Enables Security Hub for this AWS Account.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>standards</code> (Attributes) Manages Security Hub Standards and their controls for this AWS Organization. (see <a href="#nestedatt--configuration--securityhub--standards">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--securityhub--standards"></a></p>
+<h3 id="nested-schema-for-configurationsecurityhubstandards">Nested Schema for <code>configuration.securityhub.standards</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>aws_foundational_security_best_practices</code> (Attributes) Manages Security Hub <code>AWS Foundational Security Best Practices</code> standard. (see <a href="#nestedatt--configuration--securityhub--standards--aws_foundational_security_best_practices">below for nested schema</a>)</li>
+<li><code>cis_aws_foundations_benchmark</code> (Attributes) Manages Security Hub <code>CIS AWS Foundations Benchmark</code> standard. (see <a href="#nestedatt--configuration--securityhub--standards--cis_aws_foundations_benchmark">below for nested schema</a>)</li>
+<li><code>nist_special_publication_800_53</code> (Attributes) Manages Security Hub <code>NIST Special Publication 800-53</code> standard. (see <a href="#nestedatt--configuration--securityhub--standards--nist_special_publication_800_53">below for nested schema</a>)</li>
+<li><code>pci_dss</code> (Attributes) Manages Security Hub <code>PCI DSS</code> standard. (see <a href="#nestedatt--configuration--securityhub--standards--pci_dss">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--securityhub--standards--aws_foundational_security_best_practices"></a></p>
+<h3 id="nested-schema-for-configurationsecurityhubstandardsaws_foundational_security_best_practices">Nested Schema for <code>configuration.securityhub.standards.aws_foundational_security_best_practices</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>controls</code> (Attributes Map) A map of object to disable control(s) part of this standard. The map keys MUST be the all lowercase control id. (see <a href="#nestedatt--configuration--securityhub--standards--aws_foundational_security_best_practices--controls">below for nested schema</a>)</li>
+<li><code>enabled</code> (Boolean) Enables this Security Hub <code>Aws Foundational Security Best Practices</code> standard in the AWS Organization. Defaults to <code>true</code>.</li>
+<li><code>version</code> (String) Standard <code>v1.0.0</code> version.</li>
+</ul>
+<p><a id="nestedatt--configuration--securityhub--standards--aws_foundational_security_best_practices--controls"></a></p>
+<h3 id="nested-schema-for-configurationsecurityhubstandardsaws_foundational_security_best_practicescontrols">Nested Schema for <code>configuration.securityhub.standards.aws_foundational_security_best_practices.controls</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>disable_control</code> (Boolean) If true, the control will be disabled.</li>
+<li><code>disable_reason</code> (String) Provides a reason why the control has been disabled.</li>
+</ul>
+<p><a id="nestedatt--configuration--securityhub--standards--cis_aws_foundations_benchmark"></a></p>
+<h3 id="nested-schema-for-configurationsecurityhubstandardscis_aws_foundations_benchmark">Nested Schema for <code>configuration.securityhub.standards.cis_aws_foundations_benchmark</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>controls</code> (Attributes Map) A map of object to disable control(s) part of this standard. The map keys MUST be the all lowercase control id. (see <a href="#nestedatt--configuration--securityhub--standards--cis_aws_foundations_benchmark--controls">below for nested schema</a>)</li>
+<li><code>enabled</code> (Boolean) Enables this Security Hub <code>CIS AWS Foundations Benchmark</code> standard in the AWS Organization. Defaults to <code>true</code>.</li>
+<li><code>version</code> (String) Standard <code>v1.4.0</code> version.</li>
+</ul>
+<p><a id="nestedatt--configuration--securityhub--standards--cis_aws_foundations_benchmark--controls"></a></p>
+<h3 id="nested-schema-for-configurationsecurityhubstandardscis_aws_foundations_benchmarkcontrols">Nested Schema for <code>configuration.securityhub.standards.cis_aws_foundations_benchmark.controls</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>disable_control</code> (Boolean) If true, the control will be disabled.</li>
+<li><code>disable_reason</code> (String) Provides a reason why the control has been disabled.</li>
+</ul>
+<p><a id="nestedatt--configuration--securityhub--standards--nist_special_publication_800_53"></a></p>
+<h3 id="nested-schema-for-configurationsecurityhubstandardsnist_special_publication_800_53">Nested Schema for <code>configuration.securityhub.standards.nist_special_publication_800_53</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>enabled</code> (Boolean) Enables this Security Hub <code>NIST Special Publication 800-53</code> standard in the AWS Organization.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>controls</code> (Attributes Map) A map of object to disable control(s) part of this standard. The map keys MUST be the all lowercase control id. (see <a href="#nestedatt--configuration--securityhub--standards--nist_special_publication_800_53--controls">below for nested schema</a>)</li>
+<li><code>version</code> (String) Standard <code>revision_5</code> version.</li>
+</ul>
+<p><a id="nestedatt--configuration--securityhub--standards--nist_special_publication_800_53--controls"></a></p>
+<h3 id="nested-schema-for-configurationsecurityhubstandardsnist_special_publication_800_53controls">Nested Schema for <code>configuration.securityhub.standards.nist_special_publication_800_53.controls</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>disable_control</code> (Boolean) If true, the control will be disabled.</li>
+<li><code>disable_reason</code> (String) Provides a reason why the control has been disabled.</li>
+</ul>
+<p><a id="nestedatt--configuration--securityhub--standards--pci_dss"></a></p>
+<h3 id="nested-schema-for-configurationsecurityhubstandardspci_dss">Nested Schema for <code>configuration.securityhub.standards.pci_dss</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>enabled</code> (Boolean) Enables this Security Hub <code>PCI DSS</code> standard in the AWS Organization.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>controls</code> (Attributes Map) A map of object to disable control(s) part of this standard. The map keys MUST be the all lowercase control id. (see <a href="#nestedatt--configuration--securityhub--standards--pci_dss--controls">below for nested schema</a>)</li>
+<li><code>version</code> (String) Standard <code>v3.2.1</code> version.</li>
+</ul>
+<p><a id="nestedatt--configuration--securityhub--standards--pci_dss--controls"></a></p>
+<h3 id="nested-schema-for-configurationsecurityhubstandardspci_dsscontrols">Nested Schema for <code>configuration.securityhub.standards.pci_dss.controls</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>disable_control</code> (Boolean) If true, the control will be disabled.</li>
+<li><code>disable_reason</code> (String) Provides a reason why the control has been disabled.</li>
+</ul>
+<p><a id="nestedatt--configuration--auditmanager_assessments"></a></p>
+<h3 id="nested-schema-for-configurationauditmanager_assessments">Nested Schema for <code>configuration.auditmanager_assessments</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>framework</code> (Attributes) Provides the name of an enabled framework to create the assessment from. (see <a href="#nestedatt--configuration--auditmanager_assessments--framework">below for nested schema</a>)</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>owners</code> (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.</li>
+</ul>
+<p><a id="nestedatt--configuration--auditmanager_assessments--framework"></a></p>
+<h3 id="nested-schema-for-configurationauditmanager_assessmentsframework">Nested Schema for <code>configuration.auditmanager_assessments.framework</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>aws_managed</code> (String) Must match one of the aws_managed frameworks map keys defined under the audit account.</li>
+</ul>
+<p><a id="nestedatt--configuration--aws_account_org_unit"></a></p>
+<h3 id="nested-schema-for-configurationaws_account_org_unit">Nested Schema for <code>configuration.aws_account_org_unit</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>id</code> (String) AWS Organizations org unit id where to place the account.</li>
+<li><code>name</code> (String) AWS Organizations org unit name where to place the account.</li>
+</ul>
+<p><a id="nestedatt--configuration--backup"></a></p>
+<h3 id="nested-schema-for-configurationbackup">Nested Schema for <code>configuration.backup</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>policies</code> (Attributes) Configuration settings for built-in backup policies. (see <a href="#nestedatt--configuration--backup--policies">below for nested schema</a>)</li>
+<li><code>restore_testing</code> (Attributes) If enabled, it will create a restore testing plan with multiple resource type selections. (see <a href="#nestedatt--configuration--backup--restore_testing">below for nested schema</a>)</li>
+<li><code>vault_lock</code> (Attributes) Configuration settings for the AWS Organization Backup Vault lock. (see <a href="#nestedatt--configuration--backup--vault_lock">below for nested schema</a>)</li>
+<li><code>vault_notifications</code> (Attributes List) Configuration settings for the AWS Organization Backup Vault notifications. (see <a href="#nestedatt--configuration--backup--vault_notifications">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--backup--policies"></a></p>
+<h3 id="nested-schema-for-configurationbackuppolicies">Nested Schema for <code>configuration.backup.policies</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>daily</code> (Attributes) Built-in daily backup policy. (see <a href="#nestedatt--configuration--backup--policies--daily">below for nested schema</a>)</li>
+<li><code>monthly</code> (Attributes) Built-in monthly backup policy. (see <a href="#nestedatt--configuration--backup--policies--monthly">below for nested schema</a>)</li>
+<li><code>weekly</code> (Attributes) Built-in weekly backup policy. (see <a href="#nestedatt--configuration--backup--policies--weekly">below for nested schema</a>)</li>
+<li><code>yearly</code> (Attributes) Built-in yearly backup policy. (see <a href="#nestedatt--configuration--backup--policies--yearly">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--backup--policies--daily"></a></p>
+<h3 id="nested-schema-for-configurationbackuppoliciesdaily">Nested Schema for <code>configuration.backup.policies.daily</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>backup_complete_window_minutes</code> (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to <code>1</code> day.</li>
+<li><code>backup_start_window_minutes</code> (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to <code>60</code> minutes.</li>
+<li><code>copy_to_region</code> (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the <code>regions</code> attribute.</li>
+<li><code>delete_after_days</code> (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than <code>move_to_cold_storage_after_days</code>.</li>
+<li><code>move_to_cold_storage_after_days</code> (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.</li>
+<li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
+<li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.</li>
+<li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--backup--policies--monthly"></a></p>
+<h3 id="nested-schema-for-configurationbackuppoliciesmonthly">Nested Schema for <code>configuration.backup.policies.monthly</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>backup_complete_window_minutes</code> (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to <code>1</code> day.</li>
+<li><code>backup_start_window_minutes</code> (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to <code>60</code> minutes.</li>
+<li><code>copy_to_region</code> (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the <code>regions</code> attribute.</li>
+<li><code>delete_after_days</code> (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than <code>move_to_cold_storage_after_days</code>.</li>
+<li><code>move_to_cold_storage_after_days</code> (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.</li>
+<li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
+<li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.</li>
+<li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--backup--policies--weekly"></a></p>
+<h3 id="nested-schema-for-configurationbackuppoliciesweekly">Nested Schema for <code>configuration.backup.policies.weekly</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>backup_complete_window_minutes</code> (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to <code>1</code> day.</li>
+<li><code>backup_start_window_minutes</code> (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to <code>60</code> minutes.</li>
+<li><code>copy_to_region</code> (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the <code>regions</code> attribute.</li>
+<li><code>delete_after_days</code> (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than <code>move_to_cold_storage_after_days</code>.</li>
+<li><code>move_to_cold_storage_after_days</code> (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.</li>
+<li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
+<li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.</li>
+<li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--backup--policies--yearly"></a></p>
+<h3 id="nested-schema-for-configurationbackuppoliciesyearly">Nested Schema for <code>configuration.backup.policies.yearly</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>backup_complete_window_minutes</code> (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to <code>1</code> day.</li>
+<li><code>backup_start_window_minutes</code> (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to <code>60</code> minutes.</li>
+<li><code>copy_to_region</code> (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the <code>regions</code> attribute.</li>
+<li><code>delete_after_days</code> (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than <code>move_to_cold_storage_after_days</code>.</li>
+<li><code>move_to_cold_storage_after_days</code> (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.</li>
+<li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
+<li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.</li>
+<li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--backup--restore_testing"></a></p>
+<h3 id="nested-schema-for-configurationbackuprestore_testing">Nested Schema for <code>configuration.backup.restore_testing</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, enables the AWS Backup restore testing plan for supported resources. Defaults to <code>true</code>.</li>
+<li><code>protected_resource_selection_tags</code> (Attributes List) A list of conditions that you define for resources in your restore testing plan using tags. Filters the values of your tagged resources for only those resources that you tagged with the same value. (see <a href="#nestedatt--configuration--backup--restore_testing--protected_resource_selection_tags">below for nested schema</a>)</li>
+<li><code>protected_resource_selection_types</code> (List of String) The type of AWS resource included in a restore testing selection.</li>
+<li><code>recovery_point_selection</code> (Attributes) Configuration of recovery points for AWS Backup restore testing plan. (see <a href="#nestedatt--configuration--backup--restore_testing--recovery_point_selection">below for nested schema</a>)</li>
+<li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a restore test. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 1 AM on the 15th of every month.</li>
+<li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+</ul>
+<p><a id="nestedatt--configuration--backup--restore_testing--protected_resource_selection_tags"></a></p>
+<h3 id="nested-schema-for-configurationbackuprestore_testingprotected_resource_selection_tags">Nested Schema for <code>configuration.backup.restore_testing.protected_resource_selection_tags</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>tag_key</code> (String) The selection tag key. Defaults to <code>RestoreTestingEnabled</code>.</li>
+<li><code>tag_value</code> (String) The selection tag value. Defaults to <code>true</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--backup--restore_testing--recovery_point_selection"></a></p>
+<h3 id="nested-schema-for-configurationbackuprestore_testingrecovery_point_selection">Nested Schema for <code>configuration.backup.restore_testing.recovery_point_selection</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>algorithm</code> (String) Acceptable values include <code>LATEST_WITHIN_WINDOW</code> or <code>RANDOM_WITHIN_WINDOW</code>.</li>
+<li><code>recovery_point_types</code> (List of String) Acceptable values include <code>CONTINUOUS</code> and <code>SNAPSHOT</code>.</li>
+<li><code>selection_window_days</code> (Number) Accepted values are integers from 1 to 365.</li>
+</ul>
+<p><a id="nestedatt--configuration--backup--vault_lock"></a></p>
+<h3 id="nested-schema-for-configurationbackupvault_lock">Nested Schema for <code>configuration.backup.vault_lock</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>changeable_for_days</code> (Number) The number of days before the lock date. If omitted creates a vault lock in governance mode, otherwise it will create a vault lock in compliance mode.</li>
+<li><code>max_retention_days</code> (Number) The maximum retention period that the vault retains its recovery points. Defaults to <code>90</code>.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Changing this value causes the backup vault to be re-created.
+CANNOT be changed after creation without destroying the backup vault and its data.<br></p>
+</div>
+<ul>
+<li><code>min_retention_days</code> (Number) The minimum retention period that the vault retains its recovery points. Defaults to <code>1</code>.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Changing this value causes the backup vault to be re-created.
+CANNOT be changed after creation without destroying the backup vault and its data.<br></p>
+</div>
+<p><a id="nestedatt--configuration--backup--vault_notifications"></a></p>
+<h3 id="nested-schema-for-configurationbackupvault_notifications">Nested Schema for <code>configuration.backup.vault_notifications</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>recipients</code> (Attributes) The recipients of the specified Backup Vault events. (see <a href="#nestedatt--configuration--backup--vault_notifications--recipients">below for nested schema</a>)</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>events</code> (List of String) An array of events that indicate the status of jobs to back up resources to the backup vault.</li>
+<li><code>filter_policy</code> (String) JSON String with the filter policy that will be used in the SNS subscription to filter messages seen by the target resource. Refer to the <a href="https://docs.aws.amazon.com/sns/latest/dg/message-filtering.html">SNS docs</a> for more details.</li>
+</ul>
+<p><a id="nestedatt--configuration--backup--vault_notifications--recipients"></a></p>
+<h3 id="nested-schema-for-configurationbackupvault_notificationsrecipients">Nested Schema for <code>configuration.backup.vault_notifications.recipients</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>email</code> (List of String) List of email addresses.</li>
+</ul>
+<p><a id="nestedatt--configuration--s3_account_public_access_block"></a></p>
+<h3 id="nested-schema-for-configurations3_account_public_access_block">Nested Schema for <code>configuration.s3_account_public_access_block</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>block_public_acls</code> (Boolean) Optional) Whether Amazon S3 should block public bucket policies for buckets in this account. Defaults to <code>true</code>.</li>
+<li><code>block_public_policy</code> (Boolean) Whether Amazon S3 should block public bucket policies for buckets in this account. Defaults to <code>true</code>.</li>
+<li><code>ignore_public_acls</code> (Boolean) Whether Amazon S3 should ignore public ACLs for buckets in this account. Defaults to true.</li>
+<li><code>restrict_public_buckets</code> (Boolean) Whether Amazon S3 should restrict public bucket policies for buckets in this account. Defaults to true.</li>
+</ul>
+<p><a id="nestedatt--configuration--vpc"></a></p>
+<h3 id="nested-schema-for-configurationvpc">Nested Schema for <code>configuration.vpc</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>deployment_architecture</code> (Attributes) Network deployment architecture specific to this acocunt. This is used in combination with the organization <code>network_deployment_architectures</code> attribute. (see <a href="#nestedatt--configuration--vpc--deployment_architecture">below for nested schema</a>)</li>
+<li><code>enable_dns_hostnames</code> (Boolean) A boolean flag to enable/disable DNS hostnames in the VPC. Defaults to <code>true</code>.</li>
+<li><code>enable_dns_support</code> (Boolean) A boolean flag to enable/disable DNS support in the VPC. Defaults to <code>true</code>.</li>
+<li><code>instance_tenancy</code> (String) A tenancy option for instances launched into the VPC. Default is <code>default</code>, which ensures that EC2 instances launched in this VPC use the EC2 instance tenancy attribute specified when the EC2 instance is launched. The only other option is <code>dedicated</code>, which ensures that EC2 instances launched in this VPC are run on dedicated tenancy instances regardless of the tenancy attribute specified at launch.</li>
+<li><code>network_firewall</code> (Attributes) Configuration settings for AWS Network Firewall service. MUST be deployed only if the VPC template supports distributed architecture. (see <a href="#nestedatt--configuration--vpc--network_firewall">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--vpc--deployment_architecture"></a></p>
+<h3 id="nested-schema-for-configurationvpcdeployment_architecture">Nested Schema for <code>configuration.vpc.deployment_architecture</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>egress_enabled</code> (Boolean) If true, enables account local egress access to internet. Defaults to <code>false</code>.</li>
+<li><code>ingress_enabled</code> (Boolean) If true, enables account local ingress access from internet. Defaults to <code>false</code>.</li>
+<li><code>private_endpoints</code> (Attributes) Configuration for AWS Services that support private endpoints configuration in the VPC. The subnet where these private endpoints are created is predetermined by the selected VPC template. For standard it will use app_tier subnet. For web_tier_only it will use the only available subnet. (see <a href="#nestedatt--configuration--vpc--deployment_architecture--private_endpoints">below for nested schema</a>)</li>
+<li><code>template</code> (String) The VPC template determines what nacls, routing tables, routes and subnets are going to be created in the VPC. Defaults to <code>standard</code>.
+Can be one of:<ul>
+<li><code>standard_centralized</code>: Creates 2 tier subnets (private app_tier, private data_tier) with centralized public web_tier running in network account accessed using centralized Transit Gateway deployment. The minimum network mask for the VPC MUST be <code>/24</code>.</li>
+<li><code>standard_centralized_and_distributed</code>: Creates 3 tier subnets (public web_tier, private app_tier, private data_tier) with 1 extra subnet to support centralized Transit Gateway deployment and 1 extra subnet to support distributed deployment with account firewall. The minimum network mask for the VPC MUST be <code>/23</code>.</li>
+<li><code>standard_distributed</code>: Creates 3 tier subnets (public web_tier, private app_tier, private data_tier) with 1 extra subnet to support distributed deployment with account firewall. The minimum network mask for the VPC MUST be <code>/24</code>.</li>
+<li><code>web_tier_centralized_and_distributed</code>: Create 1 public web_tier subnet with 1 extra subnet to support centralized Transit Gateway deployment and 1 extra subnet to support distributed deployment with account firewall. The minimum network mask for the VPC MUST be <code>/24</code>.</li>
+<li><code>web_tier_distributed</code>: Create 1 public web_tier subnet with 1 extra subnet to support distributed deployment with account firewall. The minimum network mask for the VPC MUST be <code>/25</code>.<br></li>
+</ul>
+</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Changing this value causes the VPC to be re-created.
+CANNOT be changed after creation without destroying everything running on top of the VPC first.<br></p>
+</div>
+<p><a id="nestedatt--configuration--vpc--deployment_architecture--private_endpoints"></a></p>
+<h3 id="nested-schema-for-configurationvpcdeployment_architectureprivate_endpoints">Nested Schema for <code>configuration.vpc.deployment_architecture.private_endpoints</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, enables account local private endpoints for supported services. Defaults to <code>false</code>.</li>
+<li><code>gateway_services</code> (List of String) List of AWS services to create private endpoints of type gateway in the local account private endpoints VPC. For more details see <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html">AWS documentation</a>. Valid values are: <code>dynamodb | s3</code>.</li>
+<li><code>interface_services</code> (List of String) List of AWS services to create private endpoints of type interface in the local/network account private endpoints VPC. The service name is derived from this ![aws-services-privatelink-support]https://docs.aws.amazon.com/vpc/latest/privatelink/aws-services-privatelink-support.html, by taking the service name after the region part. Valid values are: <code>[access-analyzer account acm-pca airflow.api api-fips env env-fips ops analytics-omics appconfig appconfigdata appmesh appmesh-envoy-management apprunner apprunner.requests applicationinsights application-autoscaling application-signals appstream.api appstream.streaming app-integrations apptest aps aps-workspaces arsenal-discovery athena auditmanager autoscaling autoscaling-plans awsconnector b2bi backup backup-gateway batch bcm-data-exports bedrock bedrock-agent bedrock-agent-runtime bedrock-runtime billing billingconductor braket cassandra cassandra-fips cases ce cleanrooms cleanrooms-ml cloudcontrolapi cloudcontrolapi-fips clouddirectory cloudformation cloudhsmv2 cloudtrail codeartifact.api codeartifact.repositories codebuild codebuild-fips codecommit codecommit-fips codeconnections.api codedeploy codedeploy-commands-secure codeguru-profiler codeguru-reviewer codepipeline codestar-connections.api codewhisperer comprehend comprehendmedical compute-optimizer config connect-campaigns console controlcatalog control-storage-omics cost-optimization-hub databrew dataexchange datasync data-servicediscovery data-servicediscovery-fips deadline.management deadline.scheduling deviceadvisor.iot devops-guru dicom-medical-imaging discovery dms dms-fips drs ds ds-data dynamodb dynamodb-fips ebs ec2 ec2messages ec2-fips ecr.api ecr.dkr ecs ecs-agent ecs-telemetry eks eks-auth elasticbeanstalk elasticbeanstalk-health elasticfilesystem elasticfilesystem-fips elasticloadbalancing elasticache elasticache-fips elasticmapreduce email-smtp emr-containers emr-serverless emr-serverless-services.livy emrwal.prod entityresolution events evidently evidently-dataplane execute-api experiments finspace finspace-api fis forecast forecast-fips forecastquery forecastquery-fips frauddetector freetier fsx fsx-fips git-codecommit git-codecommit-fips glue glue.dashboard grafana grafana-workspace greengrass groundstation guardduty guardduty-data guardduty-data-fips guardduty-fips healthlake iam identitystore imagebuilder inspector2 inspector-scan internetmonitor internetmonitor-fips iotfleetwise iotroborunner iotsitewise.api iotsitewise.data iottwinmaker.api iottwinmaker.data iotwireless.api iot.data iot.credentials iot.fleethub.api kafka kafka-fips kendra kendra-ranking kinesis-firehose kinesis-streams kinesis-streams-fips kms kms-fips lakeformation lambda launchwizard license-manager license-manager-fips license-manager-linux-subscriptions license-manager-linux-subscriptions-fips license-manager-user-subscriptions lightsail logs lookoutequipment lookoutmetrics lookoutvision lorawan.cups lorawan.lns m2 macie2 managedblockchain-query managedblockchain.bitcoin.mainnet managedblockchain.bitcoin.testnet mediaconnect medical-imaging memory-db memorydb-fips migrationhub-orchestrator migrationhub-strategy mgn models-v2-lex monitoring mq neptune-graph neptune-graph-data neptune-graph-fips network-firewall network-firewall-fips networkflowmonitor networkflowmonitorreports networkmonitor notebook observabilityadmin organizations organizations-fips outposts panorama partner-app payment-cryptography.controlplane payment-cryptography.dataplane pca-connector-ad pca-connector-scep pcs pcs-fips personalize personalize-events personalize-runtime pi pi-fips pinpoint pinpoint-sms-voice-v2 pipes pipes-data pipes-fips polly pricing.api private-networks profile proton q qapps qbusiness qldb.session quicksight-website ram rbin refactor-spaces rds rds-data redshift redshift-fips redshift-serverless redshift-serverless-fips redshift-data redshift-data-fips rekognition rekognition-fips repostspace resource-groups resource-groups-fips robomaker rolesanywhere rum rum-dataplane runtime-medical-imaging runtime-v2-lex s3 s3tables s3-global.accesspoint s3-outposts sagemaker.api sagemaker-data-science-assistant sagemaker.api-fips sagemaker.featurestore-runtime sagemaker.metrics sagemaker.runtime sagemaker.runtime-fips savingsplans schemas scn secretsmanager securityhub securitylake securitylake-fips serverlessrepo servicecatalog servicecatalog-appregistry servicediscovery servicediscovery-fips service.user-subscriptions signin simspaceweaver snow-device-management sns social-messaging sqs ssm ssm-contacts ssm-incidents ssm-quicksetup ssmmessages states storagegateway storage-omics streaming-rekognition streaming-rekognition-fips sts studio swf swf-fips sync-states synthetics synthetics-fips tagging tags-omics tax textract textract-fips thinclient.api timestream.ingest-cell timestream.query-cell timestream-influxdb timestream-influxdb-fips tnb transcribe transcribestreaming transfer transfer.server translate trustedadvisor verifiedpermissions voiceid vpc-lattice wellarchitected wisdom workflows-omics workmail workspaces workspaces-web workspaces-web-fips xray]</code>.</li>
+</ul>
+<p><a id="nestedatt--configuration--vpc--network_firewall"></a></p>
+<h3 id="nested-schema-for-configurationvpcnetwork_firewall">Nested Schema for <code>configuration.vpc.network_firewall</code></h3>
+<p>Required:</p>
+<ul>
+<li><code>enabled</code> (Boolean) If true, creates AWS Network Firewalls in each AZ.</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>vendor</code> (Attributes) The vendor of the network firewall and it's associated settings. Defaults to <code>aws</code>. (see <a href="#nestedatt--configuration--vpc--network_firewall--vendor">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--vpc--network_firewall--vendor"></a></p>
+<h3 id="nested-schema-for-configurationvpcnetwork_firewallvendor">Nested Schema for <code>configuration.vpc.network_firewall.vendor</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>aws</code> (Attributes) Settings for AWS Network Firewall. (see <a href="#nestedatt--configuration--vpc--network_firewall--vendor--aws">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--vpc--network_firewall--vendor--aws"></a></p>
+<h3 id="nested-schema-for-configurationvpcnetwork_firewallvendoraws">Nested Schema for <code>configuration.vpc.network_firewall.vendor.aws</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>managed_rule_groups</code> (Attributes) Settings for AWS Managed Rule Groups. (see <a href="#nestedatt--configuration--vpc--network_firewall--vendor--aws--managed_rule_groups">below for nested schema</a>)</li>
+</ul>
+<p><a id="nestedatt--configuration--vpc--network_firewall--vendor--aws--managed_rule_groups"></a></p>
+<h3 id="nested-schema-for-configurationvpcnetwork_firewallvendorawsmanaged_rule_groups">Nested Schema for <code>configuration.vpc.network_firewall.vendor.aws.managed_rule_groups</code></h3>
+<p>Optional:</p>
+<ul>
+<li><code>domain_lists</code> (List of String) AWS Network Firewall managed domain and IP rule groups block HTTP/HTTPS traffic to domains identified as low-reputation, or that are known or suspected to be associated with malware or botnets.</li>
+<li><code>threat_signatures</code> (List of String) AWS Network Firewall managed threat signature rule groups support several categories of threat signatures to protect against various types of malware and exploits, denial of service attempts, botnets, web attacks, credential phishing, scanning tools, and mail or messaging attacks. There are also signatures for intrusion detection and to enforce fair use policies as well as guard against emerging threats.</li>
+</ul>
+<h2 id="import">Import</h2>
+<p>Import is supported using the following syntax:</p>
+<pre><code class="language-terraform">$ terraform import volocloud_tenancy_account_aws.example &lt;resource ID&gt;
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <resource ID> format is: "account_id:tenancy_id:tenancy_account_id"</p>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright 2025 Volo
+    </div>
+  
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/company/volotechnologies/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.path", "navigation.prune", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "toc.follow", "toc.integrate"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>
