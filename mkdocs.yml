@@ -57,7 +57,8 @@ extra:
       link: https://www.linkedin.com/company/volotechnologies/
 
 extra_css:
-  - css/custom.css
+  # - assets/custom.css
+  - "data:text/css;charset=UTF-8, .md-content, .md-nav__item, .md-nav__link, .md-ellipsis { overflow-wrap: break-word !important; word-wrap: break-word !important; white-space: normal !important; }"
 
 markdown_extensions:
   - admonition
