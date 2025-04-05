@@ -1279,7 +1279,6 @@ resource &quot;volocloud_tenancy_account_module_azure_vdi&quot; &quot;example&qu
 <ul>
 <li><code>access_tier</code> (String) The access tier of the File Share where the storage account is configured with a standard performance tier. This is ignored if the storage account is configured with a premium performance tier. Possible values are  <code>Cool</code>, <code>Hot</code> or <code>TransactionOptimized</code>. Default to <code>Hot</code>.</li>
 <li><code>directories</code> (Attributes List) List of directory objects to create in the file share. (see <a href="#nestedatt--configuration--host_pools--file_shares--directories">below for nested schema</a>)</li>
-<li><code>metadata</code> (Map of String) A mapping of MetaData for this File Share. Metadata names MUST start with a letter or underscore. Can contain alphanumeric, underscore, dash, dot or space up to lenght of 128 chars.</li>
 <li><code>quota</code> (Number) The size of the file share in <code>GB</code>. If the tier is premium this is the allocation which will be paid for. If the tier is standard this is just an upper limit and will only be charged per consumed storage. Defaults to <code>500</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--host_pools--file_shares--directories"></a></p>
@@ -1290,7 +1289,6 @@ resource &quot;volocloud_tenancy_account_module_azure_vdi&quot; &quot;example&qu
 </ul>
 <p>Optional:</p>
 <ul>
-<li><code>metadata</code> (Map of String) A name-value pair to associate with the directory as metadata. Metadata names MUST start with a letter or underscore. Can contain alphanumeric, underscore, dash, dot or space up to lenght of 128 chars.</li>
 <li><code>permissions</code> (Attributes Map) A Map of permissions for the directory. The map key is the Microsoft Entra ID objectID (GUID format) for which the permissions are granted and the map value contains the security descriptor for the directory that's specified in the Security Descriptor Definition Language (<a href="https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-definition-language">SDDL</a>). If not specified, the directory will be created with default permissions. (see <a href="#nestedatt--configuration--host_pools--file_shares--directories--permissions">below for nested schema</a>)</li>
 </ul>
 <p><a id="nestedatt--configuration--host_pools--file_shares--directories--permissions"></a></p>
@@ -1550,7 +1548,6 @@ CANNOT be changed after creation without destroying the storage account and its 
 <ul>
 <li><code>access_tier</code> (String) The access tier of the File Share where the storage account is configured with a standard performance tier. This is ignored if the storage account is configured with a premium performance tier. Possible values are  <code>Cool</code>, <code>Hot</code> or <code>TransactionOptimized</code>. Default to <code>Hot</code>.</li>
 <li><code>directories</code> (Attributes List) List of directory objects to create in the file share. (see <a href="#nestedatt--configuration--storage_account--file_shares--directories">below for nested schema</a>)</li>
-<li><code>metadata</code> (Map of String) A mapping of MetaData for this File Share. Metadata names MUST start with a letter or underscore. Can contain alphanumeric, underscore, dash, dot or space up to lenght of 128 chars.</li>
 <li><code>quota</code> (Number) The size of the file share in <code>GB</code>. If the tier is premium this is the allocation which will be paid for. If the tier is standard this is just an upper limit and will only be charged per consumed storage. Defaults to <code>500</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--storage_account--file_shares--directories"></a></p>
@@ -1561,7 +1558,6 @@ CANNOT be changed after creation without destroying the storage account and its 
 </ul>
 <p>Optional:</p>
 <ul>
-<li><code>metadata</code> (Map of String) A name-value pair to associate with the directory as metadata. Metadata names MUST start with a letter or underscore. Can contain alphanumeric, underscore, dash, dot or space up to lenght of 128 chars.</li>
 <li><code>permissions</code> (Attributes Map) A Map of permissions for the directory. The map key is the Microsoft Entra ID objectID (GUID format) for which the permissions are granted and the map value contains the security descriptor for the directory that's specified in the Security Descriptor Definition Language (<a href="https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-definition-language">SDDL</a>). If not specified, the directory will be created with default permissions. (see <a href="#nestedatt--configuration--storage_account--file_shares--directories--permissions">below for nested schema</a>)</li>
 </ul>
 <p><a id="nestedatt--configuration--storage_account--file_shares--directories--permissions"></a></p>
