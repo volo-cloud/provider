@@ -738,7 +738,7 @@ with a client secret and the following permissions:</p>
 <h3 id="azure-permissions">Azure Permissions</h3>
 <p>Azure requires a service principal (app registration) with a client secret and the following permissions:</p>
 <ul>
-<li>Enterprise Agreement(EA) billing account <ul>
+<li>Enterprise Agreement(EA) billing account<ul>
 <li>The service principal, needs permissions to create subscriptions under the EA Enrollment ID, using the SubscriptionCreator role.
   To grant these permissions, MUST use REST APIs and the documentation followed can be found here:
   <a href="https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/assign-roles-azure-service-principals">Assign Enterprise Agreement roles to service principals - Microsoft Cost Management</a></li>
@@ -1602,7 +1602,7 @@ the tenant MUST have valid payment methods associated to allow creation of paid 
 <li><a href="https://azuremarketplace.microsoft.com/en-us/marketplace/apps/vololimited1666556006423.volo-cloud-foundations-saas?tab=Overview">Azure Marketplace</a></li>
 </ul>
 <h3 id="marketplace-registration">Marketplace Registration</h3>
-<p>The customer will procure the offer from the AWS/Azure Marketplace. The Marketplace will redirect to Volocloud registration page 
+<p>The customer will procure the offer from the AWS/Azure Marketplace. The Marketplace will redirect to Volocloud registration page
 where the customer must register a new volo account by providing the following information:</p>
 <ul>
 <li>Volocloud account name</li>
@@ -1640,10 +1640,10 @@ resources. E.g. Terraform Cloud has a default timeout of 2h.</p>
 </li>
 <li>The <code>volocloud_tenancy_aws</code> and <code>volocloud_tenancy_azure</code> resources MUST be created after the <code>volocloud_account</code>
     resource and their purpose is to create the core AWS Accounts/Azure Subscriptions and configure services inside those AWS Accounts/Azure Subscriptions.</li>
-<li>The <code>volocloud_tenancy_account</code> and <code>volocloud_tenancy_account</code> resources MUST be created after the 
+<li>The <code>volocloud_tenancy_account</code> and <code>volocloud_tenancy_account</code> resources MUST be created after the
     <code>volocloud_tenancy_aws</code> and <code>volocloud_tenancy_azure</code> resources, and their purpose is to create a dedicated AWS Account/Azure
-    Subscription, per application/per environment to host business workloads. The definition of application is entirely up to the customer and can be as small or 
-    as big as the customer decides. The documentation for each resource usage is provided to the customer and in marketplace registration page and if required, 
+    Subscription, per application/per environment to host business workloads. The definition of application is entirely up to the customer and can be as small or
+    as big as the customer decides. The documentation for each resource usage is provided to the customer and in marketplace registration page and if required,
     Volo support team is available.</li>
 </ul>
 <h4 id="volocloud-provider-account-resource">Volocloud provider account resource</h4>

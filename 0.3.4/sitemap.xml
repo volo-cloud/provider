@@ -2,54 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/data-sources/account/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/data-sources/tenancy_account_aws/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/data-sources/tenancy_account_azure/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/data-sources/tenancy_account_module_azure_vdi/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/data-sources/tenancy_aws/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/data-sources/tenancy_azure/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/resources/account/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/resources/tenancy_account_aws/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/resources/tenancy_account_azure/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/resources/tenancy_account_module_azure_vdi/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/resources/tenancy_aws/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
     <url>
          <loc>https://tf.volo-global.com/v1/providers/volo/volocloud/0.3.4/resources/tenancy_azure/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-10-10</lastmod>
     </url>
 </urlset>

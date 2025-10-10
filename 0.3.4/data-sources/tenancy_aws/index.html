@@ -7351,6 +7351,7 @@ Your only alternative is to disable and then re-enable Audit Manager.<br></p>
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--audit--backup--policies--monthly"></a></p>
 <h3 id="nested-schema-for-configurationaccountsauditbackuppoliciesmonthly">Nested Schema for <code>configuration.accounts.audit.backup.policies.monthly</code></h3>
@@ -7364,6 +7365,7 @@ Your only alternative is to disable and then re-enable Audit Manager.<br></p>
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--audit--backup--policies--weekly"></a></p>
 <h3 id="nested-schema-for-configurationaccountsauditbackuppoliciesweekly">Nested Schema for <code>configuration.accounts.audit.backup.policies.weekly</code></h3>
@@ -7377,6 +7379,7 @@ Your only alternative is to disable and then re-enable Audit Manager.<br></p>
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--audit--backup--policies--yearly"></a></p>
 <h3 id="nested-schema-for-configurationaccountsauditbackuppoliciesyearly">Nested Schema for <code>configuration.accounts.audit.backup.policies.yearly</code></h3>
@@ -7390,6 +7393,7 @@ Your only alternative is to disable and then re-enable Audit Manager.<br></p>
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--audit--backup--restore_testing"></a></p>
 <h3 id="nested-schema-for-configurationaccountsauditbackuprestore_testing">Nested Schema for <code>configuration.accounts.audit.backup.restore_testing</code></h3>
@@ -7993,6 +7997,7 @@ CANNOT be changed after creation without destroying everything running on top of
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--log_archive--backup--policies--monthly"></a></p>
 <h3 id="nested-schema-for-configurationaccountslog_archivebackuppoliciesmonthly">Nested Schema for <code>configuration.accounts.log_archive.backup.policies.monthly</code></h3>
@@ -8006,6 +8011,7 @@ CANNOT be changed after creation without destroying everything running on top of
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--log_archive--backup--policies--weekly"></a></p>
 <h3 id="nested-schema-for-configurationaccountslog_archivebackuppoliciesweekly">Nested Schema for <code>configuration.accounts.log_archive.backup.policies.weekly</code></h3>
@@ -8019,6 +8025,7 @@ CANNOT be changed after creation without destroying everything running on top of
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--log_archive--backup--policies--yearly"></a></p>
 <h3 id="nested-schema-for-configurationaccountslog_archivebackuppoliciesyearly">Nested Schema for <code>configuration.accounts.log_archive.backup.policies.yearly</code></h3>
@@ -8032,6 +8039,7 @@ CANNOT be changed after creation without destroying everything running on top of
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--log_archive--backup--restore_testing"></a></p>
 <h3 id="nested-schema-for-configurationaccountslog_archivebackuprestore_testing">Nested Schema for <code>configuration.accounts.log_archive.backup.restore_testing</code></h3>
@@ -8442,6 +8450,7 @@ CANNOT be changed after creation without destroying the backup vault and its dat
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--management--backup--policies--monthly"></a></p>
 <h3 id="nested-schema-for-configurationaccountsmanagementbackuppoliciesmonthly">Nested Schema for <code>configuration.accounts.management.backup.policies.monthly</code></h3>
@@ -8455,6 +8464,7 @@ CANNOT be changed after creation without destroying the backup vault and its dat
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--management--backup--policies--weekly"></a></p>
 <h3 id="nested-schema-for-configurationaccountsmanagementbackuppoliciesweekly">Nested Schema for <code>configuration.accounts.management.backup.policies.weekly</code></h3>
@@ -8468,6 +8478,7 @@ CANNOT be changed after creation without destroying the backup vault and its dat
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--management--backup--policies--yearly"></a></p>
 <h3 id="nested-schema-for-configurationaccountsmanagementbackuppoliciesyearly">Nested Schema for <code>configuration.accounts.management.backup.policies.yearly</code></h3>
@@ -8481,6 +8492,7 @@ CANNOT be changed after creation without destroying the backup vault and its dat
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--management--backup--restore_testing"></a></p>
 <h3 id="nested-schema-for-configurationaccountsmanagementbackuprestore_testing">Nested Schema for <code>configuration.accounts.management.backup.restore_testing</code></h3>
@@ -8876,6 +8888,7 @@ CANNOT be changed after creation without destroying the backup vault and its dat
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--network--backup--policies--monthly"></a></p>
 <h3 id="nested-schema-for-configurationaccountsnetworkbackuppoliciesmonthly">Nested Schema for <code>configuration.accounts.network.backup.policies.monthly</code></h3>
@@ -8889,6 +8902,7 @@ CANNOT be changed after creation without destroying the backup vault and its dat
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--network--backup--policies--weekly"></a></p>
 <h3 id="nested-schema-for-configurationaccountsnetworkbackuppoliciesweekly">Nested Schema for <code>configuration.accounts.network.backup.policies.weekly</code></h3>
@@ -8902,6 +8916,7 @@ CANNOT be changed after creation without destroying the backup vault and its dat
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--network--backup--policies--yearly"></a></p>
 <h3 id="nested-schema-for-configurationaccountsnetworkbackuppoliciesyearly">Nested Schema for <code>configuration.accounts.network.backup.policies.yearly</code></h3>
@@ -8915,6 +8930,7 @@ CANNOT be changed after creation without destroying the backup vault and its dat
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--network--backup--restore_testing"></a></p>
 <h3 id="nested-schema-for-configurationaccountsnetworkbackuprestore_testing">Nested Schema for <code>configuration.accounts.network.backup.restore_testing</code></h3>
@@ -9890,6 +9906,7 @@ VPC per Region service quota increased from default.<br></p>
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--shared_services--backup--policies--monthly"></a></p>
 <h3 id="nested-schema-for-configurationaccountsshared_servicesbackuppoliciesmonthly">Nested Schema for <code>configuration.accounts.shared_services.backup.policies.monthly</code></h3>
@@ -9903,6 +9920,7 @@ VPC per Region service quota increased from default.<br></p>
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--shared_services--backup--policies--weekly"></a></p>
 <h3 id="nested-schema-for-configurationaccountsshared_servicesbackuppoliciesweekly">Nested Schema for <code>configuration.accounts.shared_services.backup.policies.weekly</code></h3>
@@ -9916,6 +9934,7 @@ VPC per Region service quota increased from default.<br></p>
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--shared_services--backup--policies--yearly"></a></p>
 <h3 id="nested-schema-for-configurationaccountsshared_servicesbackuppoliciesyearly">Nested Schema for <code>configuration.accounts.shared_services.backup.policies.yearly</code></h3>
@@ -9929,6 +9948,7 @@ VPC per Region service quota increased from default.<br></p>
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in UTC. You can modify this to a specified timezone.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--accounts--shared_services--backup--restore_testing"></a></p>
 <h3 id="nested-schema-for-configurationaccountsshared_servicesbackuprestore_testing">Nested Schema for <code>configuration.accounts.shared_services.backup.restore_testing</code></h3>
@@ -10559,6 +10579,7 @@ CANNOT be changed after creation without destroying everything running on top of
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in <code>UTC</code>. This CANNOT be modified at this stage.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--organization--backup--policies--monthly"></a></p>
 <h3 id="nested-schema-for-configurationorganizationbackuppoliciesmonthly">Nested Schema for <code>configuration.organization.backup.policies.monthly</code></h3>
@@ -10572,6 +10593,7 @@ CANNOT be changed after creation without destroying everything running on top of
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in <code>UTC</code>. This CANNOT be modified at this stage.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--organization--backup--policies--weekly"></a></p>
 <h3 id="nested-schema-for-configurationorganizationbackuppoliciesweekly">Nested Schema for <code>configuration.organization.backup.policies.weekly</code></h3>
@@ -10585,6 +10607,7 @@ CANNOT be changed after creation without destroying everything running on top of
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in <code>UTC</code>. This CANNOT be modified at this stage.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--organization--backup--policies--yearly"></a></p>
 <h3 id="nested-schema-for-configurationorganizationbackuppoliciesyearly">Nested Schema for <code>configuration.organization.backup.policies.yearly</code></h3>
@@ -10598,6 +10621,7 @@ CANNOT be changed after creation without destroying everything running on top of
 <li><code>opt_in_to_archive_for_supported_resources</code> (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.</li>
 <li><code>schedule_expression</code> (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">Cron expressions reference</a> for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.</li>
 <li><code>schedule_expression_timezone</code> (String) This is the timezone in which the schedule expression is set. By default, <code>schedule_expression</code> is in <code>UTC</code>. This CANNOT be modified at this stage.</li>
+<li><code>selection_tag</code> (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be <code>true</code>.</li>
 </ul>
 <p><a id="nestedatt--configuration--organization--backup--vault_lock"></a></p>
 <h3 id="nested-schema-for-configurationorganizationbackupvault_lock">Nested Schema for <code>configuration.organization.backup.vault_lock</code></h3>
