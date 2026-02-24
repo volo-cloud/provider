@@ -1,0 +1,10452 @@
+---
+description: |-
+  Volocloud Tenancy configuration. The AWS Cloudformation template obtained from volocloud_account resource MUST be deployed before this resource is created.
+hide: toc
+page_title: "volocloud_tenancy_aws Resource"
+subcategory: ""
+---
+
+# volocloud_tenancy_aws
+
+Volocloud Tenancy configuration. The AWS Cloudformation template obtained from `volocloud_account` resource MUST be deployed before this resource is created.
+
+## Example Usage
+
+```terraform
+# Create AWS Tenancy
+# Deploy new AWS Organizations and AWS Identity Center.
+# Deploy new AWS Accounts for network and shared-services accounts.
+resource "volocloud_tenancy_aws" "example" {
+  account_id = volocloud_account.example.account_id
+  configuration = {
+    abbreviation = "expl"
+    accounts = {
+      audit = {
+        backup = {
+          restore_testing = {
+            enabled = true
+          }
+        }
+        securityhub = {
+          enabled = true
+          notifications = {
+            subscribers = [
+              {
+                emails = ["example+securityhub@example.com"]
+              }
+            ]
+          }
+          standards = {
+            aws_foundational_security_best_practices = {
+              controls = {
+                "iam.6" = {
+                  disable_control = true
+                  disable_reason  = "We have virtual MFA and don't plan to have hardware MFA."
+                }
+              }
+              enabled = true
+              version = "v1.0.0"
+            }
+            cis_aws_foundations_benchmark = {
+              controls = {
+                "1.6" = {
+                  disable_control = true
+                  disable_reason  = "We have virtual MFA and don't plan to have hardware MFA."
+                }
+              }
+              enabled = true
+              version = "v1.4.0"
+            }
+          }
+        }
+      }
+      log_archive = {
+        backup = {
+          restore_testing = {
+            enabled = true
+          }
+        }
+      }
+      management = {
+        backup = {
+          restore_testing = {
+            enabled = false
+          }
+        }
+      }
+      network = {
+        aws_account_close_on_delete = false
+        backup = {
+          restore_testing = {
+            enabled = true
+          }
+        }
+        dns_resolver = {
+          enabled = true
+          forwarding_domains = [
+            {
+              dns_domain = "example.test"
+              dns_servers = [
+                "1.2.3.4",
+                "5.6.7.8",
+              ]
+            }
+          ]
+        }
+        dns_zones = {
+          private_subdomains = {
+            dev  = "dev"
+            prod = "prod"
+            qa   = "qa"
+            test = "test"
+          }
+          public_domains = [
+            "test.example.com",
+          ]
+        }
+        network_firewall = {
+          enabled = true
+        }
+        transit_gateway = {
+          enabled = true
+        }
+      }
+      shared_services = {
+        aws_account_close_on_delete = false
+        backup = {
+          restore_testing = {
+            enabled = true
+          }
+        }
+      }
+    }
+    assume_role = {
+      account_id  = "123456789012"
+      arn         = volocloud_account.example.resources.aws.management_accounts["123456789012"].bootstrap_role_arn
+      external_id = volocloud_account.example.resources.aws.management_accounts["123456789012"].bootstrap_role_external_id
+    }
+    dns_domain   = "example.com"
+    email        = "example@example.com"
+    environments = ["dev"]
+    organization = {
+      backup = {
+        enabled = true
+      }
+      controltower = {
+        access_management = true
+      }
+    }
+    regions = {
+      home = {
+        primary = {
+          location = "ap-southeast-2"
+          network = {
+            enabled = true
+            ip_schema = {
+              address = "172.16.0.0"
+              environments = {
+                core = {
+                  address = "172.16.0.0"
+                  mask    = 18
+                }
+                dev = {
+                  address = "172.16.192.0"
+                  mask    = 18
+                }
+              }
+              mask = 16
+            }
+          }
+          region = "apse2"
+        }
+      }
+    }
+    tags = {
+      key1 = "value1"
+    }
+  }
+  name = "example"
+}
+
+# Create AWS Tenancy
+# Reuse existing AWS Organizations and AWS Identity Center.
+# Reuse existing AWS Accounts for network and shared-services accounts.
+resource "volocloud_tenancy_aws" "example" {
+  account_id = volocloud_account.example.account_id
+  configuration = {
+    abbreviation = "expl"
+    accounts = {
+      audit = {
+        backup = {
+          restore_testing = {
+            enabled = true
+          }
+        }
+        securityhub = {
+          enabled = true
+          notifications = {
+            subscribers = [
+              {
+                emails = ["example+securityhub@example.com"]
+              }
+            ]
+          }
+          standards = {
+            aws_foundational_security_best_practices = {
+              controls = {
+                "iam.6" = {
+                  disable_control = true
+                  disable_reason  = "We have virtual MFA and don't plan to have hardware MFA."
+                }
+              }
+              enabled = true
+              version = "v1.0.0"
+            }
+            cis_aws_foundations_benchmark = {
+              controls = {
+                "1.6" = {
+                  disable_control = true
+                  disable_reason  = "We have virtual MFA and don't plan to have hardware MFA."
+                }
+              }
+              enabled = true
+              version = "v1.4.0"
+            }
+          }
+        }
+      }
+      log_archive = {
+        backup = {
+          restore_testing = {
+            enabled = true
+          }
+        }
+      }
+      management = {
+        backup = {
+          restore_testing = {
+            enabled = false
+          }
+        }
+      }
+      network = {
+        aws_account_close_on_delete = false
+        backup = {
+          restore_testing = {
+            enabled = true
+          }
+        }
+        dns_resolver = {
+          enabled = true
+          forwarding_domains = [
+            {
+              dns_domain = "example.test"
+              dns_servers = [
+                "1.2.3.4",
+                "5.6.7.8",
+              ]
+            }
+          ]
+        }
+        dns_zones = {
+          private_subdomains = {
+            dev  = "dev"
+            prod = "prod"
+            qa   = "qa"
+            test = "test"
+          }
+          public_domains = [
+            "volocloud.test",
+          ]
+        }
+        network_firewall = {
+          enabled = true
+        }
+        transit_gateway = {
+          enabled = true
+        }
+      }
+      shared_services = {
+        aws_account_close_on_delete = false
+        backup = {
+          restore_testing = {
+            enabled = true
+          }
+        }
+      }
+    }
+    assume_role = {
+      account_id  = "123456789012"
+      arn         = volocloud_account.example.resources.aws.management_accounts["123456789012"].bootstrap_role_arn
+      external_id = volocloud_account.example.resources.aws.management_accounts["123456789012"].bootstrap_role_external_id
+    }
+    dns_domain   = "example.com"
+    email        = "example@example.com"
+    environments = ["dev"]
+    organization = {
+      backup = {
+        enabled = true
+      }
+      controltower = {
+        access_management = false
+        central_logging = {
+          reuse_existing = {
+            account_id = "123456789012"
+            enabled    = true
+          }
+        }
+        # org_units = {}
+        security = {
+          reuse_existing = {
+            account_id = "123456789012"
+            enabled    = true
+          }
+        }
+      }
+      reuse_existing = {
+        identity_store_id = "d-id"
+        organization_id   = "o-id"
+      }
+    }
+    regions = {
+      home = {
+        primary = {
+          location = "ap-southeast-2"
+          network = {
+            enabled = true
+            ip_schema = {
+              address = "172.16.0.0"
+              environments = {
+                core = {
+                  address = "172.16.0.0"
+                  mask    = 18
+                }
+                dev = {
+                  address = "172.16.192.0"
+                  mask    = 18
+                }
+              }
+              mask = 16
+            }
+          }
+          region = "apse2"
+        }
+      }
+    }
+    tags = {
+      key1 = "value1"
+    }
+  }
+  name = "example"
+}
+```
+
+<!-- schema generated by tfplugindocs -->
+## Schema
+
+### Required
+
+- `account_id` (String) Volocloud Account ID associated with this account.
+- `configuration` (Attributes) Provides configuration required to setup the Tenancy. (see [below for nested schema](#nestedatt--configuration))
+- `name` (String) Volocloud tenancy Name.
+
+### Optional
+
+- `credentials` (Attributes) Provides credentials required to setup the Tenancy. (see [below for nested schema](#nestedatt--credentials))
+- `trigger_update` (String) This attribute provides a mechanism to trigger an update on the tenancy resouce when there is no change to the other attributes.
+
+### Read-Only
+
+- `id` (String) ID of the resource computed from the account_id and tenancy_id separated by : .
+- `provider_version` (String) The provider version which is used by this resource. It gets automatically updated whent he provider version is changed. It triggers an update on the tenancy resource.
+- `resources` (Map of String) These are all the resources created in the tenancy.
+- `tenancy_id` (String) Volocloud Tenancy ID.
+
+<a id="nestedatt--configuration"></a>
+### Nested Schema for `configuration`
+
+Required:
+
+- `abbreviation` (String) This abbreviation will be used to uniquily identify resources created. Only applies to resources that require AWS global uniqueness.
+- `accounts` (Attributes) Configuration details for AWS Accounts part of tenancy. (see [below for nested schema](#nestedatt--configuration--accounts))
+- `assume_role` (Attributes) AWS Management Account details for Volocloud bootstrap role to be assumed. (see [below for nested schema](#nestedatt--configuration--assume_role))
+- `dns_domain` (String) DNS domain to be used as the root DNS for the AWS tenancy. A public Route53 hosted zone will be created for this domain and it order to work, either the registrar needs to be updated with the NS records of the new zone if it's a root domain, or a DNS delegation MUST be configured for this zone. Private dns subdomains will be created based on this.
+- `email` (String) Email address for the root user of the provisioned AWS Accounts part of this tenancy. Must support subaddressing (+ sign) and be max 42 chars.
+- `organization` (Attributes) AWS services configuration applicable at AWS Organization level. (see [below for nested schema](#nestedatt--configuration--organization))
+- `regions` (Attributes) Defines which regions to deploy into. (see [below for nested schema](#nestedatt--configuration--regions))
+
+Optional:
+
+- `environments` (List of String) List of environments to be deployed part of the tenancy. Possible values are `dev`, `prod`, `qa` and `test`. Defaults to `[dev, prod, test]`
+- `idp` (Attributes) Configuration details for AWS Identity Center SSO. (see [below for nested schema](#nestedatt--configuration--idp))
+- `tags` (Map of String) Key-value map of resource tags for all the tenancy resources.
+
+<a id="nestedatt--configuration--accounts"></a>
+### Nested Schema for `configuration.accounts`
+
+Required:
+
+- `audit` (Attributes) Provides details for configuring audit resources. (see [below for nested schema](#nestedatt--configuration--accounts--audit))
+- `log_archive` (Attributes) Provides details for configuring log archive resources. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive))
+- `management` (Attributes) Provides details for configuring management resources. (see [below for nested schema](#nestedatt--configuration--accounts--management))
+- `network` (Attributes) Provides details for configuring network resources. (see [below for nested schema](#nestedatt--configuration--accounts--network))
+- `shared_services` (Attributes) Provides details for configuring shared services resources. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services))
+
+<a id="nestedatt--configuration--accounts--audit"></a>
+### Nested Schema for `configuration.accounts.audit`
+
+Required:
+
+- `alternate_contacts` (Attributes Map) Configuration of AWS Account alternate contacts. (see [below for nested schema](#nestedatt--configuration--accounts--audit--alternate_contacts))
+- `primary_contact` (Attributes) Configuration of AWS Account primary contact. (see [below for nested schema](#nestedatt--configuration--accounts--audit--primary_contact))
+- `securityhub` (Attributes) Manages the Security Hub Configuration for AWS Organization. (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub))
+
+Optional:
+
+- `auditmanager` (Attributes) Provides a resource to manage AWS Audit Manager for this AWS Organization. (see [below for nested schema](#nestedatt--configuration--accounts--audit--auditmanager))
+- `backup` (Attributes) AWS Backup configuration settings for the local account. (see [below for nested schema](#nestedatt--configuration--accounts--audit--backup))
+- `budgets` (Attributes List) A list of budget objects. (see [below for nested schema](#nestedatt--configuration--accounts--audit--budgets))
+- `config` (Attributes) AWS Config Conformance Packs Rules deployed for this AWS account only. (see [below for nested schema](#nestedatt--configuration--accounts--audit--config))
+- `ebs_encryption_by_default` (Boolean) Whether or not default EBS encryption is enabled. Defaults to `true`.
+- `guardduty` (Attributes) Provides a resource to manage Amazon GuardDuty for this AWS Organization. (see [below for nested schema](#nestedatt--configuration--accounts--audit--guardduty))
+- `inspector` (Attributes) Provides a resource to managed AWS Inspector for this AWS Organization. (see [below for nested schema](#nestedatt--configuration--accounts--audit--inspector))
+- `s3_account_public_access_block` (Attributes) Manages S3 account-level Public Access Block configuration. (see [below for nested schema](#nestedatt--configuration--accounts--audit--s3_account_public_access_block))
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with with this AWS account. (see [below for nested schema](#nestedatt--configuration--accounts--audit--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--accounts--audit--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with this AWS account. The object name MUST be unique across this account and any OU level definitions. (see [below for nested schema](#nestedatt--configuration--accounts--audit--sso_permission_sets))
+- `vpc` (Attributes) Configuration for the account VPC. (see [below for nested schema](#nestedatt--configuration--accounts--audit--vpc))
+
+<a id="nestedatt--configuration--accounts--audit--alternate_contacts"></a>
+### Nested Schema for `configuration.accounts.audit.alternate_contacts`
+
+Required:
+
+- `email` (String) An email address for the alternate contact.
+- `name` (String) Name of the alternate contact.
+- `phone` (String) Phone number for the alternate contact.
+- `title` (String) Title for the alternate contact.
+
+
+<a id="nestedatt--configuration--accounts--audit--primary_contact"></a>
+### Nested Schema for `configuration.accounts.audit.primary_contact`
+
+Required:
+
+- `address_line_1` (String) The first line of the primary contact address.
+- `city` (String) The city of the primary contact address.
+- `country_code` (String) The ISO-3166 two-letter country code for the primary contact address.
+- `full_name` (String) The full name of the primary contact address.
+- `phone` (String) The phone number of the primary contact information. The number will be validated and, in some countries, checked for activation.
+- `postal_code` (String) The postal code of the primary contact address.
+
+Optional:
+
+- `address_line_2` (String) The second line of the primary contact address, if any.
+- `address_line_3` (String) The third line of the primary contact address, if any.
+- `company_name` (String) The name of the company associated with the primary contact information, if any.
+- `district_or_county` (String) The district or county of the primary contact address, if any.
+- `state_or_region` (String) The state or region of the primary contact address. If the mailing address is within the United States (US), the value in this field can be either a two character state code (for example, `NJ`) or the full state name (for example, `New Jersey`). This field is required in the following countries: `US, CA, GB, DE, JP, IN, and BR`.
+- `website_url` (String) The URL of the website associated with the primary contact information, if any.
+
+
+<a id="nestedatt--configuration--accounts--audit--securityhub"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub`
+
+Required:
+
+- `enabled` (Boolean) Enables Security Hub for this AWS Organization and the core AWS Accounts.
+
+Optional:
+
+- `notifications` (Attributes) Settings for configuring email based notifications for SecurityHub using SNS. (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--notifications))
+- `standards` (Attributes) Manages Security Hub Standards and their controls for this AWS Organization. (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards))
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--notifications"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.notifications`
+
+Required:
+
+- `subscribers` (Attributes List) A list of notification objects for receiving SecurityHub alerts. (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--notifications--subscribers))
+
+Optional:
+
+- `findings_pattern` (String) SecurityHub event rule findings pattern to configure which events are sent to the SNS topic, formatted as JSON string. The SecurityHub event rule and findings format can be found in AWS documentation: [Configuring an EventBridge rule for automatically sent findings]https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cwe-all-findings.html. Only one findings pattern can be configured for all events generated by SecurityHub. Defaults to all new and active findings.
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--notifications--subscribers"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.notifications.subscribers`
+
+Required:
+
+- `emails` (List of String) Specifies a list of email addresses to send the budget notification to when the threshold is exceeded.
+
+Optional:
+
+- `filter_policy` (String) JSON String with the filter policy that will be used in the SNS subscription to filter messages seen by the target resource. Refer to the [SNS docs](https://docs.aws.amazon.com/sns/latest/dg/message-filtering.html) for more details. If not provided, all messages received by the SNS Topic will be forwarded to subscribers.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards`
+
+Optional:
+
+- `aws_foundational_security_best_practices` (Attributes) Manages Security Hub `AWS Foundational Security Best Practices` standard. Defaults to `{"controls":<null>,"enabled":true,"version":"v1.0.0"}`. (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards--aws_foundational_security_best_practices))
+- `aws_resource_tagging_standard` (Attributes) Manages Security Hub `AWS Resource Tagging Standard` standard. Defaults to `{"controls":<null>,"enabled":true,"version":"v1.0.0"}`. (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards--aws_resource_tagging_standard))
+- `cis_aws_foundations_benchmark` (Attributes) Manages Security Hub `CIS AWS Foundations Benchmark` standard. Defaults to `{"controls":<null>,"enabled":true,"version":"v5.0.0"}`. (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards--cis_aws_foundations_benchmark))
+- `nist_special_publication_800_171` (Attributes) Manages Security Hub `NIST Special Publication 800-171` standard. (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards--nist_special_publication_800_171))
+- `nist_special_publication_800_53` (Attributes) Manages Security Hub `NIST Special Publication 800-53` standard. (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards--nist_special_publication_800_53))
+- `pci_dss` (Attributes) Manages Security Hub `PCI DSS` standard. (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards--pci_dss))
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards--aws_foundational_security_best_practices"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards.aws_foundational_security_best_practices`
+
+Optional:
+
+- `controls` (Attributes Map) A map of object to disable control(s) part of this standard. The map keys MUST be the all lowercase control id. For control id see [AWS Documentation](https://docs.aws.amazon.com/securityhub/latest/userguide/fsbp-standard.html). (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards--aws_foundational_security_best_practices--controls))
+- `enabled` (Boolean) Enables this Security Hub `AWS Foundational Security Best Practices` standard in the AWS Organization. Defaults to `true`.
+- `version` (String) Standard version. Valid versions: `v1.0.0`. Defaults to `v1.0.0`.
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards--aws_foundational_security_best_practices--controls"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards.aws_foundational_security_best_practices.controls`
+
+Required:
+
+- `disable_control` (Boolean) If true, the control will be disabled.
+- `disable_reason` (String) Provides a reason why the control has been disabled.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards--aws_resource_tagging_standard"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards.aws_resource_tagging_standard`
+
+Optional:
+
+- `controls` (Attributes Map) A map of object to disable control(s) part of this standard. The map keys MUST be the all lowercase control id. For control id see [AWS Documentation](https://docs.aws.amazon.com/securityhub/latest/userguide/standards-tagging.html). (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards--aws_resource_tagging_standard--controls))
+- `enabled` (Boolean) Enables this Security Hub `AWS Resource Tagging Standard` standard in the AWS Organization. Defaults to `true`.
+- `version` (String) Standard version. Valid versions: `v1.0.0`. Defaults to `v1.0.0`.
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards--aws_resource_tagging_standard--controls"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards.aws_resource_tagging_standard.controls`
+
+Required:
+
+- `disable_control` (Boolean) If true, the control will be disabled.
+- `disable_reason` (String) Provides a reason why the control has been disabled.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards--cis_aws_foundations_benchmark"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards.cis_aws_foundations_benchmark`
+
+Optional:
+
+- `controls` (Attributes Map) A map of object to disable control(s) part of this standard. The map keys MUST be the all lowercase control id. For control id see [AWS Documentation](https://docs.aws.amazon.com/securityhub/latest/userguide/cis-aws-foundations-benchmark.html). (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards--cis_aws_foundations_benchmark--controls))
+- `enabled` (Boolean) Enables this Security Hub `CIS AWS Foundations Benchmark` standard in the AWS Organization. Defaults to `true`.
+- `version` (String) Standard version. Valid versions: `v1.4.0`, `v3.0.0` or `v5.0.0`. Defaults to `v5.0.0`.
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards--cis_aws_foundations_benchmark--controls"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards.cis_aws_foundations_benchmark.controls`
+
+Required:
+
+- `disable_control` (Boolean) If true, the control will be disabled.
+- `disable_reason` (String) Provides a reason why the control has been disabled.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards--nist_special_publication_800_171"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards.nist_special_publication_800_171`
+
+Required:
+
+- `enabled` (Boolean) Enables this Security Hub `NIST Special Publication 800-171` standard in the AWS Organization.
+
+Optional:
+
+- `controls` (Attributes Map) A map of object to disable control(s) part of this standard. The map keys MUST be the all lowercase control id. For control id see [AWS Documentation](https://docs.aws.amazon.com/securityhub/latest/userguide/standards-reference-nist-800-171.html). (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards--nist_special_publication_800_171--controls))
+- `version` (String) Standard version. Valid versions: `revision_2`. Defaults to `revision_2`.
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards--nist_special_publication_800_171--controls"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards.nist_special_publication_800_171.controls`
+
+Required:
+
+- `disable_control` (Boolean) If true, the control will be disabled.
+- `disable_reason` (String) Provides a reason why the control has been disabled.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards--nist_special_publication_800_53"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards.nist_special_publication_800_53`
+
+Required:
+
+- `enabled` (Boolean) Enables this Security Hub `NIST Special Publication 800-53` standard in the AWS Organization.
+
+Optional:
+
+- `controls` (Attributes Map) A map of object to disable control(s) part of this standard. The map keys MUST be the all lowercase control id. For control id see [AWS Documentation](https://docs.aws.amazon.com/securityhub/latest/userguide/nist-standard.html). (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards--nist_special_publication_800_53--controls))
+- `version` (String) Standard version. Valid versions: `revision_5`. Defaults to `revision_5`.
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards--nist_special_publication_800_53--controls"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards.nist_special_publication_800_53.controls`
+
+Required:
+
+- `disable_control` (Boolean) If true, the control will be disabled.
+- `disable_reason` (String) Provides a reason why the control has been disabled.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards--pci_dss"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards.pci_dss`
+
+Required:
+
+- `enabled` (Boolean) Enables this Security Hub `PCI DSS` standard in the AWS Organization.
+
+Optional:
+
+- `controls` (Attributes Map) A map of object to disable control(s) part of this standard. The map keys MUST be the all lowercase control id. For control id see [AWS Documentation](https://docs.aws.amazon.com/securityhub/latest/userguide/pci-standard.html). (see [below for nested schema](#nestedatt--configuration--accounts--audit--securityhub--standards--pci_dss--controls))
+- `version` (String) Standard version. Valid versions: `v3.2.1` or `v4.0.1`. Defaults to `v4.0.1`.
+
+<a id="nestedatt--configuration--accounts--audit--securityhub--standards--pci_dss--controls"></a>
+### Nested Schema for `configuration.accounts.audit.securityhub.standards.pci_dss.controls`
+
+Required:
+
+- `disable_control` (Boolean) If true, the control will be disabled.
+- `disable_reason` (String) Provides a reason why the control has been disabled.
+
+
+
+
+
+<a id="nestedatt--configuration--accounts--audit--auditmanager"></a>
+### Nested Schema for `configuration.accounts.audit.auditmanager`
+
+Optional:
+
+- `assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--accounts--audit--auditmanager--assessments))
+- `enabled` (Boolean) Enables Audit Manager for this AWS Organization. Defaults to `true`.
+- `frameworks` (Attributes) Audit Manager provides prebuilt frameworks that structure and automate assessments for a given compliance standard or regulation. Frameworks include a prebuilt collection of controls with descriptions and testing procedures. These controls are grouped according to the requirements of the specified compliance standard or regulation. You can also customize frameworks and controls to support internal audits according to your specific requirements. (see [below for nested schema](#nestedatt--configuration--accounts--audit--auditmanager--frameworks))
+- `notifications` (Attributes) Settings for configuring email based notifications for Audit Manager using SNS. (see [below for nested schema](#nestedatt--configuration--accounts--audit--auditmanager--notifications))
+- `settings` (Attributes) Audit Manager (select) settings as described in [docs](https://docs.aws.amazon.com/audit-manager/latest/userguide/console-settings.html). Only allows update to `deregistration_policy` and `evidence_finder`. Default to `deregistration_policy = "DEFAULT"` and `evidence_finder.enabled = false`. (see [below for nested schema](#nestedatt--configuration--accounts--audit--auditmanager--settings))
+
+<a id="nestedatt--configuration--accounts--audit--auditmanager--assessments"></a>
+### Nested Schema for `configuration.accounts.audit.auditmanager.assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--accounts--audit--auditmanager--assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--accounts--audit--auditmanager--assessments--framework"></a>
+### Nested Schema for `configuration.accounts.audit.auditmanager.assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--auditmanager--frameworks"></a>
+### Nested Schema for `configuration.accounts.audit.auditmanager.frameworks`
+
+Optional:
+
+- `aws_managed` (Attributes Map) AWS Audit Manager supports [AWS Managed Frameworks](https://docs.aws.amazon.com/audit-manager/latest/userguide/framework-overviews.html) out of the box. Possible values for the map keys are:
+	- `aws_waf_v10`: AWS Audit Manager provides a prebuilt standard framework that supports the [AWS Well-Architected Framework v10](https://docs.aws.amazon.com/audit-manager/latest/userguide/well-architected.html).
+	- `acsc_essential_eight`: AWS Audit Manager provides a prebuilt standard framework that supports the [Australian Cyber Security Center (ACSC) Essential Eight](https://docs.aws.amazon.com/audit-manager/latest/userguide/essential-eight.html).
+	- `acsc_ism`: AWS Audit Manager provides a prebuilt standard framework that supports the [Australian Cyber Security Center (ACSC) Information Security Manual (ISM)](https://docs.aws.amazon.com/audit-manager/latest/userguide/acsc-information-security-manual.html).
+	- `aws_foundational_security_best_practices`: AWS Audit Manager provides a prebuilt standard framework that supports the [AWS Foundational Security Best Practices](https://docs.aws.amazon.com/audit-manager/latest/userguide/aws-foundational-security-best-practices.html).
+	- `aws_generative_ai_best_practices_v2`: AWS Audit Manager provides a prebuilt standard framework to help you gain visibility into how your [generative AI implementation](https://docs.aws.amazon.com/audit-manager/latest/userguide/aws-generative-ai-best-practices.html) on Amazon Bedrock and Amazon SageMaker is working against AWS recommended best practices.
+	- `aws_license_manager`: AWS Audit Manager provides a prebuilt [AWS License Manager](https://docs.aws.amazon.com/audit-manager/latest/userguide/Licensemanager.html) framework to assist you with your audit preparation.
+	- `aws_operational_best_practices`: AWS Audit Manager provides a prebuilt [AWS Operational Best Practices (OBP)](https://docs.aws.amazon.com/audit-manager/latest/userguide/OBP.html) framework to assist you with your audit preparation.
+	- `cccs_medium_cloud_control`: AWS Audit Manager provides a prebuilt standard framework that supports the [Canadian Centre for Cyber Security (CCCS) Medium Cloud Control](https://docs.aws.amazon.com/audit-manager/latest/userguide/cccs-medium.html).
+	- `cis_aws_benchmark_v1_4_level1`: The [CIS AWS Benchmark v1.4.0](https://docs.aws.amazon.com/audit-manager/latest/userguide/CIS-1-4.html) provides prescriptive guidance for configuring security options for a subset of Amazon Web Services.
+	- `cis_aws_benchmark_v1_4_level1and2`: The [CIS AWS Benchmark v1.4.0](https://docs.aws.amazon.com/audit-manager/latest/userguide/CIS-1-4.html) provides prescriptive guidance for configuring security options for a subset of Amazon Web Services.
+	- `cis_v8_0_ig1`: AWS Audit Manager provides a prebuilt standard framework that supports the [CIS Critical Security Controls version 8.0 , Implementation Group 1](https://docs.aws.amazon.com/audit-manager/latest/userguide/CIS-controls-v8.html).
+	- `eu_gmp_annex_11_v1`: AWS Audit Manager provides a prebuilt framework that supports the [EudraLex - The Rules Governing Medicinal Products in the European Union (EU) - Volume 4: Good Manufacturing Practice (GMP) Medicinal Products for Human and Veterinary Use - Annex 11](https://docs.aws.amazon.com/audit-manager/latest/userguide/GxP-EU-Annex-11.html).
+	- `fedramp_r4`: AWS Audit Manager provides a prebuilt standard framework that supports the [Federal Risk And Authorization Management Program (FedRAMP) Security Baseline Controls r4](https://docs.aws.amazon.com/audit-manager/latest/userguide/fedramp-moderate.html).
+	- `gdpr`: AWS Audit Manager provides a prebuilt standard framework that supports the [General Data Protection Regulation (GDPR) 2016](https://docs.aws.amazon.com/audit-manager/latest/userguide/GDPR.html).
+	- `glba`: AWS Audit Manager provides a prebuilt framework that supports the [Gramm-Leach-Bliley Act (GLBA)](https://docs.aws.amazon.com/audit-manager/latest/userguide/gramm-leach-bliley-act.html).
+	- `hipaa_omnibus`: AWS Audit Manager provides a prebuilt standard framework that supports the [Health Insurance Portability and Accountability Act (HIPAA) Omnibus Final Rule](https://docs.aws.amazon.com/audit-manager/latest/userguide/HIPAA-omnibus-rule.html).
+	- `hipaa_security`: AWS Audit Manager provides a prebuilt standard framework that supports the [Health Insurance Portability and Accountability Act (HIPAA) Security Rule: Feb 2003](https://docs.aws.amazon.com/audit-manager/latest/userguide/HIPAA.html).
+	- `iso_iec_27001_2013_annex_a`: AWS Audit Manager provides a prebuilt standard framework that supports the [International Organization for standardization (ISO)/International Electrotechnical Commission (IEC) 27001:2013 Annex A](https://docs.aws.amazon.com/audit-manager/latest/userguide/iso-27001-2013.html).
+	- `nist_sp_800_171_r2`: AWS Audit Manager provides a prebuilt standard framework that supports [NIST 800-171 Revision 2](https://docs.aws.amazon.com/audit-manager/latest/userguide/NIST-800-171-r2-1.1.html): Protecting Controlled Unclassified Information in Nonfederal Systems and Organizations.
+	- `nist_sp_800_53_r5`: AWS Audit Manager provides a prebuilt framework that supports the [NIST 800-53 Rev 5](https://docs.aws.amazon.com/audit-manager/latest/userguide/NIST800-53r5.html): Security and Privacy Controls for Information Systems and Organizations.
+	- `nist_csf_v1_1`: AWS Audit Manager provides a prebuilt framework that supports the [NIST Cybersecurity Framework (CSF) v1.1](https://docs.aws.amazon.com/audit-manager/latest/userguide/NIST-Cybersecurity-Framework-v1-1.html).
+	- `pci_dss_v4_0`: AWS Audit Manager provides a prebuilt framework that supports the [Payment Card Industry Data Security Standard (PCI DSS) v4.0.](https://docs.aws.amazon.com/audit-manager/latest/userguide/pci-v4.html)
+	- `ssae_18_soc_2`: AWS Audit Manager provides a prebuilt standard framework that supports the [Statement on Standards for Attestations Engagement (SSAE) No. 18, Service Organizations Controls (SOC) Report 2](https://docs.aws.amazon.com/audit-manager/latest/userguide/SOC2.html).
+	- `title_21_cfr_part_11`: AWS Audit Manager provides a prebuilt standard framework that supports [Title 21 of the Code of Federal Regulations (CFR) Part 11](https://docs.aws.amazon.com/audit-manager/latest/userguide/GxP.html), Electronic records; Electronic Signatures - Scope and Application 24 May 2023.
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--accounts--audit--auditmanager--frameworks--aws_managed))
+
+<a id="nestedatt--configuration--accounts--audit--auditmanager--frameworks--aws_managed"></a>
+### Nested Schema for `configuration.accounts.audit.auditmanager.frameworks.aws_managed`
+
+Required:
+
+- `enabled` (Boolean) Enables the AWS Managed Framework.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--auditmanager--notifications"></a>
+### Nested Schema for `configuration.accounts.audit.auditmanager.notifications`
+
+Required:
+
+- `subscribers` (Attributes List) A list of notification objects for receiving Audit Manager alerts. (see [below for nested schema](#nestedatt--configuration--accounts--audit--auditmanager--notifications--subscribers))
+
+<a id="nestedatt--configuration--accounts--audit--auditmanager--notifications--subscribers"></a>
+### Nested Schema for `configuration.accounts.audit.auditmanager.notifications.subscribers`
+
+Required:
+
+- `emails` (List of String) Specifies a list of email addresses to send the budget notification to when the threshold is exceeded.
+
+Optional:
+
+- `filter_policy` (String) JSON String with the filter policy that will be used in the SNS subscription to filter messages seen by the target resource. Refer to the [SNS docs](https://docs.aws.amazon.com/sns/latest/dg/message-filtering.html) for more details. If not provided, all messages received by the SNS Topic will be forwarded to subscribers.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--auditmanager--settings"></a>
+### Nested Schema for `configuration.accounts.audit.auditmanager.settings`
+
+Optional:
+
+- `data_retention_policy` (String) Configures the data rentention policy when Audit Managed is disabled. For more details check [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/data-protection.html). For delegated admin scenario AWS has a limitation and can only use `DEFAULT`. Defaults to `DEFAULT`.
+- `evidence_finder` (Attributes) Evidence finder provides a powerful way to search for evidence in Audit Manager. Instead of browsing deeply nested evidence folders to find what you're looking for, you can now use evidence finder to quickly query your evidence. For more details check [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/evidence-finder.html). (see [below for nested schema](#nestedatt--configuration--accounts--audit--auditmanager--settings--evidence_finder))
+
+<a id="nestedatt--configuration--accounts--audit--auditmanager--settings--evidence_finder"></a>
+### Nested Schema for `configuration.accounts.audit.auditmanager.settings.evidence_finder`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables evidence finder. Defaults to `false`.
+!!! warning
+    When you use this attribute to disable evidence finder,
+    Audit Manager deletes the event data store that's used to query your evidence data.
+    As a result, you can't re-enable evidence finder and use the feature again.
+    Your only alternative is to disable and then re-enable Audit Manager.<br>
+
+
+
+
+<a id="nestedatt--configuration--accounts--audit--backup"></a>
+### Nested Schema for `configuration.accounts.audit.backup`
+
+Optional:
+
+- `policies` (Attributes) Configuration settings for built-in backup policies. (see [below for nested schema](#nestedatt--configuration--accounts--audit--backup--policies))
+- `restore_testing` (Attributes) If enabled, it will create a restore testing plan with multiple resource type selections. (see [below for nested schema](#nestedatt--configuration--accounts--audit--backup--restore_testing))
+- `vault_lock` (Attributes) Configuration settings for the AWS Organization Backup Vault lock. (see [below for nested schema](#nestedatt--configuration--accounts--audit--backup--vault_lock))
+- `vault_notifications` (Attributes List) Configuration settings for the AWS Organization Backup Vault notifications. (see [below for nested schema](#nestedatt--configuration--accounts--audit--backup--vault_notifications))
+
+<a id="nestedatt--configuration--accounts--audit--backup--policies"></a>
+### Nested Schema for `configuration.accounts.audit.backup.policies`
+
+Optional:
+
+- `daily` (Attributes) Built-in daily backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--audit--backup--policies--daily))
+- `monthly` (Attributes) Built-in monthly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--audit--backup--policies--monthly))
+- `weekly` (Attributes) Built-in weekly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--audit--backup--policies--weekly))
+- `yearly` (Attributes) Built-in yearly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--audit--backup--policies--yearly))
+
+<a id="nestedatt--configuration--accounts--audit--backup--policies--daily"></a>
+### Nested Schema for `configuration.accounts.audit.backup.policies.daily`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--audit--backup--policies--monthly"></a>
+### Nested Schema for `configuration.accounts.audit.backup.policies.monthly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--audit--backup--policies--weekly"></a>
+### Nested Schema for `configuration.accounts.audit.backup.policies.weekly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--audit--backup--policies--yearly"></a>
+### Nested Schema for `configuration.accounts.audit.backup.policies.yearly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--backup--restore_testing"></a>
+### Nested Schema for `configuration.accounts.audit.backup.restore_testing`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables the AWS Backup restore testing plan for supported resources. Defaults to `true`.
+- `protected_resource_selection_tags` (Attributes List) A list of conditions that you define for resources in your restore testing plan using tags. Filters the values of your tagged resources for only those resources that you tagged with the same value. (see [below for nested schema](#nestedatt--configuration--accounts--audit--backup--restore_testing--protected_resource_selection_tags))
+- `protected_resource_selection_types` (List of String) The type of AWS resource included in a restore testing selection.
+- `recovery_point_selection` (Attributes) Configuration of recovery points for AWS Backup restore testing plan. (see [below for nested schema](#nestedatt--configuration--accounts--audit--backup--restore_testing--recovery_point_selection))
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a restore test. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 1 AM on the 15th of every month.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+
+<a id="nestedatt--configuration--accounts--audit--backup--restore_testing--protected_resource_selection_tags"></a>
+### Nested Schema for `configuration.accounts.audit.backup.restore_testing.protected_resource_selection_tags`
+
+Optional:
+
+- `tag_key` (String) The selection tag key. Defaults to `RestoreTestingEnabled`.
+- `tag_value` (String) The selection tag value. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--accounts--audit--backup--restore_testing--recovery_point_selection"></a>
+### Nested Schema for `configuration.accounts.audit.backup.restore_testing.recovery_point_selection`
+
+Optional:
+
+- `algorithm` (String) Acceptable values include `LATEST_WITHIN_WINDOW` or `RANDOM_WITHIN_WINDOW`.
+- `recovery_point_types` (List of String) Acceptable values include `CONTINUOUS` and `SNAPSHOT`.
+- `selection_window_days` (Number) Accepted values are integers from 1 to 365.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--backup--vault_lock"></a>
+### Nested Schema for `configuration.accounts.audit.backup.vault_lock`
+
+Optional:
+
+- `changeable_for_days` (Number) The number of days before the lock date. If omitted creates a vault lock in governance mode, otherwise it will create a vault lock in compliance mode.
+- `max_retention_days` (Number) The maximum retention period that the vault retains its recovery points. Defaults to `90`.
+!!! warning
+    Changing this value causes the backup vault to be re-created.
+    CANNOT be changed after creation without destroying the backup vault and its data.<br>
+- `min_retention_days` (Number) The minimum retention period that the vault retains its recovery points. Defaults to `1`.
+!!! warning
+    Changing this value causes the backup vault to be re-created.
+    CANNOT be changed after creation without destroying the backup vault and its data.<br>
+
+
+<a id="nestedatt--configuration--accounts--audit--backup--vault_notifications"></a>
+### Nested Schema for `configuration.accounts.audit.backup.vault_notifications`
+
+Required:
+
+- `recipients` (Attributes) The recipients of the specified Backup Vault events. (see [below for nested schema](#nestedatt--configuration--accounts--audit--backup--vault_notifications--recipients))
+
+Optional:
+
+- `events` (List of String) An array of events that indicate the status of jobs to back up resources to the backup vault.
+- `filter_policy` (String) JSON String with the filter policy that will be used in the SNS subscription to filter messages seen by the target resource. Refer to the [SNS docs](https://docs.aws.amazon.com/sns/latest/dg/message-filtering.html) for more details.
+
+<a id="nestedatt--configuration--accounts--audit--backup--vault_notifications--recipients"></a>
+### Nested Schema for `configuration.accounts.audit.backup.vault_notifications.recipients`
+
+Optional:
+
+- `email` (List of String) List of email addresses.
+
+
+
+
+<a id="nestedatt--configuration--accounts--audit--budgets"></a>
+### Nested Schema for `configuration.accounts.audit.budgets`
+
+Required:
+
+- `name` (String) The name of a budget. The name must be unique within an account. MUST be lowercase alphanumeric or dash between 1 and 64 characters.
+- `time_unit` (String) The length of time until a budget resets the actual and forecasted spend. Valid values are: `MONTHLY | QUARTERLY | ANNUALLY | DAILY`.
+- `type` (String) Specifies whether this budget tracks costs, usage, RI utilization, RI coverage, Savings Plans utilization, or Savings Plans coverage.
+
+Optional:
+
+- `auto_adjust_data` (Attributes) The parameters that determine the budget amount for an auto-adjusting budget. (see [below for nested schema](#nestedatt--configuration--accounts--audit--budgets--auto_adjust_data))
+- `cost_filters` (Attributes List) A list of cost filters. Refer to [AWS CostFilter documentation](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-create-filters.html) and [API Documentation](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html#awscostmanagement-Type-budgets_Budget-CostFilters) for further detail. (see [below for nested schema](#nestedatt--configuration--accounts--audit--budgets--cost_filters))
+- `cost_types` (List of String) A list of cost types included in a budget, such as tax and subscriptions. Defaults to `["include_credit","include_discount","include_other_subscription","include_recurring","include_refund","include_subscription","include_support","include_tax","include_upfront"]`.
+- `limit` (Attributes) Object containing budget limit. Only one of `limit` and `planned_limits` MUST be defined. (see [below for nested schema](#nestedatt--configuration--accounts--audit--budgets--limit))
+- `notifications` (Attributes List) A list of objects containing Budget Notifications. (see [below for nested schema](#nestedatt--configuration--accounts--audit--budgets--notifications))
+- `planned_limits` (Attributes List) Object containing Planned Budget Limits. Can be used multiple times to plan more than one budget limit. See [PlannedBudgetLimits](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html#awscostmanagement-Type-budgets_Budget-PlannedBudgetLimits) documentation. Only one of `limit` and `planned_limits` MUST be defined. (see [below for nested schema](#nestedatt--configuration--accounts--audit--budgets--planned_limits))
+- `tags` (Map of String) Map of tags assigned to the resource.
+- `time_period` (Attributes) The period of time that's covered by a budget. If you create your budget and don't specify a start date, AWS defaults to the start of your chosen time period (DAILY, MONTHLY, QUARTERLY, or ANNUALLY). For example, if you created your budget on January 24, 2018, chose DAILY, and didn't set a start date, AWS set your start date to `01/24/18 00:00 UTC`. If you chose MONTHLY, AWS set your start date to `01/01/18 00:00 UTC`. If you didn't specify an end date, AWS set your end date to `06/15/87 00:00 UTC`. (see [below for nested schema](#nestedatt--configuration--accounts--audit--budgets--time_period))
+
+<a id="nestedatt--configuration--accounts--audit--budgets--auto_adjust_data"></a>
+### Nested Schema for `configuration.accounts.audit.budgets.auto_adjust_data`
+
+Required:
+
+- `auto_adjust_type` (String) The string that defines whether your budget auto-adjusts based on historical or forecasted data.
+
+Optional:
+
+- `historical_options` (Attributes) The string that defines whether your budget auto-adjusts based on historical or forecasted data. See further details in [AWS Documentation](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_HistoricalOptions.html). (see [below for nested schema](#nestedatt--configuration--accounts--audit--budgets--auto_adjust_data--historical_options))
+- `last_auto_adjust_time` (String) The last time that your budget was auto-adjusted. MUST be in timestamp format.
+
+<a id="nestedatt--configuration--accounts--audit--budgets--auto_adjust_data--historical_options"></a>
+### Nested Schema for `configuration.accounts.audit.budgets.auto_adjust_data.historical_options`
+
+Required:
+
+- `budget_adjustment_period` (Number) The number of budget periods included in the moving-average calculation that determines your auto-adjusted budget amount.
+
+Optional:
+
+- `lookback_available_periods` (Number) The integer that describes how many budget periods in your BudgetAdjustmentPeriod are included in the calculation of your current budget limit. If the first budget period in your BudgetAdjustmentPeriod has no cost data, then that budget period isn’t included in the average that determines your budget limit. You can’t set your own LookBackAvailablePeriods. The value is automatically calculated from the `budget_adjustment_period` and your historical cost data.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--budgets--cost_filters"></a>
+### Nested Schema for `configuration.accounts.audit.budgets.cost_filters`
+
+Required:
+
+- `name` (String) The name of the cost filter. Valid values are: `AZ | BillingEntity | CostCategory | InstanceType | InvoicingEntity | LegalEntityName | LinkedAccount | Operation | PurchaseType | Region | Service | TagKeyValue | UsageType | UsageTypeGroup`.
+- `values` (List of String) The list of values used for filtering.
+
+
+<a id="nestedatt--configuration--accounts--audit--budgets--limit"></a>
+### Nested Schema for `configuration.accounts.audit.budgets.limit`
+
+Required:
+
+- `amount` (String) The cost or usage amount that's associated with a budget forecast, actual spend, or budget threshold.
+- `unit` (String) The unit of measurement that's used for the budget forecast, actual spend, or budget threshold, such as dollars or GB. See [Spend](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/data-type-spend.html) documentation.
+
+
+<a id="nestedatt--configuration--accounts--audit--budgets--notifications"></a>
+### Nested Schema for `configuration.accounts.audit.budgets.notifications`
+
+Required:
+
+- `comparison_operator` (String) Comparison operator to use to evaluate the condition. Valid values are: `EQUAL_TO | GREATER_THAN | LESS_THAN`.
+- `email_addresses` (List of String) Lost of email addresses to notify.
+- `threshold` (String) Threshold when the notification should be sent.
+- `threshold_type` (String) What kind of threshold is defined. Valid values are: `ABSOLUTE_VALUE | PERCENTAGE`.
+- `type` (String) Comparison operator to use to evaluate the condition. Valid values are: `ACTUAL | FORECASTED`.
+
+
+<a id="nestedatt--configuration--accounts--audit--budgets--planned_limits"></a>
+### Nested Schema for `configuration.accounts.audit.budgets.planned_limits`
+
+Required:
+
+- `amount` (String) The cost or usage amount that's associated with a budget forecast, actual spend, or budget threshold.
+- `start_time` (String) The start time of the budget limit. Format: `2017-01-01_12:00`.
+- `unit` (String) The unit of measurement that's used for the budget forecast, actual spend, or budget threshold, such as dollars or GB. See [Spend](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/data-type-spend.html) documentation.
+
+
+<a id="nestedatt--configuration--accounts--audit--budgets--time_period"></a>
+### Nested Schema for `configuration.accounts.audit.budgets.time_period`
+
+Optional:
+
+- `end` (String) The end of the time period covered by the budget. Format: `2017-01-01_12:00`.
+- `start` (String) The start of the time period covered by the budget. Format: `2017-01-01_12:00`.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--config"></a>
+### Nested Schema for `configuration.accounts.audit.config`
+
+Optional:
+
+- `conformance_packs` (Attributes) This resource configures the AWS Config Conformance packs provided by AWS [here](https://docs.aws.amazon.com/config/latest/developerguide/conformancepack-sample-templates.html). Please read the AWS guidance before deploying. (see [below for nested schema](#nestedatt--configuration--accounts--audit--config--conformance_packs))
+
+<a id="nestedatt--configuration--accounts--audit--config--conformance_packs"></a>
+### Nested Schema for `configuration.accounts.audit.config.conformance_packs`
+
+Optional:
+
+- `operational` (Attributes Map) AWS Config Conformance Packs for Operational Best Practices. Possible values for the key of the map are:
+	- `abs_ccigv2_material`: Operational Best Practices for ABS CCIGv2 Material Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ABS-CCIGv2-Material.html).
+	- `abs_ccigv2_standard`: Operational Best Practices for ABS CCIGv2 Standard Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ABS-CCIGv2-Standard.html).
+	- `acsc_essential8`: Operational Best Practices for ACSC Essential 8 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-acsc_essential_8.html).
+	- `acsc_ism`: Operational Best Practices for ACSC ISM Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-acsc-ism.html).
+	- `ai_and_ml`: Operational Best Practices for AI and ML Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-AI-and-ML.html).
+	- `api_gateway`: Operational Best Practices for Amazon API Gateway Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-API-gateway.html).
+	- `apra_cpg_234`: Operational Best Practices for APRA CPG 234 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-apra_cpg_234.html).
+	- `asset_management`: Operational Best Practices for Asset Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-asset-management.html).
+	- `backup`: Operational Best Practices for AWS Backup Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-backup.html).
+	- `bcp_and_dr`: Operational Best Practices for BCP and DR Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-BCP-and-DR.html).
+	- `bnm_rmit`: Operational Best Practices for BNM RMiT Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-bnm-rmit.html).
+	- `cccs_medium`: Operational Best Practices for Canadian Centre for Cyber Security (CCCS) Medium Cloud Control Profile Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cccs_medium.html).
+	- `ccn_ens_high`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) High Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens_high.html).
+	- `ccn_ens_low`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) Low Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens-low.html).
+	- `ccn_ens_medium`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) Medium Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens-medium.html).
+	- `cis`: Operational Best Practices for CIS Conformance Pack. See more details about this pack in [AWS sample](https://github.com/awslabs/aws-config-rules/blob/master/aws-config-conformance-packs/Operational-Best-Practices-for-CIS.yaml).
+	- `cis_aws_v1_4_level1`: Operational Best Practices for CIS AWS Foundations Benchmark v1.4 Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_aws_benchmark_level_1.html).
+	- `cis_aws_v1_4_level2`: Operational Best Practices for CIS AWS Foundations Benchmark v1.4 Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_aws_benchmark_level_2.html).
+	- `cis_critical_security_controls_v8_ig1`: Operational Best Practices for CIS Critical Security Controls v8 IG1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8.html).
+	- `cis_critical_security_controls_v8_ig2`: Operational Best Practices for CIS Critical Security Controls v8 IG2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8-ig2.html)
+	- `cis_critical_security_controls_v8_ig3`: Operational Best Practices for CIS Critical Security Controls v8 IG3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8-ig3.html).
+	- `cis_top20`: Operational Best Practices for CIS Top 20 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_top_20.html).
+	- `cisa_cyber_essentials`: Operational Best Practices for CISA Cyber Essentials Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cisa-ce.html).
+	- `cjis`: Operational Best Practices for Criminal Justice Information Services (CJIS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cjis.html).
+	- `cloudwatch`: Operational Best Practices for Amazon CloudWatch Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-cloudwatch.html).
+	- `cmmc_level1`: Operational Best Practices for CMMC Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_1.html).
+	- `cmmc_level2`: Operational Best Practices for CMMC Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_2.html).
+	- `cmmc_level3`: Operational Best Practices for CMMC Level 3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_3.html).
+	- `cmmc_level4`: Operational Best Practices for CMMC Level 4 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_4.html).
+	- `cmmc_level5`: Operational Best Practices for CMMC Level 5 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_5.html).
+	- `cmmc_2_0_level1`: Operational Best Practices for CMMC 2.0 Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_2.0_level_1.html).
+	- `cmmc_2_0_level2`: Operational Best Practices for CMMC 2.0 Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_2.0_level_2.html).
+	- `compute_services`: Operational Best Practices for Compute Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Compute-Services.html).
+	- `data_resiliency`: Operational Best Practices for Data Resiliency Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Data-Resiliency.html).
+	- `database_services`: Operational Best Practices for Databases Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Databases-Services.html).
+	- `datalakes_and_analytics_services`: Operational Best Practices for Data Lakes and Analytics Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Datalakes-and-Analytics-Services.html).
+	- `devops`: Operational Best Practices for DevOps Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-DevOps.html).
+	- `dynamodb`: Operational Best Practices for Amazon DynamoDB Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-dynamodb.html).
+	- `ec2`: Operational Best Practices for EC2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-EC2.html).
+	- `encryption_and_keys`: Operational Best Practices for Encryption and Key Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Encryption-and-Keys.html).
+	- `enisa_cybersecurity_guide`: Operational Best Practices for ENISA Cybersecurity guide for SMEs Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-enisa-cybersecurity-guide-for-smes.html).
+	- `fda_21cfr_part_11`: Operational Best Practices for FDA Title 21 CFR Part 11 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-FDA-21CFR-Part-11.html)
+	- `fedramp_highpart1`: Operational Best Practices for FedRAMP (High Part 1) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-high-part-1.html).
+	- `fedramp_highpart2`: Operational Best Practices for FedRAMP (High Part 2) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-high-part-2.html).
+	- `fedramp_low`: Operational Best Practices for FedRAMP(Low) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-low.html).
+	- `fedramp_moderate`: Operational Best Practices for FedRAMP(Moderate) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-moderate.html).
+	- `ffiec`: Operational Best Practices for FFIEC Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ffiec.html).
+	- `germany_c5`: Operational Best Practices for Germany Cloud Computing Compliance Criteria Catalog (C5) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-germany-c5.html).
+	- `glba`: Operational Best Practices for Gramm Leach Bliley Act (GLBA) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-gramm-leach-bliley-act.html).
+	- `gxp_eu_annex_11`: Operational Best Practices for GxP EU Annex 11 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-gxp-eu-annex-11.html).
+	- `hipaa_security`: Operational Best Practices for HIPAA Security Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-hipaa_security.html).
+	- `iam`: Operational Best Practices for AWS Identity And Access Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-identity-and-access-management.html).
+	- `irs_1075`: Operational Best Practices for IRS 1075 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-irs-1075.html).
+	- `kisms`: Operational Best Practices for K-ISMS Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-k-isms.html).
+	- `load_balancing`: Operational Best Practices for Load Balancing Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-load-balancing.html).
+	- `logging`: Operational Best Practices for Logging Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-logging.html).
+	- `management_governance_services`: Operational Best Practices for Management and Governance Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Management-and-Governance-Services.html).
+	- `mas_notice_655`: Operational Best Practices for MAS Notice 655 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-mas_notice_655.html).
+	- `mas_trmg`: Operational Best Practices for MAS TRMG Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-mas-trmg.html).
+	- `monitoring`: Operational Best Practices for Monitoring Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-monitoring.html).
+	- `nbc_trmg`: Operational Best Practices for NBC TRMG Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nbc-trmg.html).
+	- `ncsc_caf`: Operational Best Practices for NCSC Cyber Assesment Framework Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ncsc_cafv3.html).
+	- `ncsc_cloudsec_principles`: Operational Best Practices for NCSC Cloud Security Principles Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ncsc.html).
+	- `nerc_cip_bcsi`: Operational Best Practices for NERC CIP BCSI Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nerc.html).
+	- `networking_services`: Operational Best Practices for Networking and Content Delivery Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Networking-and-Content-Delivery-Services.html).
+	- `nist_csf`: Operational Best Practices for NIST CSF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-csf.html).
+	- `nist_privacy_framework_v1`: Operational Best Practices for NIST Privacy Framework v1.0 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_privacy_framework.html).
+	- `nist_800_53_rev_5`: Operational Best Practices for NIST 800-53 rev 5 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-800-53_rev_5.html).
+	- `nist_800_171`: Operational Best Practices for NIST 800 171 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-171.html).
+	- `nist_800_172`: Operational Best Practices for NIST 800 172 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-172.html).
+	- `nist_800_181`: Operational Best Practices for NIST 800 181 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-181.html).
+	- `nist_1800_25`: Operational Best Practices for NIST 1800 25 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_1800_25.html).
+	- `nydfs_23_nycrr_500`: Operational Best Practices for NYDFS 23 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-us_nydfs.html).
+	- `nzism`: Operational Best Practices for NZISM Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nzism.html).
+	- `pci_dss`: Operational Best Practices for PCI DSS Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-pci-dss.html).
+	- `publicly_accessible_resources`: Operational Best Practices for Publicly Accessible Resources Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Publicly-Accessible-Resources.html).
+	- `rbi_bcsf_ucb`: Operational Best Practices for RBI Cyber Security Framework for UCBs Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-rbi-bcsf-ucb.html).
+	- `rbi_md_itf`: Operational Best Practices for RBI MD-ITF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-rbi-md-itf.html).
+	- `security_services`: Operational Best Practices for Security, Identity, and Compliance Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Security-Identity-and-Compliance-Services.html).
+	- `serverless_services`: Operational Best Practices for Serverless Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-serverless.html).
+	- `storage_services`: Operational Best Practices for Storage Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Storage-Services.html).
+	- `swift_csp`: Operational Best Practices for SWIFT CSP Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-swift-csp.html).
+	- `s3`: Operational Best Practices for Amazon S3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-s3.html).
+	- `well_architected_reliability_pillar`: Operational Best Practices for AWS Well-Architected Framework Reliability Pillar Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-wa-Reliability-Pillar.html).
+	- `well_architected_security_pillar`: Operational Best Practices for AWS Well-Architected Framework Security Pillar Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-wa-Security-Pillar.html).
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--accounts--audit--config--conformance_packs--operational))
+- `security` (Attributes Map) AWS Config Conformance Packs for Security Best Practices. Possible values for the key of the map are:
+	- `autoscaling`: Security Best Practices for AWS Auto Scaling Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-AutoScaling.html).
+	- `cloudfront`: Security Best Practices for Amazon CloudFront Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CloudFront.html).
+	- `cloudtrail`: Security Best Practices for AWS CloudTrail Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CloudTrail.html).
+	- `codebuild`: Security Best Practices for AWS CodeBuild Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CodeBuild.html).
+	- `ecr`: Security Best Practices for Amazon ECR Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-ECR.html).
+	- `ecs`: Security Best Practices for Amazon Elastic Container Service (Amazon ECS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-ECS.html).
+	- `efs`: Security Best Practices for Amazon Elastic File System (Amazon EFS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-EFS.html).
+	- `eks`: Security Best Practices for Amazon Elastic Kubernetes Service (Amazon EKS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-EKS.html).
+	- `lambda`: Security Best Practices for AWS Lambda Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Lambda.html).
+	- `network_firewall`: Security Best Practices for AWS Network Firewall Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Network-Firewall.html).
+	- `opensearch`: Security Best Practices for Amazon OpenSearch Service Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-OpenSearch.html).
+	- `rds`: Security Best Practices for Amazon Relational Database Service (Amazon RDS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-RDS.html).
+	- `redshift`: Security Best Practices for Amazon Redshift Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-redshift.html).
+	- `sagemaker`: Security Best Practices for Amazon SageMaker Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-SageMaker.html).
+	- `secrets_manager`: Security Best Practices for AWS Secrets Manager Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Secrets-Manager.html).
+	- `waf`: Security Best Practices for AWS WAF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-aws-waf.html).
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--accounts--audit--config--conformance_packs--security))
+
+<a id="nestedatt--configuration--accounts--audit--config--conformance_packs--operational"></a>
+### Nested Schema for `configuration.accounts.audit.config.conformance_packs.operational`
+
+Required:
+
+- `enabled` (Boolean) Enables the Conformance Pack.
+
+Optional:
+
+- `parameters` (Map of String) The keys of the map are the parameters defined in the yaml file found in the AWS documentation linked to the Conformance Pack's description. The value of the map is a string that is supported by the parameter in the key. If no parameters are defined, the default values defined in the yaml file.
+
+
+<a id="nestedatt--configuration--accounts--audit--config--conformance_packs--security"></a>
+### Nested Schema for `configuration.accounts.audit.config.conformance_packs.security`
+
+Required:
+
+- `enabled` (Boolean) Enables the Conformance Pack.
+
+Optional:
+
+- `parameters` (Map of String) The keys of the map are the parameters defined in the yaml file found in the AWS documentation linked to the Conformance Pack's description. The value of the map is a string that is supported by the parameter in the key. If no parameters are defined, the default values defined in the yaml file.
+
+
+
+
+<a id="nestedatt--configuration--accounts--audit--guardduty"></a>
+### Nested Schema for `configuration.accounts.audit.guardduty`
+
+Optional:
+
+- `auto_enable_organization_members` (Boolean) Indicates the auto-enablement configuration of GuardDuty for the member accounts in the organization. Defaults to true.
+- `detector_features` (List of String) Provides a resource to manage Amazon GuardDuty organization configuration features. Possible values are:
+`ebs_malware_protection`, `eks_audit_logs`, `eks_runtime_monitoring`, `eks_runtime_monitoring_addon_management`, `lambda_network_logs`, `rds_login_events`, `s3_data_events`. The `eks_runtime_monitoring_addon_management` is used only if `eks_runtime_monitoring` is present as well.
+- `enabled` (Boolean) Enables Guardduty for this AWS Organization.
+- `finding_publishing_frequency` (String) Specifies the frequency of notifications sent for subsequent finding occurrences.Valid values: `FIFTEEN_MINUTES`, `ONE_HOUR`, `SIX_HOURS`.
+- `threatiplist` (List of String) Provides a resource to manage a GuardDuty ThreatIntelSet.
+- `trustiplist` (List of String) Provides a resource to manage a GuardDuty IPSet.
+
+
+<a id="nestedatt--configuration--accounts--audit--inspector"></a>
+### Nested Schema for `configuration.accounts.audit.inspector`
+
+Optional:
+
+- `enabled` (Boolean) Enables Inspector for this AWS Organization.
+- `organization_configuration` (Attributes) AWS Inpector Organization Configuration. (see [below for nested schema](#nestedatt--configuration--accounts--audit--inspector--organization_configuration))
+
+<a id="nestedatt--configuration--accounts--audit--inspector--organization_configuration"></a>
+### Nested Schema for `configuration.accounts.audit.inspector.organization_configuration`
+
+Optional:
+
+- `auto_enable` (List of String) List of Inpector scans to auto-enable at Organization level.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--s3_account_public_access_block"></a>
+### Nested Schema for `configuration.accounts.audit.s3_account_public_access_block`
+
+Optional:
+
+- `block_public_acls` (Boolean) Optional) Whether Amazon S3 should block public bucket policies for buckets in this account. Defaults to `true`.
+- `block_public_policy` (Boolean) Whether Amazon S3 should block public bucket policies for buckets in this account. Defaults to `true`.
+- `ignore_public_acls` (Boolean) Whether Amazon S3 should ignore public ACLs for buckets in this account. Defaults to true.
+- `restrict_public_buckets` (Boolean) Whether Amazon S3 should restrict public bucket policies for buckets in this account. Defaults to true.
+
+
+<a id="nestedatt--configuration--accounts--audit--ssm_patch_policies"></a>
+### Nested Schema for `configuration.accounts.audit.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--accounts--audit--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--accounts--audit--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--accounts--audit--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--accounts--audit--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.accounts.audit.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--accounts--audit--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.accounts.audit.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--accounts--audit--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--accounts--audit--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--accounts--audit--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.accounts.audit.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--accounts--audit--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.accounts.audit.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.accounts.audit.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.accounts.audit.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--accounts--audit--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--accounts--audit--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--accounts--audit--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.accounts.audit.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--accounts--audit--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--accounts--audit--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.accounts.audit.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.accounts.audit.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--sso_permission_sets"></a>
+### Nested Schema for `configuration.accounts.audit.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--accounts--audit--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--accounts--audit--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.accounts.audit.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--accounts--audit--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--accounts--audit--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.accounts.audit.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+<a id="nestedatt--configuration--accounts--audit--vpc"></a>
+### Nested Schema for `configuration.accounts.audit.vpc`
+
+Optional:
+
+- `deployment_architecture` (Attributes) Network deployment architecture specific to this acocunt. This is used in combination with the organization `network_deployment_architectures` attribute. (see [below for nested schema](#nestedatt--configuration--accounts--audit--vpc--deployment_architecture))
+- `enable_dns_hostnames` (Boolean) A boolean flag to enable/disable DNS hostnames in the VPC. Defaults to `true`.
+- `enable_dns_support` (Boolean) A boolean flag to enable/disable DNS support in the VPC. Defaults to `true`.
+- `enabled` (Boolean) A boolean flag to enable/disable the VPC. Defaults to `true`.
+- `instance_tenancy` (String) A tenancy option for instances launched into the VPC. Default is `default`, which ensures that EC2 instances launched in this VPC use the EC2 instance tenancy attribute specified when the EC2 instance is launched. The only other option is `dedicated`, which ensures that EC2 instances launched in this VPC are run on dedicated tenancy instances regardless of the tenancy attribute specified at launch.
+- `network_firewall` (Attributes) Configuration settings for AWS Network Firewall service. MUST be deployed only if the VPC template supports distributed architecture. (see [below for nested schema](#nestedatt--configuration--accounts--audit--vpc--network_firewall))
+
+<a id="nestedatt--configuration--accounts--audit--vpc--deployment_architecture"></a>
+### Nested Schema for `configuration.accounts.audit.vpc.deployment_architecture`
+
+Optional:
+
+- `egress_enabled` (Boolean) If true, enables account local egress access to internet. Defaults to `false`.
+- `ingress_enabled` (Boolean) If true, enables account local ingress access from internet. Defaults to `false`.
+- `private_endpoints` (Attributes) Configuration for AWS Services that support private endpoints configuration in the VPC. The subnet where these private endpoints are created is predetermined by the selected VPC template. For standard it will use app_tier subnet. For web_tier_only it will use the only available subnet. (see [below for nested schema](#nestedatt--configuration--accounts--audit--vpc--deployment_architecture--private_endpoints))
+- `template` (String) The VPC template determines what nacls, routing tables, routes and subnets are going to be created in the VPC. Defaults to `standard`.
+Possible values are:
+    - `standard_centralized`: Creates 2 tier subnets (private app_tier, private data_tier) with centralized public web_tier running in network account accessed using centralized Transit Gateway deployment. The minimum network mask for the VPC MUST be `/24`.
+    - `standard_centralized_and_distributed`: Creates 3 tier subnets (public web_tier, private app_tier, private data_tier) with 1 extra subnet to support centralized Transit Gateway deployment and 1 extra subnet to support distributed deployment with account firewall. The minimum network mask for the VPC MUST be `/23`.
+    - `standard_distributed`: Creates 3 tier subnets (public web_tier, private app_tier, private data_tier) with 1 extra subnet to support distributed deployment with account firewall. The minimum network mask for the VPC MUST be `/24`.
+    - `web_tier_centralized_and_distributed`: Create 1 public web_tier subnet with 1 extra subnet to support centralized Transit Gateway deployment and 1 extra subnet to support distributed deployment with account firewall. The minimum network mask for the VPC MUST be `/24`.
+    - `web_tier_distributed`: Create 1 public web_tier subnet with 1 extra subnet to support distributed deployment with account firewall. The minimum network mask for the VPC MUST be `/25`.<br>
+!!! warning
+    Changing this value causes the VPC to be re-created.
+    CANNOT be changed after creation without destroying everything running on top of the VPC first.<br>
+
+<a id="nestedatt--configuration--accounts--audit--vpc--deployment_architecture--private_endpoints"></a>
+### Nested Schema for `configuration.accounts.audit.vpc.deployment_architecture.private_endpoints`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables account local private endpoints for supported services. Defaults to `false`.
+- `gateway_services` (List of String) List of AWS services to create private endpoints of type gateway in the local account private endpoints VPC. For more details see [AWS documentation](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html). Valid values are: `dynamodb | s3`.
+- `interface_services` (List of String) List of AWS services to create private endpoints of type interface in the local/network account private endpoints VPC. The service name is derived from this ![aws-services-privatelink-support]https://docs.aws.amazon.com/vpc/latest/privatelink/aws-services-privatelink-support.html, by taking the service name after the region part. Valid values are: `[access-analyzer account acm-pca airflow.api api-fips env env-fips ops analytics-omics appconfig appconfigdata appmesh appmesh-envoy-management apprunner apprunner.requests applicationinsights application-autoscaling application-signals appstream.api appstream.streaming app-integrations apptest aps aps-workspaces arsenal-discovery athena auditmanager autoscaling autoscaling-plans awsconnector b2bi backup backup-gateway batch bcm-data-exports bedrock bedrock-agent bedrock-agent-runtime bedrock-runtime billing billingconductor braket cassandra cassandra-fips cases ce cleanrooms cleanrooms-ml cloudcontrolapi cloudcontrolapi-fips clouddirectory cloudformation cloudhsmv2 cloudtrail codeartifact.api codeartifact.repositories codebuild codebuild-fips codecommit codecommit-fips codeconnections.api codedeploy codedeploy-commands-secure codeguru-profiler codeguru-reviewer codepipeline codestar-connections.api codewhisperer comprehend comprehendmedical compute-optimizer config connect-campaigns console controlcatalog control-storage-omics cost-optimization-hub databrew dataexchange datasync data-servicediscovery data-servicediscovery-fips deadline.management deadline.scheduling deviceadvisor.iot devops-guru dicom-medical-imaging discovery dms dms-fips drs ds ds-data dynamodb dynamodb-fips ebs ec2 ec2messages ec2-fips ecr.api ecr.dkr ecs ecs-agent ecs-telemetry eks eks-auth elasticbeanstalk elasticbeanstalk-health elasticfilesystem elasticfilesystem-fips elasticloadbalancing elasticache elasticache-fips elasticmapreduce email-smtp emr-containers emr-serverless emr-serverless-services.livy emrwal.prod entityresolution events evidently evidently-dataplane execute-api experiments finspace finspace-api fis forecast forecast-fips forecastquery forecastquery-fips frauddetector freetier fsx fsx-fips git-codecommit git-codecommit-fips glue glue.dashboard grafana grafana-workspace greengrass groundstation guardduty guardduty-data guardduty-data-fips guardduty-fips healthlake iam identitystore imagebuilder inspector2 inspector-scan internetmonitor internetmonitor-fips iotfleetwise iotroborunner iotsitewise.api iotsitewise.data iottwinmaker.api iottwinmaker.data iotwireless.api iot.data iot.credentials iot.fleethub.api kafka kafka-fips kendra kendra-ranking kinesis-firehose kinesis-streams kinesis-streams-fips kms kms-fips lakeformation lambda launchwizard license-manager license-manager-fips license-manager-linux-subscriptions license-manager-linux-subscriptions-fips license-manager-user-subscriptions lightsail logs lookoutequipment lookoutmetrics lookoutvision lorawan.cups lorawan.lns m2 macie2 managedblockchain-query managedblockchain.bitcoin.mainnet managedblockchain.bitcoin.testnet mediaconnect medical-imaging memory-db memorydb-fips migrationhub-orchestrator migrationhub-strategy mgn models-v2-lex monitoring mq neptune-graph neptune-graph-data neptune-graph-fips network-firewall network-firewall-fips networkflowmonitor networkflowmonitorreports networkmonitor notebook observabilityadmin organizations organizations-fips outposts panorama partner-app payment-cryptography.controlplane payment-cryptography.dataplane pca-connector-ad pca-connector-scep pcs pcs-fips personalize personalize-events personalize-runtime pi pi-fips pinpoint pinpoint-sms-voice-v2 pipes pipes-data pipes-fips polly pricing.api private-networks profile proton q qapps qbusiness qldb.session quicksight-website ram rbin refactor-spaces rds rds-data redshift redshift-fips redshift-serverless redshift-serverless-fips redshift-data redshift-data-fips rekognition rekognition-fips repostspace resource-groups resource-groups-fips robomaker rolesanywhere rum rum-dataplane runtime-medical-imaging runtime-v2-lex s3 s3tables s3-global.accesspoint s3-outposts sagemaker.api sagemaker-data-science-assistant sagemaker.api-fips sagemaker.featurestore-runtime sagemaker.metrics sagemaker.runtime sagemaker.runtime-fips savingsplans schemas scn secretsmanager securityhub securitylake securitylake-fips serverlessrepo servicecatalog servicecatalog-appregistry servicediscovery servicediscovery-fips service.user-subscriptions signin simspaceweaver snow-device-management sns social-messaging sqs ssm ssm-contacts ssm-incidents ssm-quicksetup ssmmessages states storagegateway storage-omics streaming-rekognition streaming-rekognition-fips sts studio swf swf-fips sync-states synthetics synthetics-fips tagging tags-omics tax textract textract-fips thinclient.api timestream.ingest-cell timestream.query-cell timestream-influxdb timestream-influxdb-fips tnb transcribe transcribestreaming transfer transfer.server translate trustedadvisor verifiedpermissions voiceid vpc-lattice wellarchitected wisdom workflows-omics workmail workspaces workspaces-web workspaces-web-fips xray]`.
+
+
+
+<a id="nestedatt--configuration--accounts--audit--vpc--network_firewall"></a>
+### Nested Schema for `configuration.accounts.audit.vpc.network_firewall`
+
+Required:
+
+- `enabled` (Boolean) If true, creates AWS Network Firewalls in each AZ.
+
+Optional:
+
+- `vendor` (Attributes) The vendor of the network firewall and it's associated settings. Defaults to `aws`. (see [below for nested schema](#nestedatt--configuration--accounts--audit--vpc--network_firewall--vendor))
+
+<a id="nestedatt--configuration--accounts--audit--vpc--network_firewall--vendor"></a>
+### Nested Schema for `configuration.accounts.audit.vpc.network_firewall.vendor`
+
+Optional:
+
+- `aws` (Attributes) Settings for AWS Network Firewall. (see [below for nested schema](#nestedatt--configuration--accounts--audit--vpc--network_firewall--vendor--aws))
+
+<a id="nestedatt--configuration--accounts--audit--vpc--network_firewall--vendor--aws"></a>
+### Nested Schema for `configuration.accounts.audit.vpc.network_firewall.vendor.aws`
+
+Optional:
+
+- `managed_rule_groups` (Attributes) Settings for AWS Managed Rule Groups. (see [below for nested schema](#nestedatt--configuration--accounts--audit--vpc--network_firewall--vendor--aws--managed_rule_groups))
+
+<a id="nestedatt--configuration--accounts--audit--vpc--network_firewall--vendor--aws--managed_rule_groups"></a>
+### Nested Schema for `configuration.accounts.audit.vpc.network_firewall.vendor.aws.managed_rule_groups`
+
+Optional:
+
+- `domain_lists` (List of String) AWS Network Firewall managed domain and IP rule groups block HTTP/HTTPS traffic to domains identified as low-reputation, or that are known or suspected to be associated with malware or botnets.
+- `threat_signatures` (List of String) AWS Network Firewall managed threat signature rule groups support several categories of threat signatures to protect against various types of malware and exploits, denial of service attempts, botnets, web attacks, credential phishing, scanning tools, and mail or messaging attacks. There are also signatures for intrusion detection and to enforce fair use policies as well as guard against emerging threats.
+
+
+
+
+
+
+
+<a id="nestedatt--configuration--accounts--log_archive"></a>
+### Nested Schema for `configuration.accounts.log_archive`
+
+Required:
+
+- `alternate_contacts` (Attributes Map) Configuration of AWS Account alternate contacts. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--alternate_contacts))
+- `primary_contact` (Attributes) Configuration of AWS Account primary contact. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--primary_contact))
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--auditmanager_assessments))
+- `backup` (Attributes) AWS Backup configuration settings for the local account. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--backup))
+- `budgets` (Attributes List) A list of budget objects. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--budgets))
+- `config` (Attributes) AWS Config Conformance Packs Rules deployed for this AWS account only. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--config))
+- `ebs_encryption_by_default` (Boolean) Whether or not default EBS encryption is enabled. Defaults to `true`.
+- `s3_account_public_access_block` (Attributes) Manages S3 account-level Public Access Block configuration. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--s3_account_public_access_block))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with this AWS account. The object name MUST be unique across this account and any OU level definitions. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--sso_permission_sets))
+
+<a id="nestedatt--configuration--accounts--log_archive--alternate_contacts"></a>
+### Nested Schema for `configuration.accounts.log_archive.alternate_contacts`
+
+Required:
+
+- `email` (String) An email address for the alternate contact.
+- `name` (String) Name of the alternate contact.
+- `phone` (String) Phone number for the alternate contact.
+- `title` (String) Title for the alternate contact.
+
+
+<a id="nestedatt--configuration--accounts--log_archive--primary_contact"></a>
+### Nested Schema for `configuration.accounts.log_archive.primary_contact`
+
+Required:
+
+- `address_line_1` (String) The first line of the primary contact address.
+- `city` (String) The city of the primary contact address.
+- `country_code` (String) The ISO-3166 two-letter country code for the primary contact address.
+- `full_name` (String) The full name of the primary contact address.
+- `phone` (String) The phone number of the primary contact information. The number will be validated and, in some countries, checked for activation.
+- `postal_code` (String) The postal code of the primary contact address.
+
+Optional:
+
+- `address_line_2` (String) The second line of the primary contact address, if any.
+- `address_line_3` (String) The third line of the primary contact address, if any.
+- `company_name` (String) The name of the company associated with the primary contact information, if any.
+- `district_or_county` (String) The district or county of the primary contact address, if any.
+- `state_or_region` (String) The state or region of the primary contact address. If the mailing address is within the United States (US), the value in this field can be either a two character state code (for example, `NJ`) or the full state name (for example, `New Jersey`). This field is required in the following countries: `US, CA, GB, DE, JP, IN, and BR`.
+- `website_url` (String) The URL of the website associated with the primary contact information, if any.
+
+
+<a id="nestedatt--configuration--accounts--log_archive--auditmanager_assessments"></a>
+### Nested Schema for `configuration.accounts.log_archive.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--accounts--log_archive--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.accounts.log_archive.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--accounts--log_archive--backup"></a>
+### Nested Schema for `configuration.accounts.log_archive.backup`
+
+Optional:
+
+- `policies` (Attributes) Configuration settings for built-in backup policies. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--backup--policies))
+- `restore_testing` (Attributes) If enabled, it will create a restore testing plan with multiple resource type selections. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--backup--restore_testing))
+- `vault_lock` (Attributes) Configuration settings for the AWS Organization Backup Vault lock. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--backup--vault_lock))
+- `vault_notifications` (Attributes List) Configuration settings for the AWS Organization Backup Vault notifications. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--backup--vault_notifications))
+
+<a id="nestedatt--configuration--accounts--log_archive--backup--policies"></a>
+### Nested Schema for `configuration.accounts.log_archive.backup.policies`
+
+Optional:
+
+- `daily` (Attributes) Built-in daily backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--backup--policies--daily))
+- `monthly` (Attributes) Built-in monthly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--backup--policies--monthly))
+- `weekly` (Attributes) Built-in weekly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--backup--policies--weekly))
+- `yearly` (Attributes) Built-in yearly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--backup--policies--yearly))
+
+<a id="nestedatt--configuration--accounts--log_archive--backup--policies--daily"></a>
+### Nested Schema for `configuration.accounts.log_archive.backup.policies.daily`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--log_archive--backup--policies--monthly"></a>
+### Nested Schema for `configuration.accounts.log_archive.backup.policies.monthly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--log_archive--backup--policies--weekly"></a>
+### Nested Schema for `configuration.accounts.log_archive.backup.policies.weekly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--log_archive--backup--policies--yearly"></a>
+### Nested Schema for `configuration.accounts.log_archive.backup.policies.yearly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+
+<a id="nestedatt--configuration--accounts--log_archive--backup--restore_testing"></a>
+### Nested Schema for `configuration.accounts.log_archive.backup.restore_testing`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables the AWS Backup restore testing plan for supported resources. Defaults to `true`.
+- `protected_resource_selection_tags` (Attributes List) A list of conditions that you define for resources in your restore testing plan using tags. Filters the values of your tagged resources for only those resources that you tagged with the same value. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--backup--restore_testing--protected_resource_selection_tags))
+- `protected_resource_selection_types` (List of String) The type of AWS resource included in a restore testing selection.
+- `recovery_point_selection` (Attributes) Configuration of recovery points for AWS Backup restore testing plan. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--backup--restore_testing--recovery_point_selection))
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a restore test. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 1 AM on the 15th of every month.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+
+<a id="nestedatt--configuration--accounts--log_archive--backup--restore_testing--protected_resource_selection_tags"></a>
+### Nested Schema for `configuration.accounts.log_archive.backup.restore_testing.protected_resource_selection_tags`
+
+Optional:
+
+- `tag_key` (String) The selection tag key. Defaults to `RestoreTestingEnabled`.
+- `tag_value` (String) The selection tag value. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--accounts--log_archive--backup--restore_testing--recovery_point_selection"></a>
+### Nested Schema for `configuration.accounts.log_archive.backup.restore_testing.recovery_point_selection`
+
+Optional:
+
+- `algorithm` (String) Acceptable values include `LATEST_WITHIN_WINDOW` or `RANDOM_WITHIN_WINDOW`.
+- `recovery_point_types` (List of String) Acceptable values include `CONTINUOUS` and `SNAPSHOT`.
+- `selection_window_days` (Number) Accepted values are integers from 1 to 365.
+
+
+
+<a id="nestedatt--configuration--accounts--log_archive--backup--vault_lock"></a>
+### Nested Schema for `configuration.accounts.log_archive.backup.vault_lock`
+
+Optional:
+
+- `changeable_for_days` (Number) The number of days before the lock date. If omitted creates a vault lock in governance mode, otherwise it will create a vault lock in compliance mode.
+- `max_retention_days` (Number) The maximum retention period that the vault retains its recovery points. Defaults to `90`.
+!!! warning
+    Changing this value causes the backup vault to be re-created.
+    CANNOT be changed after creation without destroying the backup vault and its data.<br>
+- `min_retention_days` (Number) The minimum retention period that the vault retains its recovery points. Defaults to `1`.
+!!! warning
+    Changing this value causes the backup vault to be re-created.
+    CANNOT be changed after creation without destroying the backup vault and its data.<br>
+
+
+<a id="nestedatt--configuration--accounts--log_archive--backup--vault_notifications"></a>
+### Nested Schema for `configuration.accounts.log_archive.backup.vault_notifications`
+
+Required:
+
+- `recipients` (Attributes) The recipients of the specified Backup Vault events. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--backup--vault_notifications--recipients))
+
+Optional:
+
+- `events` (List of String) An array of events that indicate the status of jobs to back up resources to the backup vault.
+- `filter_policy` (String) JSON String with the filter policy that will be used in the SNS subscription to filter messages seen by the target resource. Refer to the [SNS docs](https://docs.aws.amazon.com/sns/latest/dg/message-filtering.html) for more details.
+
+<a id="nestedatt--configuration--accounts--log_archive--backup--vault_notifications--recipients"></a>
+### Nested Schema for `configuration.accounts.log_archive.backup.vault_notifications.recipients`
+
+Optional:
+
+- `email` (List of String) List of email addresses.
+
+
+
+
+<a id="nestedatt--configuration--accounts--log_archive--budgets"></a>
+### Nested Schema for `configuration.accounts.log_archive.budgets`
+
+Required:
+
+- `name` (String) The name of a budget. The name must be unique within an account. MUST be lowercase alphanumeric or dash between 1 and 64 characters.
+- `time_unit` (String) The length of time until a budget resets the actual and forecasted spend. Valid values are: `MONTHLY | QUARTERLY | ANNUALLY | DAILY`.
+- `type` (String) Specifies whether this budget tracks costs, usage, RI utilization, RI coverage, Savings Plans utilization, or Savings Plans coverage.
+
+Optional:
+
+- `auto_adjust_data` (Attributes) The parameters that determine the budget amount for an auto-adjusting budget. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--budgets--auto_adjust_data))
+- `cost_filters` (Attributes List) A list of cost filters. Refer to [AWS CostFilter documentation](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-create-filters.html) and [API Documentation](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html#awscostmanagement-Type-budgets_Budget-CostFilters) for further detail. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--budgets--cost_filters))
+- `cost_types` (List of String) A list of cost types included in a budget, such as tax and subscriptions. Defaults to `["include_credit","include_discount","include_other_subscription","include_recurring","include_refund","include_subscription","include_support","include_tax","include_upfront"]`.
+- `limit` (Attributes) Object containing budget limit. Only one of `limit` and `planned_limits` MUST be defined. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--budgets--limit))
+- `notifications` (Attributes List) A list of objects containing Budget Notifications. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--budgets--notifications))
+- `planned_limits` (Attributes List) Object containing Planned Budget Limits. Can be used multiple times to plan more than one budget limit. See [PlannedBudgetLimits](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html#awscostmanagement-Type-budgets_Budget-PlannedBudgetLimits) documentation. Only one of `limit` and `planned_limits` MUST be defined. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--budgets--planned_limits))
+- `tags` (Map of String) Map of tags assigned to the resource.
+- `time_period` (Attributes) The period of time that's covered by a budget. If you create your budget and don't specify a start date, AWS defaults to the start of your chosen time period (DAILY, MONTHLY, QUARTERLY, or ANNUALLY). For example, if you created your budget on January 24, 2018, chose DAILY, and didn't set a start date, AWS set your start date to `01/24/18 00:00 UTC`. If you chose MONTHLY, AWS set your start date to `01/01/18 00:00 UTC`. If you didn't specify an end date, AWS set your end date to `06/15/87 00:00 UTC`. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--budgets--time_period))
+
+<a id="nestedatt--configuration--accounts--log_archive--budgets--auto_adjust_data"></a>
+### Nested Schema for `configuration.accounts.log_archive.budgets.auto_adjust_data`
+
+Required:
+
+- `auto_adjust_type` (String) The string that defines whether your budget auto-adjusts based on historical or forecasted data.
+
+Optional:
+
+- `historical_options` (Attributes) The string that defines whether your budget auto-adjusts based on historical or forecasted data. See further details in [AWS Documentation](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_HistoricalOptions.html). (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--budgets--auto_adjust_data--historical_options))
+- `last_auto_adjust_time` (String) The last time that your budget was auto-adjusted. MUST be in timestamp format.
+
+<a id="nestedatt--configuration--accounts--log_archive--budgets--auto_adjust_data--historical_options"></a>
+### Nested Schema for `configuration.accounts.log_archive.budgets.auto_adjust_data.historical_options`
+
+Required:
+
+- `budget_adjustment_period` (Number) The number of budget periods included in the moving-average calculation that determines your auto-adjusted budget amount.
+
+Optional:
+
+- `lookback_available_periods` (Number) The integer that describes how many budget periods in your BudgetAdjustmentPeriod are included in the calculation of your current budget limit. If the first budget period in your BudgetAdjustmentPeriod has no cost data, then that budget period isn’t included in the average that determines your budget limit. You can’t set your own LookBackAvailablePeriods. The value is automatically calculated from the `budget_adjustment_period` and your historical cost data.
+
+
+
+<a id="nestedatt--configuration--accounts--log_archive--budgets--cost_filters"></a>
+### Nested Schema for `configuration.accounts.log_archive.budgets.cost_filters`
+
+Required:
+
+- `name` (String) The name of the cost filter. Valid values are: `AZ | BillingEntity | CostCategory | InstanceType | InvoicingEntity | LegalEntityName | LinkedAccount | Operation | PurchaseType | Region | Service | TagKeyValue | UsageType | UsageTypeGroup`.
+- `values` (List of String) The list of values used for filtering.
+
+
+<a id="nestedatt--configuration--accounts--log_archive--budgets--limit"></a>
+### Nested Schema for `configuration.accounts.log_archive.budgets.limit`
+
+Required:
+
+- `amount` (String) The cost or usage amount that's associated with a budget forecast, actual spend, or budget threshold.
+- `unit` (String) The unit of measurement that's used for the budget forecast, actual spend, or budget threshold, such as dollars or GB. See [Spend](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/data-type-spend.html) documentation.
+
+
+<a id="nestedatt--configuration--accounts--log_archive--budgets--notifications"></a>
+### Nested Schema for `configuration.accounts.log_archive.budgets.notifications`
+
+Required:
+
+- `comparison_operator` (String) Comparison operator to use to evaluate the condition. Valid values are: `EQUAL_TO | GREATER_THAN | LESS_THAN`.
+- `email_addresses` (List of String) Lost of email addresses to notify.
+- `threshold` (String) Threshold when the notification should be sent.
+- `threshold_type` (String) What kind of threshold is defined. Valid values are: `ABSOLUTE_VALUE | PERCENTAGE`.
+- `type` (String) Comparison operator to use to evaluate the condition. Valid values are: `ACTUAL | FORECASTED`.
+
+
+<a id="nestedatt--configuration--accounts--log_archive--budgets--planned_limits"></a>
+### Nested Schema for `configuration.accounts.log_archive.budgets.planned_limits`
+
+Required:
+
+- `amount` (String) The cost or usage amount that's associated with a budget forecast, actual spend, or budget threshold.
+- `start_time` (String) The start time of the budget limit. Format: `2017-01-01_12:00`.
+- `unit` (String) The unit of measurement that's used for the budget forecast, actual spend, or budget threshold, such as dollars or GB. See [Spend](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/data-type-spend.html) documentation.
+
+
+<a id="nestedatt--configuration--accounts--log_archive--budgets--time_period"></a>
+### Nested Schema for `configuration.accounts.log_archive.budgets.time_period`
+
+Optional:
+
+- `end` (String) The end of the time period covered by the budget. Format: `2017-01-01_12:00`.
+- `start` (String) The start of the time period covered by the budget. Format: `2017-01-01_12:00`.
+
+
+
+<a id="nestedatt--configuration--accounts--log_archive--config"></a>
+### Nested Schema for `configuration.accounts.log_archive.config`
+
+Optional:
+
+- `conformance_packs` (Attributes) This resource configures the AWS Config Conformance packs provided by AWS [here](https://docs.aws.amazon.com/config/latest/developerguide/conformancepack-sample-templates.html). Please read the AWS guidance before deploying. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--config--conformance_packs))
+
+<a id="nestedatt--configuration--accounts--log_archive--config--conformance_packs"></a>
+### Nested Schema for `configuration.accounts.log_archive.config.conformance_packs`
+
+Optional:
+
+- `operational` (Attributes Map) AWS Config Conformance Packs for Operational Best Practices. Possible values for the key of the map are:
+	- `abs_ccigv2_material`: Operational Best Practices for ABS CCIGv2 Material Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ABS-CCIGv2-Material.html).
+	- `abs_ccigv2_standard`: Operational Best Practices for ABS CCIGv2 Standard Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ABS-CCIGv2-Standard.html).
+	- `acsc_essential8`: Operational Best Practices for ACSC Essential 8 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-acsc_essential_8.html).
+	- `acsc_ism`: Operational Best Practices for ACSC ISM Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-acsc-ism.html).
+	- `ai_and_ml`: Operational Best Practices for AI and ML Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-AI-and-ML.html).
+	- `api_gateway`: Operational Best Practices for Amazon API Gateway Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-API-gateway.html).
+	- `apra_cpg_234`: Operational Best Practices for APRA CPG 234 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-apra_cpg_234.html).
+	- `asset_management`: Operational Best Practices for Asset Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-asset-management.html).
+	- `backup`: Operational Best Practices for AWS Backup Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-backup.html).
+	- `bcp_and_dr`: Operational Best Practices for BCP and DR Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-BCP-and-DR.html).
+	- `bnm_rmit`: Operational Best Practices for BNM RMiT Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-bnm-rmit.html).
+	- `cccs_medium`: Operational Best Practices for Canadian Centre for Cyber Security (CCCS) Medium Cloud Control Profile Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cccs_medium.html).
+	- `ccn_ens_high`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) High Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens_high.html).
+	- `ccn_ens_low`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) Low Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens-low.html).
+	- `ccn_ens_medium`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) Medium Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens-medium.html).
+	- `cis`: Operational Best Practices for CIS Conformance Pack. See more details about this pack in [AWS sample](https://github.com/awslabs/aws-config-rules/blob/master/aws-config-conformance-packs/Operational-Best-Practices-for-CIS.yaml).
+	- `cis_aws_v1_4_level1`: Operational Best Practices for CIS AWS Foundations Benchmark v1.4 Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_aws_benchmark_level_1.html).
+	- `cis_aws_v1_4_level2`: Operational Best Practices for CIS AWS Foundations Benchmark v1.4 Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_aws_benchmark_level_2.html).
+	- `cis_critical_security_controls_v8_ig1`: Operational Best Practices for CIS Critical Security Controls v8 IG1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8.html).
+	- `cis_critical_security_controls_v8_ig2`: Operational Best Practices for CIS Critical Security Controls v8 IG2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8-ig2.html)
+	- `cis_critical_security_controls_v8_ig3`: Operational Best Practices for CIS Critical Security Controls v8 IG3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8-ig3.html).
+	- `cis_top20`: Operational Best Practices for CIS Top 20 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_top_20.html).
+	- `cisa_cyber_essentials`: Operational Best Practices for CISA Cyber Essentials Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cisa-ce.html).
+	- `cjis`: Operational Best Practices for Criminal Justice Information Services (CJIS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cjis.html).
+	- `cloudwatch`: Operational Best Practices for Amazon CloudWatch Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-cloudwatch.html).
+	- `cmmc_level1`: Operational Best Practices for CMMC Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_1.html).
+	- `cmmc_level2`: Operational Best Practices for CMMC Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_2.html).
+	- `cmmc_level3`: Operational Best Practices for CMMC Level 3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_3.html).
+	- `cmmc_level4`: Operational Best Practices for CMMC Level 4 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_4.html).
+	- `cmmc_level5`: Operational Best Practices for CMMC Level 5 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_5.html).
+	- `cmmc_2_0_level1`: Operational Best Practices for CMMC 2.0 Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_2.0_level_1.html).
+	- `cmmc_2_0_level2`: Operational Best Practices for CMMC 2.0 Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_2.0_level_2.html).
+	- `compute_services`: Operational Best Practices for Compute Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Compute-Services.html).
+	- `data_resiliency`: Operational Best Practices for Data Resiliency Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Data-Resiliency.html).
+	- `database_services`: Operational Best Practices for Databases Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Databases-Services.html).
+	- `datalakes_and_analytics_services`: Operational Best Practices for Data Lakes and Analytics Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Datalakes-and-Analytics-Services.html).
+	- `devops`: Operational Best Practices for DevOps Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-DevOps.html).
+	- `dynamodb`: Operational Best Practices for Amazon DynamoDB Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-dynamodb.html).
+	- `ec2`: Operational Best Practices for EC2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-EC2.html).
+	- `encryption_and_keys`: Operational Best Practices for Encryption and Key Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Encryption-and-Keys.html).
+	- `enisa_cybersecurity_guide`: Operational Best Practices for ENISA Cybersecurity guide for SMEs Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-enisa-cybersecurity-guide-for-smes.html).
+	- `fda_21cfr_part_11`: Operational Best Practices for FDA Title 21 CFR Part 11 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-FDA-21CFR-Part-11.html)
+	- `fedramp_highpart1`: Operational Best Practices for FedRAMP (High Part 1) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-high-part-1.html).
+	- `fedramp_highpart2`: Operational Best Practices for FedRAMP (High Part 2) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-high-part-2.html).
+	- `fedramp_low`: Operational Best Practices for FedRAMP(Low) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-low.html).
+	- `fedramp_moderate`: Operational Best Practices for FedRAMP(Moderate) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-moderate.html).
+	- `ffiec`: Operational Best Practices for FFIEC Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ffiec.html).
+	- `germany_c5`: Operational Best Practices for Germany Cloud Computing Compliance Criteria Catalog (C5) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-germany-c5.html).
+	- `glba`: Operational Best Practices for Gramm Leach Bliley Act (GLBA) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-gramm-leach-bliley-act.html).
+	- `gxp_eu_annex_11`: Operational Best Practices for GxP EU Annex 11 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-gxp-eu-annex-11.html).
+	- `hipaa_security`: Operational Best Practices for HIPAA Security Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-hipaa_security.html).
+	- `iam`: Operational Best Practices for AWS Identity And Access Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-identity-and-access-management.html).
+	- `irs_1075`: Operational Best Practices for IRS 1075 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-irs-1075.html).
+	- `kisms`: Operational Best Practices for K-ISMS Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-k-isms.html).
+	- `load_balancing`: Operational Best Practices for Load Balancing Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-load-balancing.html).
+	- `logging`: Operational Best Practices for Logging Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-logging.html).
+	- `management_governance_services`: Operational Best Practices for Management and Governance Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Management-and-Governance-Services.html).
+	- `mas_notice_655`: Operational Best Practices for MAS Notice 655 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-mas_notice_655.html).
+	- `mas_trmg`: Operational Best Practices for MAS TRMG Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-mas-trmg.html).
+	- `monitoring`: Operational Best Practices for Monitoring Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-monitoring.html).
+	- `nbc_trmg`: Operational Best Practices for NBC TRMG Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nbc-trmg.html).
+	- `ncsc_caf`: Operational Best Practices for NCSC Cyber Assesment Framework Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ncsc_cafv3.html).
+	- `ncsc_cloudsec_principles`: Operational Best Practices for NCSC Cloud Security Principles Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ncsc.html).
+	- `nerc_cip_bcsi`: Operational Best Practices for NERC CIP BCSI Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nerc.html).
+	- `networking_services`: Operational Best Practices for Networking and Content Delivery Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Networking-and-Content-Delivery-Services.html).
+	- `nist_csf`: Operational Best Practices for NIST CSF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-csf.html).
+	- `nist_privacy_framework_v1`: Operational Best Practices for NIST Privacy Framework v1.0 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_privacy_framework.html).
+	- `nist_800_53_rev_5`: Operational Best Practices for NIST 800-53 rev 5 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-800-53_rev_5.html).
+	- `nist_800_171`: Operational Best Practices for NIST 800 171 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-171.html).
+	- `nist_800_172`: Operational Best Practices for NIST 800 172 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-172.html).
+	- `nist_800_181`: Operational Best Practices for NIST 800 181 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-181.html).
+	- `nist_1800_25`: Operational Best Practices for NIST 1800 25 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_1800_25.html).
+	- `nydfs_23_nycrr_500`: Operational Best Practices for NYDFS 23 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-us_nydfs.html).
+	- `nzism`: Operational Best Practices for NZISM Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nzism.html).
+	- `pci_dss`: Operational Best Practices for PCI DSS Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-pci-dss.html).
+	- `publicly_accessible_resources`: Operational Best Practices for Publicly Accessible Resources Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Publicly-Accessible-Resources.html).
+	- `rbi_bcsf_ucb`: Operational Best Practices for RBI Cyber Security Framework for UCBs Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-rbi-bcsf-ucb.html).
+	- `rbi_md_itf`: Operational Best Practices for RBI MD-ITF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-rbi-md-itf.html).
+	- `security_services`: Operational Best Practices for Security, Identity, and Compliance Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Security-Identity-and-Compliance-Services.html).
+	- `serverless_services`: Operational Best Practices for Serverless Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-serverless.html).
+	- `storage_services`: Operational Best Practices for Storage Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Storage-Services.html).
+	- `swift_csp`: Operational Best Practices for SWIFT CSP Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-swift-csp.html).
+	- `s3`: Operational Best Practices for Amazon S3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-s3.html).
+	- `well_architected_reliability_pillar`: Operational Best Practices for AWS Well-Architected Framework Reliability Pillar Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-wa-Reliability-Pillar.html).
+	- `well_architected_security_pillar`: Operational Best Practices for AWS Well-Architected Framework Security Pillar Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-wa-Security-Pillar.html).
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--config--conformance_packs--operational))
+- `security` (Attributes Map) AWS Config Conformance Packs for Security Best Practices. Possible values for the key of the map are:
+	- `autoscaling`: Security Best Practices for AWS Auto Scaling Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-AutoScaling.html).
+	- `cloudfront`: Security Best Practices for Amazon CloudFront Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CloudFront.html).
+	- `cloudtrail`: Security Best Practices for AWS CloudTrail Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CloudTrail.html).
+	- `codebuild`: Security Best Practices for AWS CodeBuild Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CodeBuild.html).
+	- `ecr`: Security Best Practices for Amazon ECR Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-ECR.html).
+	- `ecs`: Security Best Practices for Amazon Elastic Container Service (Amazon ECS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-ECS.html).
+	- `efs`: Security Best Practices for Amazon Elastic File System (Amazon EFS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-EFS.html).
+	- `eks`: Security Best Practices for Amazon Elastic Kubernetes Service (Amazon EKS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-EKS.html).
+	- `lambda`: Security Best Practices for AWS Lambda Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Lambda.html).
+	- `network_firewall`: Security Best Practices for AWS Network Firewall Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Network-Firewall.html).
+	- `opensearch`: Security Best Practices for Amazon OpenSearch Service Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-OpenSearch.html).
+	- `rds`: Security Best Practices for Amazon Relational Database Service (Amazon RDS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-RDS.html).
+	- `redshift`: Security Best Practices for Amazon Redshift Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-redshift.html).
+	- `sagemaker`: Security Best Practices for Amazon SageMaker Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-SageMaker.html).
+	- `secrets_manager`: Security Best Practices for AWS Secrets Manager Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Secrets-Manager.html).
+	- `waf`: Security Best Practices for AWS WAF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-aws-waf.html).
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--config--conformance_packs--security))
+
+<a id="nestedatt--configuration--accounts--log_archive--config--conformance_packs--operational"></a>
+### Nested Schema for `configuration.accounts.log_archive.config.conformance_packs.operational`
+
+Required:
+
+- `enabled` (Boolean) Enables the Conformance Pack.
+
+Optional:
+
+- `parameters` (Map of String) The keys of the map are the parameters defined in the yaml file found in the AWS documentation linked to the Conformance Pack's description. The value of the map is a string that is supported by the parameter in the key. If no parameters are defined, the default values defined in the yaml file.
+
+
+<a id="nestedatt--configuration--accounts--log_archive--config--conformance_packs--security"></a>
+### Nested Schema for `configuration.accounts.log_archive.config.conformance_packs.security`
+
+Required:
+
+- `enabled` (Boolean) Enables the Conformance Pack.
+
+Optional:
+
+- `parameters` (Map of String) The keys of the map are the parameters defined in the yaml file found in the AWS documentation linked to the Conformance Pack's description. The value of the map is a string that is supported by the parameter in the key. If no parameters are defined, the default values defined in the yaml file.
+
+
+
+
+<a id="nestedatt--configuration--accounts--log_archive--s3_account_public_access_block"></a>
+### Nested Schema for `configuration.accounts.log_archive.s3_account_public_access_block`
+
+Optional:
+
+- `block_public_acls` (Boolean) Optional) Whether Amazon S3 should block public bucket policies for buckets in this account. Defaults to `true`.
+- `block_public_policy` (Boolean) Whether Amazon S3 should block public bucket policies for buckets in this account. Defaults to `true`.
+- `ignore_public_acls` (Boolean) Whether Amazon S3 should ignore public ACLs for buckets in this account. Defaults to true.
+- `restrict_public_buckets` (Boolean) Whether Amazon S3 should restrict public bucket policies for buckets in this account. Defaults to true.
+
+
+<a id="nestedatt--configuration--accounts--log_archive--sso_permission_sets"></a>
+### Nested Schema for `configuration.accounts.log_archive.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--accounts--log_archive--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.accounts.log_archive.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--accounts--log_archive--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--accounts--log_archive--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.accounts.log_archive.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--accounts--management"></a>
+### Nested Schema for `configuration.accounts.management`
+
+Required:
+
+- `alternate_contacts` (Attributes Map) Configuration of AWS Account alternate contacts. (see [below for nested schema](#nestedatt--configuration--accounts--management--alternate_contacts))
+- `primary_contact` (Attributes) Configuration of AWS Account primary contact. (see [below for nested schema](#nestedatt--configuration--accounts--management--primary_contact))
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--accounts--management--auditmanager_assessments))
+- `backup` (Attributes) AWS Backup configuration settings for the local account. (see [below for nested schema](#nestedatt--configuration--accounts--management--backup))
+- `budgets` (Attributes List) A list of budget objects. (see [below for nested schema](#nestedatt--configuration--accounts--management--budgets))
+- `config` (Attributes) AWS Config Conformance Packs Rules deployed for this AWS account only. (see [below for nested schema](#nestedatt--configuration--accounts--management--config))
+- `ebs_encryption_by_default` (Boolean) Whether or not default EBS encryption is enabled. Defaults to `true`.
+- `s3_account_public_access_block` (Attributes) Manages S3 account-level Public Access Block configuration. (see [below for nested schema](#nestedatt--configuration--accounts--management--s3_account_public_access_block))
+
+<a id="nestedatt--configuration--accounts--management--alternate_contacts"></a>
+### Nested Schema for `configuration.accounts.management.alternate_contacts`
+
+Required:
+
+- `email` (String) An email address for the alternate contact.
+- `name` (String) Name of the alternate contact.
+- `phone` (String) Phone number for the alternate contact.
+- `title` (String) Title for the alternate contact.
+
+
+<a id="nestedatt--configuration--accounts--management--primary_contact"></a>
+### Nested Schema for `configuration.accounts.management.primary_contact`
+
+Required:
+
+- `address_line_1` (String) The first line of the primary contact address.
+- `city` (String) The city of the primary contact address.
+- `country_code` (String) The ISO-3166 two-letter country code for the primary contact address.
+- `full_name` (String) The full name of the primary contact address.
+- `phone` (String) The phone number of the primary contact information. The number will be validated and, in some countries, checked for activation.
+- `postal_code` (String) The postal code of the primary contact address.
+
+Optional:
+
+- `address_line_2` (String) The second line of the primary contact address, if any.
+- `address_line_3` (String) The third line of the primary contact address, if any.
+- `company_name` (String) The name of the company associated with the primary contact information, if any.
+- `district_or_county` (String) The district or county of the primary contact address, if any.
+- `state_or_region` (String) The state or region of the primary contact address. If the mailing address is within the United States (US), the value in this field can be either a two character state code (for example, `NJ`) or the full state name (for example, `New Jersey`). This field is required in the following countries: `US, CA, GB, DE, JP, IN, and BR`.
+- `website_url` (String) The URL of the website associated with the primary contact information, if any.
+
+
+<a id="nestedatt--configuration--accounts--management--auditmanager_assessments"></a>
+### Nested Schema for `configuration.accounts.management.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--accounts--management--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--accounts--management--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.accounts.management.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--accounts--management--backup"></a>
+### Nested Schema for `configuration.accounts.management.backup`
+
+Optional:
+
+- `policies` (Attributes) Configuration settings for built-in backup policies. (see [below for nested schema](#nestedatt--configuration--accounts--management--backup--policies))
+- `restore_testing` (Attributes) If enabled, it will create a restore testing plan with multiple resource type selections. (see [below for nested schema](#nestedatt--configuration--accounts--management--backup--restore_testing))
+- `vault_lock` (Attributes) Configuration settings for the AWS Organization Backup Vault lock. (see [below for nested schema](#nestedatt--configuration--accounts--management--backup--vault_lock))
+- `vault_notifications` (Attributes List) Configuration settings for the AWS Organization Backup Vault notifications. (see [below for nested schema](#nestedatt--configuration--accounts--management--backup--vault_notifications))
+
+<a id="nestedatt--configuration--accounts--management--backup--policies"></a>
+### Nested Schema for `configuration.accounts.management.backup.policies`
+
+Optional:
+
+- `daily` (Attributes) Built-in daily backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--management--backup--policies--daily))
+- `monthly` (Attributes) Built-in monthly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--management--backup--policies--monthly))
+- `weekly` (Attributes) Built-in weekly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--management--backup--policies--weekly))
+- `yearly` (Attributes) Built-in yearly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--management--backup--policies--yearly))
+
+<a id="nestedatt--configuration--accounts--management--backup--policies--daily"></a>
+### Nested Schema for `configuration.accounts.management.backup.policies.daily`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--management--backup--policies--monthly"></a>
+### Nested Schema for `configuration.accounts.management.backup.policies.monthly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--management--backup--policies--weekly"></a>
+### Nested Schema for `configuration.accounts.management.backup.policies.weekly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--management--backup--policies--yearly"></a>
+### Nested Schema for `configuration.accounts.management.backup.policies.yearly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+
+<a id="nestedatt--configuration--accounts--management--backup--restore_testing"></a>
+### Nested Schema for `configuration.accounts.management.backup.restore_testing`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables the AWS Backup restore testing plan for supported resources. Defaults to `true`.
+- `protected_resource_selection_tags` (Attributes List) A list of conditions that you define for resources in your restore testing plan using tags. Filters the values of your tagged resources for only those resources that you tagged with the same value. (see [below for nested schema](#nestedatt--configuration--accounts--management--backup--restore_testing--protected_resource_selection_tags))
+- `protected_resource_selection_types` (List of String) The type of AWS resource included in a restore testing selection.
+- `recovery_point_selection` (Attributes) Configuration of recovery points for AWS Backup restore testing plan. (see [below for nested schema](#nestedatt--configuration--accounts--management--backup--restore_testing--recovery_point_selection))
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a restore test. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 1 AM on the 15th of every month.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+
+<a id="nestedatt--configuration--accounts--management--backup--restore_testing--protected_resource_selection_tags"></a>
+### Nested Schema for `configuration.accounts.management.backup.restore_testing.protected_resource_selection_tags`
+
+Optional:
+
+- `tag_key` (String) The selection tag key. Defaults to `RestoreTestingEnabled`.
+- `tag_value` (String) The selection tag value. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--accounts--management--backup--restore_testing--recovery_point_selection"></a>
+### Nested Schema for `configuration.accounts.management.backup.restore_testing.recovery_point_selection`
+
+Optional:
+
+- `algorithm` (String) Acceptable values include `LATEST_WITHIN_WINDOW` or `RANDOM_WITHIN_WINDOW`.
+- `recovery_point_types` (List of String) Acceptable values include `CONTINUOUS` and `SNAPSHOT`.
+- `selection_window_days` (Number) Accepted values are integers from 1 to 365.
+
+
+
+<a id="nestedatt--configuration--accounts--management--backup--vault_lock"></a>
+### Nested Schema for `configuration.accounts.management.backup.vault_lock`
+
+Optional:
+
+- `changeable_for_days` (Number) The number of days before the lock date. If omitted creates a vault lock in governance mode, otherwise it will create a vault lock in compliance mode.
+- `max_retention_days` (Number) The maximum retention period that the vault retains its recovery points. Defaults to `90`.
+!!! warning
+    Changing this value causes the backup vault to be re-created.
+    CANNOT be changed after creation without destroying the backup vault and its data.<br>
+- `min_retention_days` (Number) The minimum retention period that the vault retains its recovery points. Defaults to `1`.
+!!! warning
+    Changing this value causes the backup vault to be re-created.
+    CANNOT be changed after creation without destroying the backup vault and its data.<br>
+
+
+<a id="nestedatt--configuration--accounts--management--backup--vault_notifications"></a>
+### Nested Schema for `configuration.accounts.management.backup.vault_notifications`
+
+Required:
+
+- `recipients` (Attributes) The recipients of the specified Backup Vault events. (see [below for nested schema](#nestedatt--configuration--accounts--management--backup--vault_notifications--recipients))
+
+Optional:
+
+- `events` (List of String) An array of events that indicate the status of jobs to back up resources to the backup vault.
+- `filter_policy` (String) JSON String with the filter policy that will be used in the SNS subscription to filter messages seen by the target resource. Refer to the [SNS docs](https://docs.aws.amazon.com/sns/latest/dg/message-filtering.html) for more details.
+
+<a id="nestedatt--configuration--accounts--management--backup--vault_notifications--recipients"></a>
+### Nested Schema for `configuration.accounts.management.backup.vault_notifications.recipients`
+
+Optional:
+
+- `email` (List of String) List of email addresses.
+
+
+
+
+<a id="nestedatt--configuration--accounts--management--budgets"></a>
+### Nested Schema for `configuration.accounts.management.budgets`
+
+Required:
+
+- `name` (String) The name of a budget. The name must be unique within an account. MUST be lowercase alphanumeric or dash between 1 and 64 characters.
+- `time_unit` (String) The length of time until a budget resets the actual and forecasted spend. Valid values are: `MONTHLY | QUARTERLY | ANNUALLY | DAILY`.
+- `type` (String) Specifies whether this budget tracks costs, usage, RI utilization, RI coverage, Savings Plans utilization, or Savings Plans coverage.
+
+Optional:
+
+- `auto_adjust_data` (Attributes) The parameters that determine the budget amount for an auto-adjusting budget. (see [below for nested schema](#nestedatt--configuration--accounts--management--budgets--auto_adjust_data))
+- `cost_filters` (Attributes List) A list of cost filters. Refer to [AWS CostFilter documentation](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-create-filters.html) and [API Documentation](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html#awscostmanagement-Type-budgets_Budget-CostFilters) for further detail. (see [below for nested schema](#nestedatt--configuration--accounts--management--budgets--cost_filters))
+- `cost_types` (List of String) A list of cost types included in a budget, such as tax and subscriptions. Defaults to `["include_credit","include_discount","include_other_subscription","include_recurring","include_refund","include_subscription","include_support","include_tax","include_upfront"]`.
+- `limit` (Attributes) Object containing budget limit. Only one of `limit` and `planned_limits` MUST be defined. (see [below for nested schema](#nestedatt--configuration--accounts--management--budgets--limit))
+- `notifications` (Attributes List) A list of objects containing Budget Notifications. (see [below for nested schema](#nestedatt--configuration--accounts--management--budgets--notifications))
+- `planned_limits` (Attributes List) Object containing Planned Budget Limits. Can be used multiple times to plan more than one budget limit. See [PlannedBudgetLimits](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html#awscostmanagement-Type-budgets_Budget-PlannedBudgetLimits) documentation. Only one of `limit` and `planned_limits` MUST be defined. (see [below for nested schema](#nestedatt--configuration--accounts--management--budgets--planned_limits))
+- `tags` (Map of String) Map of tags assigned to the resource.
+- `time_period` (Attributes) The period of time that's covered by a budget. If you create your budget and don't specify a start date, AWS defaults to the start of your chosen time period (DAILY, MONTHLY, QUARTERLY, or ANNUALLY). For example, if you created your budget on January 24, 2018, chose DAILY, and didn't set a start date, AWS set your start date to `01/24/18 00:00 UTC`. If you chose MONTHLY, AWS set your start date to `01/01/18 00:00 UTC`. If you didn't specify an end date, AWS set your end date to `06/15/87 00:00 UTC`. (see [below for nested schema](#nestedatt--configuration--accounts--management--budgets--time_period))
+
+<a id="nestedatt--configuration--accounts--management--budgets--auto_adjust_data"></a>
+### Nested Schema for `configuration.accounts.management.budgets.auto_adjust_data`
+
+Required:
+
+- `auto_adjust_type` (String) The string that defines whether your budget auto-adjusts based on historical or forecasted data.
+
+Optional:
+
+- `historical_options` (Attributes) The string that defines whether your budget auto-adjusts based on historical or forecasted data. See further details in [AWS Documentation](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_HistoricalOptions.html). (see [below for nested schema](#nestedatt--configuration--accounts--management--budgets--auto_adjust_data--historical_options))
+- `last_auto_adjust_time` (String) The last time that your budget was auto-adjusted. MUST be in timestamp format.
+
+<a id="nestedatt--configuration--accounts--management--budgets--auto_adjust_data--historical_options"></a>
+### Nested Schema for `configuration.accounts.management.budgets.auto_adjust_data.historical_options`
+
+Required:
+
+- `budget_adjustment_period` (Number) The number of budget periods included in the moving-average calculation that determines your auto-adjusted budget amount.
+
+Optional:
+
+- `lookback_available_periods` (Number) The integer that describes how many budget periods in your BudgetAdjustmentPeriod are included in the calculation of your current budget limit. If the first budget period in your BudgetAdjustmentPeriod has no cost data, then that budget period isn’t included in the average that determines your budget limit. You can’t set your own LookBackAvailablePeriods. The value is automatically calculated from the `budget_adjustment_period` and your historical cost data.
+
+
+
+<a id="nestedatt--configuration--accounts--management--budgets--cost_filters"></a>
+### Nested Schema for `configuration.accounts.management.budgets.cost_filters`
+
+Required:
+
+- `name` (String) The name of the cost filter. Valid values are: `AZ | BillingEntity | CostCategory | InstanceType | InvoicingEntity | LegalEntityName | LinkedAccount | Operation | PurchaseType | Region | Service | TagKeyValue | UsageType | UsageTypeGroup`.
+- `values` (List of String) The list of values used for filtering.
+
+
+<a id="nestedatt--configuration--accounts--management--budgets--limit"></a>
+### Nested Schema for `configuration.accounts.management.budgets.limit`
+
+Required:
+
+- `amount` (String) The cost or usage amount that's associated with a budget forecast, actual spend, or budget threshold.
+- `unit` (String) The unit of measurement that's used for the budget forecast, actual spend, or budget threshold, such as dollars or GB. See [Spend](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/data-type-spend.html) documentation.
+
+
+<a id="nestedatt--configuration--accounts--management--budgets--notifications"></a>
+### Nested Schema for `configuration.accounts.management.budgets.notifications`
+
+Required:
+
+- `comparison_operator` (String) Comparison operator to use to evaluate the condition. Valid values are: `EQUAL_TO | GREATER_THAN | LESS_THAN`.
+- `email_addresses` (List of String) Lost of email addresses to notify.
+- `threshold` (String) Threshold when the notification should be sent.
+- `threshold_type` (String) What kind of threshold is defined. Valid values are: `ABSOLUTE_VALUE | PERCENTAGE`.
+- `type` (String) Comparison operator to use to evaluate the condition. Valid values are: `ACTUAL | FORECASTED`.
+
+
+<a id="nestedatt--configuration--accounts--management--budgets--planned_limits"></a>
+### Nested Schema for `configuration.accounts.management.budgets.planned_limits`
+
+Required:
+
+- `amount` (String) The cost or usage amount that's associated with a budget forecast, actual spend, or budget threshold.
+- `start_time` (String) The start time of the budget limit. Format: `2017-01-01_12:00`.
+- `unit` (String) The unit of measurement that's used for the budget forecast, actual spend, or budget threshold, such as dollars or GB. See [Spend](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/data-type-spend.html) documentation.
+
+
+<a id="nestedatt--configuration--accounts--management--budgets--time_period"></a>
+### Nested Schema for `configuration.accounts.management.budgets.time_period`
+
+Optional:
+
+- `end` (String) The end of the time period covered by the budget. Format: `2017-01-01_12:00`.
+- `start` (String) The start of the time period covered by the budget. Format: `2017-01-01_12:00`.
+
+
+
+<a id="nestedatt--configuration--accounts--management--config"></a>
+### Nested Schema for `configuration.accounts.management.config`
+
+Optional:
+
+- `conformance_packs` (Attributes) This resource configures the AWS Config Conformance packs provided by AWS [here](https://docs.aws.amazon.com/config/latest/developerguide/conformancepack-sample-templates.html). Please read the AWS guidance before deploying. (see [below for nested schema](#nestedatt--configuration--accounts--management--config--conformance_packs))
+
+<a id="nestedatt--configuration--accounts--management--config--conformance_packs"></a>
+### Nested Schema for `configuration.accounts.management.config.conformance_packs`
+
+Optional:
+
+- `operational` (Attributes Map) AWS Config Conformance Packs for Operational Best Practices. Possible values for the key of the map are:
+	- `abs_ccigv2_material`: Operational Best Practices for ABS CCIGv2 Material Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ABS-CCIGv2-Material.html).
+	- `abs_ccigv2_standard`: Operational Best Practices for ABS CCIGv2 Standard Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ABS-CCIGv2-Standard.html).
+	- `acsc_essential8`: Operational Best Practices for ACSC Essential 8 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-acsc_essential_8.html).
+	- `acsc_ism`: Operational Best Practices for ACSC ISM Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-acsc-ism.html).
+	- `ai_and_ml`: Operational Best Practices for AI and ML Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-AI-and-ML.html).
+	- `api_gateway`: Operational Best Practices for Amazon API Gateway Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-API-gateway.html).
+	- `apra_cpg_234`: Operational Best Practices for APRA CPG 234 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-apra_cpg_234.html).
+	- `asset_management`: Operational Best Practices for Asset Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-asset-management.html).
+	- `backup`: Operational Best Practices for AWS Backup Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-backup.html).
+	- `bcp_and_dr`: Operational Best Practices for BCP and DR Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-BCP-and-DR.html).
+	- `bnm_rmit`: Operational Best Practices for BNM RMiT Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-bnm-rmit.html).
+	- `cccs_medium`: Operational Best Practices for Canadian Centre for Cyber Security (CCCS) Medium Cloud Control Profile Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cccs_medium.html).
+	- `ccn_ens_high`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) High Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens_high.html).
+	- `ccn_ens_low`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) Low Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens-low.html).
+	- `ccn_ens_medium`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) Medium Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens-medium.html).
+	- `cis`: Operational Best Practices for CIS Conformance Pack. See more details about this pack in [AWS sample](https://github.com/awslabs/aws-config-rules/blob/master/aws-config-conformance-packs/Operational-Best-Practices-for-CIS.yaml).
+	- `cis_aws_v1_4_level1`: Operational Best Practices for CIS AWS Foundations Benchmark v1.4 Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_aws_benchmark_level_1.html).
+	- `cis_aws_v1_4_level2`: Operational Best Practices for CIS AWS Foundations Benchmark v1.4 Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_aws_benchmark_level_2.html).
+	- `cis_critical_security_controls_v8_ig1`: Operational Best Practices for CIS Critical Security Controls v8 IG1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8.html).
+	- `cis_critical_security_controls_v8_ig2`: Operational Best Practices for CIS Critical Security Controls v8 IG2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8-ig2.html)
+	- `cis_critical_security_controls_v8_ig3`: Operational Best Practices for CIS Critical Security Controls v8 IG3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8-ig3.html).
+	- `cis_top20`: Operational Best Practices for CIS Top 20 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_top_20.html).
+	- `cisa_cyber_essentials`: Operational Best Practices for CISA Cyber Essentials Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cisa-ce.html).
+	- `cjis`: Operational Best Practices for Criminal Justice Information Services (CJIS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cjis.html).
+	- `cloudwatch`: Operational Best Practices for Amazon CloudWatch Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-cloudwatch.html).
+	- `cmmc_level1`: Operational Best Practices for CMMC Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_1.html).
+	- `cmmc_level2`: Operational Best Practices for CMMC Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_2.html).
+	- `cmmc_level3`: Operational Best Practices for CMMC Level 3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_3.html).
+	- `cmmc_level4`: Operational Best Practices for CMMC Level 4 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_4.html).
+	- `cmmc_level5`: Operational Best Practices for CMMC Level 5 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_5.html).
+	- `cmmc_2_0_level1`: Operational Best Practices for CMMC 2.0 Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_2.0_level_1.html).
+	- `cmmc_2_0_level2`: Operational Best Practices for CMMC 2.0 Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_2.0_level_2.html).
+	- `compute_services`: Operational Best Practices for Compute Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Compute-Services.html).
+	- `data_resiliency`: Operational Best Practices for Data Resiliency Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Data-Resiliency.html).
+	- `database_services`: Operational Best Practices for Databases Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Databases-Services.html).
+	- `datalakes_and_analytics_services`: Operational Best Practices for Data Lakes and Analytics Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Datalakes-and-Analytics-Services.html).
+	- `devops`: Operational Best Practices for DevOps Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-DevOps.html).
+	- `dynamodb`: Operational Best Practices for Amazon DynamoDB Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-dynamodb.html).
+	- `ec2`: Operational Best Practices for EC2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-EC2.html).
+	- `encryption_and_keys`: Operational Best Practices for Encryption and Key Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Encryption-and-Keys.html).
+	- `enisa_cybersecurity_guide`: Operational Best Practices for ENISA Cybersecurity guide for SMEs Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-enisa-cybersecurity-guide-for-smes.html).
+	- `fda_21cfr_part_11`: Operational Best Practices for FDA Title 21 CFR Part 11 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-FDA-21CFR-Part-11.html)
+	- `fedramp_highpart1`: Operational Best Practices for FedRAMP (High Part 1) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-high-part-1.html).
+	- `fedramp_highpart2`: Operational Best Practices for FedRAMP (High Part 2) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-high-part-2.html).
+	- `fedramp_low`: Operational Best Practices for FedRAMP(Low) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-low.html).
+	- `fedramp_moderate`: Operational Best Practices for FedRAMP(Moderate) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-moderate.html).
+	- `ffiec`: Operational Best Practices for FFIEC Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ffiec.html).
+	- `germany_c5`: Operational Best Practices for Germany Cloud Computing Compliance Criteria Catalog (C5) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-germany-c5.html).
+	- `glba`: Operational Best Practices for Gramm Leach Bliley Act (GLBA) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-gramm-leach-bliley-act.html).
+	- `gxp_eu_annex_11`: Operational Best Practices for GxP EU Annex 11 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-gxp-eu-annex-11.html).
+	- `hipaa_security`: Operational Best Practices for HIPAA Security Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-hipaa_security.html).
+	- `iam`: Operational Best Practices for AWS Identity And Access Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-identity-and-access-management.html).
+	- `irs_1075`: Operational Best Practices for IRS 1075 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-irs-1075.html).
+	- `kisms`: Operational Best Practices for K-ISMS Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-k-isms.html).
+	- `load_balancing`: Operational Best Practices for Load Balancing Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-load-balancing.html).
+	- `logging`: Operational Best Practices for Logging Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-logging.html).
+	- `management_governance_services`: Operational Best Practices for Management and Governance Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Management-and-Governance-Services.html).
+	- `mas_notice_655`: Operational Best Practices for MAS Notice 655 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-mas_notice_655.html).
+	- `mas_trmg`: Operational Best Practices for MAS TRMG Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-mas-trmg.html).
+	- `monitoring`: Operational Best Practices for Monitoring Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-monitoring.html).
+	- `nbc_trmg`: Operational Best Practices for NBC TRMG Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nbc-trmg.html).
+	- `ncsc_caf`: Operational Best Practices for NCSC Cyber Assesment Framework Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ncsc_cafv3.html).
+	- `ncsc_cloudsec_principles`: Operational Best Practices for NCSC Cloud Security Principles Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ncsc.html).
+	- `nerc_cip_bcsi`: Operational Best Practices for NERC CIP BCSI Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nerc.html).
+	- `networking_services`: Operational Best Practices for Networking and Content Delivery Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Networking-and-Content-Delivery-Services.html).
+	- `nist_csf`: Operational Best Practices for NIST CSF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-csf.html).
+	- `nist_privacy_framework_v1`: Operational Best Practices for NIST Privacy Framework v1.0 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_privacy_framework.html).
+	- `nist_800_53_rev_5`: Operational Best Practices for NIST 800-53 rev 5 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-800-53_rev_5.html).
+	- `nist_800_171`: Operational Best Practices for NIST 800 171 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-171.html).
+	- `nist_800_172`: Operational Best Practices for NIST 800 172 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-172.html).
+	- `nist_800_181`: Operational Best Practices for NIST 800 181 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-181.html).
+	- `nist_1800_25`: Operational Best Practices for NIST 1800 25 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_1800_25.html).
+	- `nydfs_23_nycrr_500`: Operational Best Practices for NYDFS 23 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-us_nydfs.html).
+	- `nzism`: Operational Best Practices for NZISM Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nzism.html).
+	- `pci_dss`: Operational Best Practices for PCI DSS Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-pci-dss.html).
+	- `publicly_accessible_resources`: Operational Best Practices for Publicly Accessible Resources Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Publicly-Accessible-Resources.html).
+	- `rbi_bcsf_ucb`: Operational Best Practices for RBI Cyber Security Framework for UCBs Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-rbi-bcsf-ucb.html).
+	- `rbi_md_itf`: Operational Best Practices for RBI MD-ITF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-rbi-md-itf.html).
+	- `security_services`: Operational Best Practices for Security, Identity, and Compliance Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Security-Identity-and-Compliance-Services.html).
+	- `serverless_services`: Operational Best Practices for Serverless Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-serverless.html).
+	- `storage_services`: Operational Best Practices for Storage Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Storage-Services.html).
+	- `swift_csp`: Operational Best Practices for SWIFT CSP Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-swift-csp.html).
+	- `s3`: Operational Best Practices for Amazon S3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-s3.html).
+	- `well_architected_reliability_pillar`: Operational Best Practices for AWS Well-Architected Framework Reliability Pillar Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-wa-Reliability-Pillar.html).
+	- `well_architected_security_pillar`: Operational Best Practices for AWS Well-Architected Framework Security Pillar Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-wa-Security-Pillar.html).
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--accounts--management--config--conformance_packs--operational))
+- `security` (Attributes Map) AWS Config Conformance Packs for Security Best Practices. Possible values for the key of the map are:
+	- `autoscaling`: Security Best Practices for AWS Auto Scaling Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-AutoScaling.html).
+	- `cloudfront`: Security Best Practices for Amazon CloudFront Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CloudFront.html).
+	- `cloudtrail`: Security Best Practices for AWS CloudTrail Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CloudTrail.html).
+	- `codebuild`: Security Best Practices for AWS CodeBuild Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CodeBuild.html).
+	- `ecr`: Security Best Practices for Amazon ECR Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-ECR.html).
+	- `ecs`: Security Best Practices for Amazon Elastic Container Service (Amazon ECS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-ECS.html).
+	- `efs`: Security Best Practices for Amazon Elastic File System (Amazon EFS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-EFS.html).
+	- `eks`: Security Best Practices for Amazon Elastic Kubernetes Service (Amazon EKS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-EKS.html).
+	- `lambda`: Security Best Practices for AWS Lambda Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Lambda.html).
+	- `network_firewall`: Security Best Practices for AWS Network Firewall Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Network-Firewall.html).
+	- `opensearch`: Security Best Practices for Amazon OpenSearch Service Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-OpenSearch.html).
+	- `rds`: Security Best Practices for Amazon Relational Database Service (Amazon RDS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-RDS.html).
+	- `redshift`: Security Best Practices for Amazon Redshift Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-redshift.html).
+	- `sagemaker`: Security Best Practices for Amazon SageMaker Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-SageMaker.html).
+	- `secrets_manager`: Security Best Practices for AWS Secrets Manager Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Secrets-Manager.html).
+	- `waf`: Security Best Practices for AWS WAF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-aws-waf.html).
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--accounts--management--config--conformance_packs--security))
+
+<a id="nestedatt--configuration--accounts--management--config--conformance_packs--operational"></a>
+### Nested Schema for `configuration.accounts.management.config.conformance_packs.operational`
+
+Required:
+
+- `enabled` (Boolean) Enables the Conformance Pack.
+
+Optional:
+
+- `parameters` (Map of String) The keys of the map are the parameters defined in the yaml file found in the AWS documentation linked to the Conformance Pack's description. The value of the map is a string that is supported by the parameter in the key. If no parameters are defined, the default values defined in the yaml file.
+
+
+<a id="nestedatt--configuration--accounts--management--config--conformance_packs--security"></a>
+### Nested Schema for `configuration.accounts.management.config.conformance_packs.security`
+
+Required:
+
+- `enabled` (Boolean) Enables the Conformance Pack.
+
+Optional:
+
+- `parameters` (Map of String) The keys of the map are the parameters defined in the yaml file found in the AWS documentation linked to the Conformance Pack's description. The value of the map is a string that is supported by the parameter in the key. If no parameters are defined, the default values defined in the yaml file.
+
+
+
+
+<a id="nestedatt--configuration--accounts--management--s3_account_public_access_block"></a>
+### Nested Schema for `configuration.accounts.management.s3_account_public_access_block`
+
+Optional:
+
+- `block_public_acls` (Boolean) Optional) Whether Amazon S3 should block public bucket policies for buckets in this account. Defaults to `true`.
+- `block_public_policy` (Boolean) Whether Amazon S3 should block public bucket policies for buckets in this account. Defaults to `true`.
+- `ignore_public_acls` (Boolean) Whether Amazon S3 should ignore public ACLs for buckets in this account. Defaults to true.
+- `restrict_public_buckets` (Boolean) Whether Amazon S3 should restrict public bucket policies for buckets in this account. Defaults to true.
+
+
+
+<a id="nestedatt--configuration--accounts--network"></a>
+### Nested Schema for `configuration.accounts.network`
+
+Required:
+
+- `alternate_contacts` (Attributes Map) Configuration of AWS Account alternate contacts. (see [below for nested schema](#nestedatt--configuration--accounts--network--alternate_contacts))
+- `aws_account_close_on_delete` (Boolean) If `true`, this will close the AWS account on resource deletion, beginning the 90-day suspension period. Otherwise, the account will just be unenrolled from Control Tower.
+- `primary_contact` (Attributes) Configuration of AWS Account primary contact. (see [below for nested schema](#nestedatt--configuration--accounts--network--primary_contact))
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--accounts--network--auditmanager_assessments))
+- `backup` (Attributes) AWS Backup configuration settings for the local account. (see [below for nested schema](#nestedatt--configuration--accounts--network--backup))
+- `budgets` (Attributes List) A list of budget objects. (see [below for nested schema](#nestedatt--configuration--accounts--network--budgets))
+- `cloud_wan` (Attributes) Cloud WAN architecture. Conflicts with `transit_gateway`. (see [below for nested schema](#nestedatt--configuration--accounts--network--cloud_wan))
+- `config` (Attributes) AWS Config Conformance Packs Rules deployed for this AWS account only. (see [below for nested schema](#nestedatt--configuration--accounts--network--config))
+- `dns_resolver` (Attributes) AWS Private DNS Resolver configuration. (see [below for nested schema](#nestedatt--configuration--accounts--network--dns_resolver))
+- `dns_zones` (Attributes) AWS DNS Zones for public and private DNS object. (see [below for nested schema](#nestedatt--configuration--accounts--network--dns_zones))
+- `ebs_encryption_by_default` (Boolean) Whether or not default EBS encryption is enabled. Defaults to true.
+- `s3_account_public_access_block` (Attributes) Manages S3 account-level Public Access Block configuration. (see [below for nested schema](#nestedatt--configuration--accounts--network--s3_account_public_access_block))
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with with this AWS account. (see [below for nested schema](#nestedatt--configuration--accounts--network--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--accounts--network--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with this AWS account. The object name MUST be unique across this account and any OU level definitions. (see [below for nested schema](#nestedatt--configuration--accounts--network--sso_permission_sets))
+- `transit_gateway` (Attributes) Region Hub and Spoke centralized architecture, with multi regional support. (see [below for nested schema](#nestedatt--configuration--accounts--network--transit_gateway))
+- `virtual_private_gateway` (Attributes) VPN gateway for distributed architecture. It is ignored if centralized architecture with transit gateway is enabled. (see [below for nested schema](#nestedatt--configuration--accounts--network--virtual_private_gateway))
+- `vpc` (Attributes) Configuration for the VPC(s) deployed in the Hub. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpc))
+- `vpc_ipam` (Attributes) Configuration for VPC IPAM service deployed in the Hub. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpc_ipam))
+- `vpn` (Attributes) Wrapper for the configuration of 2 types of VPN: client and site-to-site. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn))
+
+<a id="nestedatt--configuration--accounts--network--alternate_contacts"></a>
+### Nested Schema for `configuration.accounts.network.alternate_contacts`
+
+Required:
+
+- `email` (String) An email address for the alternate contact.
+- `name` (String) Name of the alternate contact.
+- `phone` (String) Phone number for the alternate contact.
+- `title` (String) Title for the alternate contact.
+
+
+<a id="nestedatt--configuration--accounts--network--primary_contact"></a>
+### Nested Schema for `configuration.accounts.network.primary_contact`
+
+Required:
+
+- `address_line_1` (String) The first line of the primary contact address.
+- `city` (String) The city of the primary contact address.
+- `country_code` (String) The ISO-3166 two-letter country code for the primary contact address.
+- `full_name` (String) The full name of the primary contact address.
+- `phone` (String) The phone number of the primary contact information. The number will be validated and, in some countries, checked for activation.
+- `postal_code` (String) The postal code of the primary contact address.
+
+Optional:
+
+- `address_line_2` (String) The second line of the primary contact address, if any.
+- `address_line_3` (String) The third line of the primary contact address, if any.
+- `company_name` (String) The name of the company associated with the primary contact information, if any.
+- `district_or_county` (String) The district or county of the primary contact address, if any.
+- `state_or_region` (String) The state or region of the primary contact address. If the mailing address is within the United States (US), the value in this field can be either a two character state code (for example, `NJ`) or the full state name (for example, `New Jersey`). This field is required in the following countries: `US, CA, GB, DE, JP, IN, and BR`.
+- `website_url` (String) The URL of the website associated with the primary contact information, if any.
+
+
+<a id="nestedatt--configuration--accounts--network--auditmanager_assessments"></a>
+### Nested Schema for `configuration.accounts.network.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--accounts--network--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--accounts--network--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.accounts.network.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--accounts--network--backup"></a>
+### Nested Schema for `configuration.accounts.network.backup`
+
+Optional:
+
+- `policies` (Attributes) Configuration settings for built-in backup policies. (see [below for nested schema](#nestedatt--configuration--accounts--network--backup--policies))
+- `restore_testing` (Attributes) If enabled, it will create a restore testing plan with multiple resource type selections. (see [below for nested schema](#nestedatt--configuration--accounts--network--backup--restore_testing))
+- `vault_lock` (Attributes) Configuration settings for the AWS Organization Backup Vault lock. (see [below for nested schema](#nestedatt--configuration--accounts--network--backup--vault_lock))
+- `vault_notifications` (Attributes List) Configuration settings for the AWS Organization Backup Vault notifications. (see [below for nested schema](#nestedatt--configuration--accounts--network--backup--vault_notifications))
+
+<a id="nestedatt--configuration--accounts--network--backup--policies"></a>
+### Nested Schema for `configuration.accounts.network.backup.policies`
+
+Optional:
+
+- `daily` (Attributes) Built-in daily backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--network--backup--policies--daily))
+- `monthly` (Attributes) Built-in monthly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--network--backup--policies--monthly))
+- `weekly` (Attributes) Built-in weekly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--network--backup--policies--weekly))
+- `yearly` (Attributes) Built-in yearly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--network--backup--policies--yearly))
+
+<a id="nestedatt--configuration--accounts--network--backup--policies--daily"></a>
+### Nested Schema for `configuration.accounts.network.backup.policies.daily`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--network--backup--policies--monthly"></a>
+### Nested Schema for `configuration.accounts.network.backup.policies.monthly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--network--backup--policies--weekly"></a>
+### Nested Schema for `configuration.accounts.network.backup.policies.weekly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--network--backup--policies--yearly"></a>
+### Nested Schema for `configuration.accounts.network.backup.policies.yearly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+
+<a id="nestedatt--configuration--accounts--network--backup--restore_testing"></a>
+### Nested Schema for `configuration.accounts.network.backup.restore_testing`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables the AWS Backup restore testing plan for supported resources. Defaults to `true`.
+- `protected_resource_selection_tags` (Attributes List) A list of conditions that you define for resources in your restore testing plan using tags. Filters the values of your tagged resources for only those resources that you tagged with the same value. (see [below for nested schema](#nestedatt--configuration--accounts--network--backup--restore_testing--protected_resource_selection_tags))
+- `protected_resource_selection_types` (List of String) The type of AWS resource included in a restore testing selection.
+- `recovery_point_selection` (Attributes) Configuration of recovery points for AWS Backup restore testing plan. (see [below for nested schema](#nestedatt--configuration--accounts--network--backup--restore_testing--recovery_point_selection))
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a restore test. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 1 AM on the 15th of every month.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+
+<a id="nestedatt--configuration--accounts--network--backup--restore_testing--protected_resource_selection_tags"></a>
+### Nested Schema for `configuration.accounts.network.backup.restore_testing.protected_resource_selection_tags`
+
+Optional:
+
+- `tag_key` (String) The selection tag key. Defaults to `RestoreTestingEnabled`.
+- `tag_value` (String) The selection tag value. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--accounts--network--backup--restore_testing--recovery_point_selection"></a>
+### Nested Schema for `configuration.accounts.network.backup.restore_testing.recovery_point_selection`
+
+Optional:
+
+- `algorithm` (String) Acceptable values include `LATEST_WITHIN_WINDOW` or `RANDOM_WITHIN_WINDOW`.
+- `recovery_point_types` (List of String) Acceptable values include `CONTINUOUS` and `SNAPSHOT`.
+- `selection_window_days` (Number) Accepted values are integers from 1 to 365.
+
+
+
+<a id="nestedatt--configuration--accounts--network--backup--vault_lock"></a>
+### Nested Schema for `configuration.accounts.network.backup.vault_lock`
+
+Optional:
+
+- `changeable_for_days` (Number) The number of days before the lock date. If omitted creates a vault lock in governance mode, otherwise it will create a vault lock in compliance mode.
+- `max_retention_days` (Number) The maximum retention period that the vault retains its recovery points. Defaults to `90`.
+!!! warning
+    Changing this value causes the backup vault to be re-created.
+    CANNOT be changed after creation without destroying the backup vault and its data.<br>
+- `min_retention_days` (Number) The minimum retention period that the vault retains its recovery points. Defaults to `1`.
+!!! warning
+    Changing this value causes the backup vault to be re-created.
+    CANNOT be changed after creation without destroying the backup vault and its data.<br>
+
+
+<a id="nestedatt--configuration--accounts--network--backup--vault_notifications"></a>
+### Nested Schema for `configuration.accounts.network.backup.vault_notifications`
+
+Required:
+
+- `recipients` (Attributes) The recipients of the specified Backup Vault events. (see [below for nested schema](#nestedatt--configuration--accounts--network--backup--vault_notifications--recipients))
+
+Optional:
+
+- `events` (List of String) An array of events that indicate the status of jobs to back up resources to the backup vault.
+- `filter_policy` (String) JSON String with the filter policy that will be used in the SNS subscription to filter messages seen by the target resource. Refer to the [SNS docs](https://docs.aws.amazon.com/sns/latest/dg/message-filtering.html) for more details.
+
+<a id="nestedatt--configuration--accounts--network--backup--vault_notifications--recipients"></a>
+### Nested Schema for `configuration.accounts.network.backup.vault_notifications.recipients`
+
+Optional:
+
+- `email` (List of String) List of email addresses.
+
+
+
+
+<a id="nestedatt--configuration--accounts--network--budgets"></a>
+### Nested Schema for `configuration.accounts.network.budgets`
+
+Required:
+
+- `name` (String) The name of a budget. The name must be unique within an account. MUST be lowercase alphanumeric or dash between 1 and 64 characters.
+- `time_unit` (String) The length of time until a budget resets the actual and forecasted spend. Valid values are: `MONTHLY | QUARTERLY | ANNUALLY | DAILY`.
+- `type` (String) Specifies whether this budget tracks costs, usage, RI utilization, RI coverage, Savings Plans utilization, or Savings Plans coverage.
+
+Optional:
+
+- `auto_adjust_data` (Attributes) The parameters that determine the budget amount for an auto-adjusting budget. (see [below for nested schema](#nestedatt--configuration--accounts--network--budgets--auto_adjust_data))
+- `cost_filters` (Attributes List) A list of cost filters. Refer to [AWS CostFilter documentation](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-create-filters.html) and [API Documentation](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html#awscostmanagement-Type-budgets_Budget-CostFilters) for further detail. (see [below for nested schema](#nestedatt--configuration--accounts--network--budgets--cost_filters))
+- `cost_types` (List of String) A list of cost types included in a budget, such as tax and subscriptions. Defaults to `["include_credit","include_discount","include_other_subscription","include_recurring","include_refund","include_subscription","include_support","include_tax","include_upfront"]`.
+- `limit` (Attributes) Object containing budget limit. Only one of `limit` and `planned_limits` MUST be defined. (see [below for nested schema](#nestedatt--configuration--accounts--network--budgets--limit))
+- `notifications` (Attributes List) A list of objects containing Budget Notifications. (see [below for nested schema](#nestedatt--configuration--accounts--network--budgets--notifications))
+- `planned_limits` (Attributes List) Object containing Planned Budget Limits. Can be used multiple times to plan more than one budget limit. See [PlannedBudgetLimits](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html#awscostmanagement-Type-budgets_Budget-PlannedBudgetLimits) documentation. Only one of `limit` and `planned_limits` MUST be defined. (see [below for nested schema](#nestedatt--configuration--accounts--network--budgets--planned_limits))
+- `tags` (Map of String) Map of tags assigned to the resource.
+- `time_period` (Attributes) The period of time that's covered by a budget. If you create your budget and don't specify a start date, AWS defaults to the start of your chosen time period (DAILY, MONTHLY, QUARTERLY, or ANNUALLY). For example, if you created your budget on January 24, 2018, chose DAILY, and didn't set a start date, AWS set your start date to `01/24/18 00:00 UTC`. If you chose MONTHLY, AWS set your start date to `01/01/18 00:00 UTC`. If you didn't specify an end date, AWS set your end date to `06/15/87 00:00 UTC`. (see [below for nested schema](#nestedatt--configuration--accounts--network--budgets--time_period))
+
+<a id="nestedatt--configuration--accounts--network--budgets--auto_adjust_data"></a>
+### Nested Schema for `configuration.accounts.network.budgets.auto_adjust_data`
+
+Required:
+
+- `auto_adjust_type` (String) The string that defines whether your budget auto-adjusts based on historical or forecasted data.
+
+Optional:
+
+- `historical_options` (Attributes) The string that defines whether your budget auto-adjusts based on historical or forecasted data. See further details in [AWS Documentation](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_HistoricalOptions.html). (see [below for nested schema](#nestedatt--configuration--accounts--network--budgets--auto_adjust_data--historical_options))
+- `last_auto_adjust_time` (String) The last time that your budget was auto-adjusted. MUST be in timestamp format.
+
+<a id="nestedatt--configuration--accounts--network--budgets--auto_adjust_data--historical_options"></a>
+### Nested Schema for `configuration.accounts.network.budgets.auto_adjust_data.historical_options`
+
+Required:
+
+- `budget_adjustment_period` (Number) The number of budget periods included in the moving-average calculation that determines your auto-adjusted budget amount.
+
+Optional:
+
+- `lookback_available_periods` (Number) The integer that describes how many budget periods in your BudgetAdjustmentPeriod are included in the calculation of your current budget limit. If the first budget period in your BudgetAdjustmentPeriod has no cost data, then that budget period isn’t included in the average that determines your budget limit. You can’t set your own LookBackAvailablePeriods. The value is automatically calculated from the `budget_adjustment_period` and your historical cost data.
+
+
+
+<a id="nestedatt--configuration--accounts--network--budgets--cost_filters"></a>
+### Nested Schema for `configuration.accounts.network.budgets.cost_filters`
+
+Required:
+
+- `name` (String) The name of the cost filter. Valid values are: `AZ | BillingEntity | CostCategory | InstanceType | InvoicingEntity | LegalEntityName | LinkedAccount | Operation | PurchaseType | Region | Service | TagKeyValue | UsageType | UsageTypeGroup`.
+- `values` (List of String) The list of values used for filtering.
+
+
+<a id="nestedatt--configuration--accounts--network--budgets--limit"></a>
+### Nested Schema for `configuration.accounts.network.budgets.limit`
+
+Required:
+
+- `amount` (String) The cost or usage amount that's associated with a budget forecast, actual spend, or budget threshold.
+- `unit` (String) The unit of measurement that's used for the budget forecast, actual spend, or budget threshold, such as dollars or GB. See [Spend](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/data-type-spend.html) documentation.
+
+
+<a id="nestedatt--configuration--accounts--network--budgets--notifications"></a>
+### Nested Schema for `configuration.accounts.network.budgets.notifications`
+
+Required:
+
+- `comparison_operator` (String) Comparison operator to use to evaluate the condition. Valid values are: `EQUAL_TO | GREATER_THAN | LESS_THAN`.
+- `email_addresses` (List of String) Lost of email addresses to notify.
+- `threshold` (String) Threshold when the notification should be sent.
+- `threshold_type` (String) What kind of threshold is defined. Valid values are: `ABSOLUTE_VALUE | PERCENTAGE`.
+- `type` (String) Comparison operator to use to evaluate the condition. Valid values are: `ACTUAL | FORECASTED`.
+
+
+<a id="nestedatt--configuration--accounts--network--budgets--planned_limits"></a>
+### Nested Schema for `configuration.accounts.network.budgets.planned_limits`
+
+Required:
+
+- `amount` (String) The cost or usage amount that's associated with a budget forecast, actual spend, or budget threshold.
+- `start_time` (String) The start time of the budget limit. Format: `2017-01-01_12:00`.
+- `unit` (String) The unit of measurement that's used for the budget forecast, actual spend, or budget threshold, such as dollars or GB. See [Spend](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/data-type-spend.html) documentation.
+
+
+<a id="nestedatt--configuration--accounts--network--budgets--time_period"></a>
+### Nested Schema for `configuration.accounts.network.budgets.time_period`
+
+Optional:
+
+- `end` (String) The end of the time period covered by the budget. Format: `2017-01-01_12:00`.
+- `start` (String) The start of the time period covered by the budget. Format: `2017-01-01_12:00`.
+
+
+
+<a id="nestedatt--configuration--accounts--network--cloud_wan"></a>
+### Nested Schema for `configuration.accounts.network.cloud_wan`
+
+Optional:
+
+- `enabled` (Boolean) If true, deploys a Cloud WAN architecture. Defaults to `false`
+
+
+<a id="nestedatt--configuration--accounts--network--config"></a>
+### Nested Schema for `configuration.accounts.network.config`
+
+Optional:
+
+- `conformance_packs` (Attributes) This resource configures the AWS Config Conformance packs provided by AWS [here](https://docs.aws.amazon.com/config/latest/developerguide/conformancepack-sample-templates.html). Please read the AWS guidance before deploying. (see [below for nested schema](#nestedatt--configuration--accounts--network--config--conformance_packs))
+
+<a id="nestedatt--configuration--accounts--network--config--conformance_packs"></a>
+### Nested Schema for `configuration.accounts.network.config.conformance_packs`
+
+Optional:
+
+- `operational` (Attributes Map) AWS Config Conformance Packs for Operational Best Practices. Possible values for the key of the map are:
+	- `abs_ccigv2_material`: Operational Best Practices for ABS CCIGv2 Material Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ABS-CCIGv2-Material.html).
+	- `abs_ccigv2_standard`: Operational Best Practices for ABS CCIGv2 Standard Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ABS-CCIGv2-Standard.html).
+	- `acsc_essential8`: Operational Best Practices for ACSC Essential 8 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-acsc_essential_8.html).
+	- `acsc_ism`: Operational Best Practices for ACSC ISM Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-acsc-ism.html).
+	- `ai_and_ml`: Operational Best Practices for AI and ML Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-AI-and-ML.html).
+	- `api_gateway`: Operational Best Practices for Amazon API Gateway Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-API-gateway.html).
+	- `apra_cpg_234`: Operational Best Practices for APRA CPG 234 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-apra_cpg_234.html).
+	- `asset_management`: Operational Best Practices for Asset Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-asset-management.html).
+	- `backup`: Operational Best Practices for AWS Backup Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-backup.html).
+	- `bcp_and_dr`: Operational Best Practices for BCP and DR Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-BCP-and-DR.html).
+	- `bnm_rmit`: Operational Best Practices for BNM RMiT Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-bnm-rmit.html).
+	- `cccs_medium`: Operational Best Practices for Canadian Centre for Cyber Security (CCCS) Medium Cloud Control Profile Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cccs_medium.html).
+	- `ccn_ens_high`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) High Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens_high.html).
+	- `ccn_ens_low`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) Low Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens-low.html).
+	- `ccn_ens_medium`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) Medium Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens-medium.html).
+	- `cis`: Operational Best Practices for CIS Conformance Pack. See more details about this pack in [AWS sample](https://github.com/awslabs/aws-config-rules/blob/master/aws-config-conformance-packs/Operational-Best-Practices-for-CIS.yaml).
+	- `cis_aws_v1_4_level1`: Operational Best Practices for CIS AWS Foundations Benchmark v1.4 Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_aws_benchmark_level_1.html).
+	- `cis_aws_v1_4_level2`: Operational Best Practices for CIS AWS Foundations Benchmark v1.4 Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_aws_benchmark_level_2.html).
+	- `cis_critical_security_controls_v8_ig1`: Operational Best Practices for CIS Critical Security Controls v8 IG1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8.html).
+	- `cis_critical_security_controls_v8_ig2`: Operational Best Practices for CIS Critical Security Controls v8 IG2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8-ig2.html)
+	- `cis_critical_security_controls_v8_ig3`: Operational Best Practices for CIS Critical Security Controls v8 IG3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8-ig3.html).
+	- `cis_top20`: Operational Best Practices for CIS Top 20 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_top_20.html).
+	- `cisa_cyber_essentials`: Operational Best Practices for CISA Cyber Essentials Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cisa-ce.html).
+	- `cjis`: Operational Best Practices for Criminal Justice Information Services (CJIS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cjis.html).
+	- `cloudwatch`: Operational Best Practices for Amazon CloudWatch Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-cloudwatch.html).
+	- `cmmc_level1`: Operational Best Practices for CMMC Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_1.html).
+	- `cmmc_level2`: Operational Best Practices for CMMC Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_2.html).
+	- `cmmc_level3`: Operational Best Practices for CMMC Level 3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_3.html).
+	- `cmmc_level4`: Operational Best Practices for CMMC Level 4 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_4.html).
+	- `cmmc_level5`: Operational Best Practices for CMMC Level 5 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_5.html).
+	- `cmmc_2_0_level1`: Operational Best Practices for CMMC 2.0 Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_2.0_level_1.html).
+	- `cmmc_2_0_level2`: Operational Best Practices for CMMC 2.0 Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_2.0_level_2.html).
+	- `compute_services`: Operational Best Practices for Compute Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Compute-Services.html).
+	- `data_resiliency`: Operational Best Practices for Data Resiliency Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Data-Resiliency.html).
+	- `database_services`: Operational Best Practices for Databases Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Databases-Services.html).
+	- `datalakes_and_analytics_services`: Operational Best Practices for Data Lakes and Analytics Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Datalakes-and-Analytics-Services.html).
+	- `devops`: Operational Best Practices for DevOps Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-DevOps.html).
+	- `dynamodb`: Operational Best Practices for Amazon DynamoDB Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-dynamodb.html).
+	- `ec2`: Operational Best Practices for EC2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-EC2.html).
+	- `encryption_and_keys`: Operational Best Practices for Encryption and Key Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Encryption-and-Keys.html).
+	- `enisa_cybersecurity_guide`: Operational Best Practices for ENISA Cybersecurity guide for SMEs Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-enisa-cybersecurity-guide-for-smes.html).
+	- `fda_21cfr_part_11`: Operational Best Practices for FDA Title 21 CFR Part 11 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-FDA-21CFR-Part-11.html)
+	- `fedramp_highpart1`: Operational Best Practices for FedRAMP (High Part 1) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-high-part-1.html).
+	- `fedramp_highpart2`: Operational Best Practices for FedRAMP (High Part 2) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-high-part-2.html).
+	- `fedramp_low`: Operational Best Practices for FedRAMP(Low) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-low.html).
+	- `fedramp_moderate`: Operational Best Practices for FedRAMP(Moderate) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-moderate.html).
+	- `ffiec`: Operational Best Practices for FFIEC Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ffiec.html).
+	- `germany_c5`: Operational Best Practices for Germany Cloud Computing Compliance Criteria Catalog (C5) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-germany-c5.html).
+	- `glba`: Operational Best Practices for Gramm Leach Bliley Act (GLBA) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-gramm-leach-bliley-act.html).
+	- `gxp_eu_annex_11`: Operational Best Practices for GxP EU Annex 11 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-gxp-eu-annex-11.html).
+	- `hipaa_security`: Operational Best Practices for HIPAA Security Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-hipaa_security.html).
+	- `iam`: Operational Best Practices for AWS Identity And Access Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-identity-and-access-management.html).
+	- `irs_1075`: Operational Best Practices for IRS 1075 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-irs-1075.html).
+	- `kisms`: Operational Best Practices for K-ISMS Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-k-isms.html).
+	- `load_balancing`: Operational Best Practices for Load Balancing Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-load-balancing.html).
+	- `logging`: Operational Best Practices for Logging Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-logging.html).
+	- `management_governance_services`: Operational Best Practices for Management and Governance Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Management-and-Governance-Services.html).
+	- `mas_notice_655`: Operational Best Practices for MAS Notice 655 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-mas_notice_655.html).
+	- `mas_trmg`: Operational Best Practices for MAS TRMG Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-mas-trmg.html).
+	- `monitoring`: Operational Best Practices for Monitoring Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-monitoring.html).
+	- `nbc_trmg`: Operational Best Practices for NBC TRMG Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nbc-trmg.html).
+	- `ncsc_caf`: Operational Best Practices for NCSC Cyber Assesment Framework Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ncsc_cafv3.html).
+	- `ncsc_cloudsec_principles`: Operational Best Practices for NCSC Cloud Security Principles Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ncsc.html).
+	- `nerc_cip_bcsi`: Operational Best Practices for NERC CIP BCSI Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nerc.html).
+	- `networking_services`: Operational Best Practices for Networking and Content Delivery Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Networking-and-Content-Delivery-Services.html).
+	- `nist_csf`: Operational Best Practices for NIST CSF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-csf.html).
+	- `nist_privacy_framework_v1`: Operational Best Practices for NIST Privacy Framework v1.0 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_privacy_framework.html).
+	- `nist_800_53_rev_5`: Operational Best Practices for NIST 800-53 rev 5 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-800-53_rev_5.html).
+	- `nist_800_171`: Operational Best Practices for NIST 800 171 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-171.html).
+	- `nist_800_172`: Operational Best Practices for NIST 800 172 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-172.html).
+	- `nist_800_181`: Operational Best Practices for NIST 800 181 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-181.html).
+	- `nist_1800_25`: Operational Best Practices for NIST 1800 25 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_1800_25.html).
+	- `nydfs_23_nycrr_500`: Operational Best Practices for NYDFS 23 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-us_nydfs.html).
+	- `nzism`: Operational Best Practices for NZISM Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nzism.html).
+	- `pci_dss`: Operational Best Practices for PCI DSS Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-pci-dss.html).
+	- `publicly_accessible_resources`: Operational Best Practices for Publicly Accessible Resources Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Publicly-Accessible-Resources.html).
+	- `rbi_bcsf_ucb`: Operational Best Practices for RBI Cyber Security Framework for UCBs Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-rbi-bcsf-ucb.html).
+	- `rbi_md_itf`: Operational Best Practices for RBI MD-ITF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-rbi-md-itf.html).
+	- `security_services`: Operational Best Practices for Security, Identity, and Compliance Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Security-Identity-and-Compliance-Services.html).
+	- `serverless_services`: Operational Best Practices for Serverless Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-serverless.html).
+	- `storage_services`: Operational Best Practices for Storage Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Storage-Services.html).
+	- `swift_csp`: Operational Best Practices for SWIFT CSP Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-swift-csp.html).
+	- `s3`: Operational Best Practices for Amazon S3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-s3.html).
+	- `well_architected_reliability_pillar`: Operational Best Practices for AWS Well-Architected Framework Reliability Pillar Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-wa-Reliability-Pillar.html).
+	- `well_architected_security_pillar`: Operational Best Practices for AWS Well-Architected Framework Security Pillar Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-wa-Security-Pillar.html).
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--accounts--network--config--conformance_packs--operational))
+- `security` (Attributes Map) AWS Config Conformance Packs for Security Best Practices. Possible values for the key of the map are:
+	- `autoscaling`: Security Best Practices for AWS Auto Scaling Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-AutoScaling.html).
+	- `cloudfront`: Security Best Practices for Amazon CloudFront Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CloudFront.html).
+	- `cloudtrail`: Security Best Practices for AWS CloudTrail Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CloudTrail.html).
+	- `codebuild`: Security Best Practices for AWS CodeBuild Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CodeBuild.html).
+	- `ecr`: Security Best Practices for Amazon ECR Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-ECR.html).
+	- `ecs`: Security Best Practices for Amazon Elastic Container Service (Amazon ECS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-ECS.html).
+	- `efs`: Security Best Practices for Amazon Elastic File System (Amazon EFS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-EFS.html).
+	- `eks`: Security Best Practices for Amazon Elastic Kubernetes Service (Amazon EKS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-EKS.html).
+	- `lambda`: Security Best Practices for AWS Lambda Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Lambda.html).
+	- `network_firewall`: Security Best Practices for AWS Network Firewall Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Network-Firewall.html).
+	- `opensearch`: Security Best Practices for Amazon OpenSearch Service Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-OpenSearch.html).
+	- `rds`: Security Best Practices for Amazon Relational Database Service (Amazon RDS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-RDS.html).
+	- `redshift`: Security Best Practices for Amazon Redshift Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-redshift.html).
+	- `sagemaker`: Security Best Practices for Amazon SageMaker Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-SageMaker.html).
+	- `secrets_manager`: Security Best Practices for AWS Secrets Manager Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Secrets-Manager.html).
+	- `waf`: Security Best Practices for AWS WAF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-aws-waf.html).
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--accounts--network--config--conformance_packs--security))
+
+<a id="nestedatt--configuration--accounts--network--config--conformance_packs--operational"></a>
+### Nested Schema for `configuration.accounts.network.config.conformance_packs.operational`
+
+Required:
+
+- `enabled` (Boolean) Enables the Conformance Pack.
+
+Optional:
+
+- `parameters` (Map of String) The keys of the map are the parameters defined in the yaml file found in the AWS documentation linked to the Conformance Pack's description. The value of the map is a string that is supported by the parameter in the key. If no parameters are defined, the default values defined in the yaml file.
+
+
+<a id="nestedatt--configuration--accounts--network--config--conformance_packs--security"></a>
+### Nested Schema for `configuration.accounts.network.config.conformance_packs.security`
+
+Required:
+
+- `enabled` (Boolean) Enables the Conformance Pack.
+
+Optional:
+
+- `parameters` (Map of String) The keys of the map are the parameters defined in the yaml file found in the AWS documentation linked to the Conformance Pack's description. The value of the map is a string that is supported by the parameter in the key. If no parameters are defined, the default values defined in the yaml file.
+
+
+
+
+<a id="nestedatt--configuration--accounts--network--dns_resolver"></a>
+### Nested Schema for `configuration.accounts.network.dns_resolver`
+
+Optional:
+
+- `enabled` (Boolean) Is AWS Private Resolver DNS enabled?
+- `forwarding_domains` (Attributes List) Provides a list of objects to configure outbound conditional forwarding. (see [below for nested schema](#nestedatt--configuration--accounts--network--dns_resolver--forwarding_domains))
+
+<a id="nestedatt--configuration--accounts--network--dns_resolver--forwarding_domains"></a>
+### Nested Schema for `configuration.accounts.network.dns_resolver.forwarding_domains`
+
+Required:
+
+- `dns_domain` (String) DNS domain for conditional forwarding.
+- `dns_servers` (List of String) List of DNS servers that are authoritative for the domain.
+
+
+
+<a id="nestedatt--configuration--accounts--network--dns_zones"></a>
+### Nested Schema for `configuration.accounts.network.dns_zones`
+
+Optional:
+
+- `private_subdomains` (Attributes) Object contains the private DNS domain for each environment. (see [below for nested schema](#nestedatt--configuration--accounts--network--dns_zones--private_subdomains))
+- `public_domains` (List of String) List contains the public DNS domains.
+
+<a id="nestedatt--configuration--accounts--network--dns_zones--private_subdomains"></a>
+### Nested Schema for `configuration.accounts.network.dns_zones.private_subdomains`
+
+Optional:
+
+- `dev` (String) The subdomain name for creating the DEV environment private dns zone.
+- `prod` (String) The subdomain name for creating the PROD environment private dns zone.
+- `qa` (String) The subdomain name for creating the QA environment private dns zone.
+- `test` (String) The subdomain name for creating the TEST environment private dns zone.
+
+
+
+<a id="nestedatt--configuration--accounts--network--s3_account_public_access_block"></a>
+### Nested Schema for `configuration.accounts.network.s3_account_public_access_block`
+
+Optional:
+
+- `block_public_acls` (Boolean) Optional) Whether Amazon S3 should block public bucket policies for buckets in this account. Defaults to `true`.
+- `block_public_policy` (Boolean) Whether Amazon S3 should block public bucket policies for buckets in this account. Defaults to `true`.
+- `ignore_public_acls` (Boolean) Whether Amazon S3 should ignore public ACLs for buckets in this account. Defaults to true.
+- `restrict_public_buckets` (Boolean) Whether Amazon S3 should restrict public bucket policies for buckets in this account. Defaults to true.
+
+
+<a id="nestedatt--configuration--accounts--network--ssm_patch_policies"></a>
+### Nested Schema for `configuration.accounts.network.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--accounts--network--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--accounts--network--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--accounts--network--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--accounts--network--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.accounts.network.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--accounts--network--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.accounts.network.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--accounts--network--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--accounts--network--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--accounts--network--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.accounts.network.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--accounts--network--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.accounts.network.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--accounts--network--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.accounts.network.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--accounts--network--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.accounts.network.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--accounts--network--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--accounts--network--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--accounts--network--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.accounts.network.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--accounts--network--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--accounts--network--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.accounts.network.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--accounts--network--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.accounts.network.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--accounts--network--sso_permission_sets"></a>
+### Nested Schema for `configuration.accounts.network.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--accounts--network--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--accounts--network--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.accounts.network.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--accounts--network--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--accounts--network--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.accounts.network.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+<a id="nestedatt--configuration--accounts--network--transit_gateway"></a>
+### Nested Schema for `configuration.accounts.network.transit_gateway`
+
+Optional:
+
+- `aws_side_asn` (Number) Private Autonomous System Number (ASN) for the Amazon side of a BGP session. The range is `64512` to `65534` for 16-bit ASNs and `4200000000` to `4294967294` for 32-bit ASNs. Extra AWS Regions will increment by 1. Defaults to `64600`.
+- `enabled` (Boolean) If true, deploys a Hub and Spoke architecture based on AWS Transit Gateway. Defaults to `true`.
+- `separate_non_prod` (Boolean) If true, deploys a dedicated Routing Table on the AWS Transit Gateway for non-prod environments.
+All other services required to create a functional architecture will be duplicated for non-prod environments.
+Defaults to `false`.
+!!! warning
+    This value requires an increase in VPC per Region service quota and it will only take effect
+    after the quota is increased. As such, it's recommended to be set to true after the initial
+    tenancy resource is deployed and confirmation that network account has
+    VPC per Region service quota increased from default.<br>
+
+
+<a id="nestedatt--configuration--accounts--network--virtual_private_gateway"></a>
+### Nested Schema for `configuration.accounts.network.virtual_private_gateway`
+
+Optional:
+
+- `aws_side_asn` (Number) Private Autonomous System Number (ASN) for the Amazon side of a BGP session. The range is `64512` to `65534` for 16-bit ASNs and `4200000000` to `4294967294` for 32-bit ASNs. Extra AWS Regions will increment by 1. Defaults to `64700`.
+- `enabled` (Boolean) If true, deploys a Virtual Private Gateway in the egress VPC. Defaults to `false`.
+
+
+<a id="nestedatt--configuration--accounts--network--vpc"></a>
+### Nested Schema for `configuration.accounts.network.vpc`
+
+Optional:
+
+- `enable_dns_hostnames` (Boolean) A boolean flag to enable/disable DNS hostnames in the VPC. Defaults to `true`.
+- `enable_dns_support` (Boolean) A boolean flag to enable/disable DNS support in the VPC. Defaults to `true`.
+- `instance_tenancy` (String) A tenancy option for instances launched into the VPC. Default is `default`, which ensures that EC2 instances launched in this VPC use the EC2 instance tenancy attribute specified when the EC2 instance is launched. The only other option is `dedicated`, which ensures that EC2 instances launched in this VPC are run on dedicated tenancy instances regardless of the tenancy attribute specified at launch.
+- `nat_gateway` (Attributes) Provides details for configuring AWS NAT Gateway service for egress traffic. Should be disabled if `network_firewall` is enabled. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpc--nat_gateway))
+- `network_firewall` (Attributes) Provides details for configuring Network Firewall capability using AWS Network Firewall service or a 3rd party firewall. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpc--network_firewall))
+
+<a id="nestedatt--configuration--accounts--network--vpc--nat_gateway"></a>
+### Nested Schema for `configuration.accounts.network.vpc.nat_gateway`
+
+Optional:
+
+- `enabled` (Boolean) Is AWS NAT Gateway service enabled? Defaults to `true`.
+
+
+<a id="nestedatt--configuration--accounts--network--vpc--network_firewall"></a>
+### Nested Schema for `configuration.accounts.network.vpc.network_firewall`
+
+Required:
+
+- `deployment` (Attributes) Specifies deployment architecture for network firewall. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpc--network_firewall--deployment))
+- `enabled` (Boolean) if true, deploys network firewall(s) as per defined deployment.
+
+Optional:
+
+- `vendor` (Attributes) The vendor of the network firewall and it's associated settings. Defaults to `aws`. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpc--network_firewall--vendor))
+
+<a id="nestedatt--configuration--accounts--network--vpc--network_firewall--deployment"></a>
+### Nested Schema for `configuration.accounts.network.vpc.network_firewall.deployment`
+
+Optional:
+
+- `egress` (Boolean) If true, deploys network firewall(s) in the egress VPC. If transit gateway has separate routing tables enabled, it will create separate network firewall in prod and nonprod egress VPCs. Cannot be enabled at the same time as `inspection` and MUST be enabled if `inspection` is disabled.
+- `ingress` (Boolean) If true, deploys network firewall(s) in the ingress VPC. If transit gateway has separate routing tables enabled, it will create separate network firewall in prod and nonprod ingress VPCs. Cannot be enabled at the same time as `inspection`.
+- `inspection` (Boolean) If true, deploys an inspection VPC using AWS Network Firewall. Requires that the vendor of the firewall to be `aws`. Cannot be enabled at the same time as `egress` and `ingress` and doesn't support separate nonprod transit gateway route table.
+
+
+<a id="nestedatt--configuration--accounts--network--vpc--network_firewall--vendor"></a>
+### Nested Schema for `configuration.accounts.network.vpc.network_firewall.vendor`
+
+Optional:
+
+- `aws` (Attributes) Settings for AWS Network Firewall. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpc--network_firewall--vendor--aws))
+
+<a id="nestedatt--configuration--accounts--network--vpc--network_firewall--vendor--aws"></a>
+### Nested Schema for `configuration.accounts.network.vpc.network_firewall.vendor.aws`
+
+Optional:
+
+- `managed_rule_groups` (Attributes) Settings for AWS Managed Rule Groups. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpc--network_firewall--vendor--aws--managed_rule_groups))
+
+<a id="nestedatt--configuration--accounts--network--vpc--network_firewall--vendor--aws--managed_rule_groups"></a>
+### Nested Schema for `configuration.accounts.network.vpc.network_firewall.vendor.aws.managed_rule_groups`
+
+Optional:
+
+- `domain_lists` (List of String) AWS Network Firewall managed domain and IP rule groups block HTTP/HTTPS traffic to domains identified as low-reputation, or that are known or suspected to be associated with malware or botnets.
+- `threat_signatures` (List of String) AWS Network Firewall managed threat signature rule groups support several categories of threat signatures to protect against various types of malware and exploits, denial of service attempts, botnets, web attacks, credential phishing, scanning tools, and mail or messaging attacks. There are also signatures for intrusion detection and to enforce fair use policies as well as guard against emerging threats.
+
+
+
+
+
+
+<a id="nestedatt--configuration--accounts--network--vpc_ipam"></a>
+### Nested Schema for `configuration.accounts.network.vpc_ipam`
+
+Optional:
+
+- `enabled` (Boolean) Is VPC IPAM enabled? Defaults to `true`.
+
+
+<a id="nestedatt--configuration--accounts--network--vpn"></a>
+### Nested Schema for `configuration.accounts.network.vpn`
+
+Optional:
+
+- `client` (Attributes) Configuration for AWS VPN Client service deployed in the Hub. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--client))
+- `s2s` (Attributes) Configuration for Site-to-Site VPN setup. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s))
+
+<a id="nestedatt--configuration--accounts--network--vpn--client"></a>
+### Nested Schema for `configuration.accounts.network.vpn.client`
+
+Required:
+
+- `endpoints` (Attributes Map) Map of Client VPN endpoints for each AWS region. Possible values for the map keys are the region codes associated with Aws supported locations and enabled at tenancy level. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--client--endpoints))
+
+<a id="nestedatt--configuration--accounts--network--vpn--client--endpoints"></a>
+### Nested Schema for `configuration.accounts.network.vpn.client.endpoints`
+
+Required:
+
+- `prod` (Attributes List) Manages a Client VPN endpoint for production environment (or all environments if transit gateway is not enabled or it is enabled but doesn't have separate routing tables). (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--client--endpoints--prod))
+
+Optional:
+
+- `nonprod` (Attributes List) Manages a Client VPN endpoint for all non production environments. This is only applicable if transit gateway is enabled has separate routing tables enabled. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--client--endpoints--nonprod))
+
+<a id="nestedatt--configuration--accounts--network--vpn--client--endpoints--prod"></a>
+### Nested Schema for `configuration.accounts.network.vpn.client.endpoints.prod`
+
+Required:
+
+- `authentication` (Attributes) Information about the authentication method to be used to authenticate clients. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--client--endpoints--prod--authentication))
+- `cidr_block` (String) The IPv4 address range, in CIDR notation, from which to assign client IP addresses. The address range cannot overlap with the CIDR(s) provided in the regions object at tenancy level. The address range cannot be changed after the Client VPN endpoint has been created. The CIDR block should be /22 or greater.
+- `name` (String) The name of the Client VPN Endpoint. MUST be lowercase alphanumeric characters, dash and underscore with maximum legth of 64. Will be used with `configuration.dns_domain` as FQDN for issuing the endpoint ACM server certificate.
+
+Optional:
+
+- `availability_zones` (List of String) How many AZs to use for VPN Client Endpoint? The list MUST contain at least 1 element and MUST be defined as values in the organization network architecture deployments. Defaults to `["1"]`.
+- `connection_log_enabled` (Boolean) Indicates whether connection logging is enabled. Defaults to `true`.
+- `login_banner_text` (String) Customizable text that will be displayed in a banner on AWS provided clients when a VPN session is established. UTF-8 encoded characters only. Maximum of 1400 characters.
+- `self_service_portal` (String) Specify whether to enable the self-service portal for the Client VPN endpoint. Values can be `enabled` or `disabled`. Defaults to `disabled`.
+- `session_timeout_hours` (Number) The maximum session duration is a trigger by which end-users are required to re-authenticate prior to establishing a VPN session. Valid values: `8 | 10 | 12 | 24`. Defaults to `24`.
+- `split_tunnel` (Attributes) Indicates whether split-tunnel is enabled. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--client--endpoints--prod--split_tunnel))
+- `tags` (Map of String) Key-value map of resource tags for all the tenancy resources.
+- `transport_protocol` (String) The transport protocol to be used by the VPN session. Valid values: `tcp | udp`. Defaults to `udp`.
+- `use_aws_dns_servers` (Boolean) Use AWS VPC DNS servers for DNS resolution. If `false`, the DNS address of the connecting device is used. Defaults to `true`.
+- `use_aws_public_static_ip` (Boolean) If true and split tunnel if NOT enabled, it will create static public IP addresses for VPN Client Endpoint using AWS Elastic IPs. Defaults to `false`.
+- `vpn_port` (Number) The port number for the Client VPN endpoint. Valid values are `443 | 1194`. Defaults to `443`.
+
+<a id="nestedatt--configuration--accounts--network--vpn--client--endpoints--prod--authentication"></a>
+### Nested Schema for `configuration.accounts.network.vpn.client.endpoints.prod.authentication`
+
+Optional:
+
+- `directory_service` (Attributes) Active Directory authentication using AWS Directory Service. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--client--endpoints--prod--authentication--directory_service))
+- `federated` (Attributes) Federated authentication via SAML 2.0. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--client--endpoints--prod--authentication--federated))
+
+<a id="nestedatt--configuration--accounts--network--vpn--client--endpoints--prod--authentication--directory_service"></a>
+### Nested Schema for `configuration.accounts.network.vpn.client.endpoints.prod.authentication.directory_service`
+
+Required:
+
+- `enabled` (Boolean) If true, configures the endpoint with an Active Directory authentication.
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--client--endpoints--prod--authentication--federated"></a>
+### Nested Schema for `configuration.accounts.network.vpn.client.endpoints.prod.authentication.federated`
+
+Required:
+
+- `enabled` (Boolean) If true, configures the endpoint with a Federated SAML 2.0 authentication.
+- `saml_metadata_document` (String) A base64 encoded XML document generated by an identity provider (IdP) that supports SAML 2.0 for the purpose of authentication VPN Client users. The document includes the issuer's name, expiration information, and keys that can be used to validate the SAML authentication response (assertions) that are received from the IdP. You must generate the metadata document using the identity management software that is used as your organization's IdP. For more information, see [About SAML 2.0-based federation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml.html) in the IAM User Guide
+
+Optional:
+
+- `self_service_saml_metadata_document` (String) A base64 encoded XML document generated by an identity provider (IdP) that supports SAML 2.0 for the purpose of using the VPN Client self-service portal (MUST be provided if `self_service_portal` is `enabled` and should be different than the `saml_metadata_document`). The document includes the issuer's name, expiration information, and keys that can be used to validate the SAML authentication response (assertions) that are received from the IdP. You must generate the metadata document using the identity management software that is used as your organization's IdP. For more information, see [About SAML 2.0-based federation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml.html) in the IAM User Guide
+
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--client--endpoints--prod--split_tunnel"></a>
+### Nested Schema for `configuration.accounts.network.vpn.client.endpoints.prod.split_tunnel`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables split tunnel for the Client VPN endpoint. Defaults to `true`.
+- `routes` (List of String) Add custom routes to the split-tunnel routing table. By default, only the AWS region CIDR where the endpoint resides is added.
+
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--client--endpoints--nonprod"></a>
+### Nested Schema for `configuration.accounts.network.vpn.client.endpoints.nonprod`
+
+Required:
+
+- `authentication` (Attributes) Information about the authentication method to be used to authenticate clients. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--client--endpoints--nonprod--authentication))
+- `cidr_block` (String) The IPv4 address range, in CIDR notation, from which to assign client IP addresses. The address range cannot overlap with the CIDR(s) provided in the regions object at tenancy level. The address range cannot be changed after the Client VPN endpoint has been created. The CIDR block should be /22 or greater.
+- `name` (String) The name of the Client VPN Endpoint. MUST be lowercase alphanumeric characters, dash and underscore with maximum legth of 64. Will be used with `configuration.dns_domain` as FQDN for issuing the endpoint ACM server certificate.
+
+Optional:
+
+- `availability_zones` (List of String) How many AZs to use for VPN Client Endpoint? The list MUST contain at least 1 element and MUST be defined as values in the organization network architecture deployments. Defaults to `["1"]`.
+- `connection_log_enabled` (Boolean) Indicates whether connection logging is enabled. Defaults to `true`.
+- `login_banner_text` (String) Customizable text that will be displayed in a banner on AWS provided clients when a VPN session is established. UTF-8 encoded characters only. Maximum of 1400 characters.
+- `self_service_portal` (String) Specify whether to enable the self-service portal for the Client VPN endpoint. Values can be `enabled` or `disabled`. Defaults to `disabled`.
+- `session_timeout_hours` (Number) The maximum session duration is a trigger by which end-users are required to re-authenticate prior to establishing a VPN session. Valid values: `8 | 10 | 12 | 24`. Defaults to `24`.
+- `split_tunnel` (Attributes) Indicates whether split-tunnel is enabled. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--client--endpoints--nonprod--split_tunnel))
+- `tags` (Map of String) Key-value map of resource tags for all the tenancy resources.
+- `transport_protocol` (String) The transport protocol to be used by the VPN session. Valid values: `tcp | udp`. Defaults to `udp`.
+- `use_aws_dns_servers` (Boolean) Use AWS VPC DNS servers for DNS resolution. If `false`, the DNS address of the connecting device is used. Defaults to `true`.
+- `use_aws_public_static_ip` (Boolean) If true and split tunnel if NOT enabled, it will create static public IP addresses for VPN Client Endpoint using AWS Elastic IPs. Defaults to `false`.
+- `vpn_port` (Number) The port number for the Client VPN endpoint. Valid values are `443 | 1194`. Defaults to `443`.
+
+<a id="nestedatt--configuration--accounts--network--vpn--client--endpoints--nonprod--authentication"></a>
+### Nested Schema for `configuration.accounts.network.vpn.client.endpoints.nonprod.authentication`
+
+Optional:
+
+- `directory_service` (Attributes) Active Directory authentication using AWS Directory Service. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--client--endpoints--nonprod--authentication--directory_service))
+- `federated` (Attributes) Federated authentication via SAML 2.0. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--client--endpoints--nonprod--authentication--federated))
+
+<a id="nestedatt--configuration--accounts--network--vpn--client--endpoints--nonprod--authentication--directory_service"></a>
+### Nested Schema for `configuration.accounts.network.vpn.client.endpoints.nonprod.authentication.directory_service`
+
+Required:
+
+- `enabled` (Boolean) If true, configures the endpoint with an Active Directory authentication.
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--client--endpoints--nonprod--authentication--federated"></a>
+### Nested Schema for `configuration.accounts.network.vpn.client.endpoints.nonprod.authentication.federated`
+
+Required:
+
+- `enabled` (Boolean) If true, configures the endpoint with a Federated SAML 2.0 authentication.
+- `saml_metadata_document` (String) A base64 encoded XML document generated by an identity provider (IdP) that supports SAML 2.0 for the purpose of authentication VPN Client users. The document includes the issuer's name, expiration information, and keys that can be used to validate the SAML authentication response (assertions) that are received from the IdP. You must generate the metadata document using the identity management software that is used as your organization's IdP. For more information, see [About SAML 2.0-based federation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml.html) in the IAM User Guide
+
+Optional:
+
+- `self_service_saml_metadata_document` (String) A base64 encoded XML document generated by an identity provider (IdP) that supports SAML 2.0 for the purpose of using the VPN Client self-service portal (MUST be provided if `self_service_portal` is `enabled` and should be different than the `saml_metadata_document`). The document includes the issuer's name, expiration information, and keys that can be used to validate the SAML authentication response (assertions) that are received from the IdP. You must generate the metadata document using the identity management software that is used as your organization's IdP. For more information, see [About SAML 2.0-based federation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml.html) in the IAM User Guide
+
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--client--endpoints--nonprod--split_tunnel"></a>
+### Nested Schema for `configuration.accounts.network.vpn.client.endpoints.nonprod.split_tunnel`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables split tunnel for the Client VPN endpoint. Defaults to `true`.
+- `routes` (List of String) Add custom routes to the split-tunnel routing table. By default, only the AWS region CIDR where the endpoint resides is added.
+
+
+
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s`
+
+Required:
+
+- `connections` (Attributes Map) Map of VPN connections for each AWS region. Possible values for the map keys are the region codes associated with Aws supported locations and enabled at tenancy level. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections))
+- `gateway_attachment` (Attributes) Site-to-Site VPN connection(s) attachment to AWS gateway type (TGW/VPG). (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--gateway_attachment))
+
+Optional:
+
+- `customer_gateway` (Attributes) Settings required for setting up customer gateways. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--customer_gateway))
+- `direct_connect` (Attributes) Site-to-Site VPN connection(s) over Direct Connect. The direct connect setup MUST be enabled in the account. Either the Transit Gateway or Virtual Private Gateway attachment MUST be enabled as well. For more details about this architecture, see [AWS Direct Connect](https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/aws-direct-connect.html) or [AWS Direct Connect + AWS Transit Gateway](https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/aws-direct-connect-aws-transit-gateway.html). (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--direct_connect))
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections`
+
+Required:
+
+- `prod` (Attributes List) Manages a Site-to-Site VPN connection between an AWS gateway type (TGW/VPG) and an on-premises network for production environment (or all environment if transit gateway doesn't have separate routing tables). (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections--prod))
+
+Optional:
+
+- `nonprod` (Attributes List) Manages a Site-to-Site VPN connection between an AWS gateway type (TGW/VPG) and an on-premises network for all non production environments. This is only applicable if transit gateway has separate routing tables enabled. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections--nonprod))
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections--prod"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections.prod`
+
+Required:
+
+- `gateway` (Attributes) Creates a customer gateway inside a VPC. These objects can be connected to VPN gateways via VPN connections, and allow you to establish tunnels between your network and the VPC. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections--prod--gateway))
+
+Optional:
+
+- `local_ipv4_network_cidr` (String) The IPv4 CIDR on the customer gateway (on-premises) side of the VPN connection. Defaults to `0.0.0.0/0`.
+- `local_ipv6_network_cidr` (String) The IPv46 CIDR on the customer gateway (on-premises) side of the VPN connection. Defaults to `::/0`.
+- `remote_ipv4_network_cidr` (String) The IPv4 CIDR on the AWS side of the VPN connection. Defaults to `0.0.0.0/0`.
+- `remote_ipv6_network_cidr` (String) The IPv46 CIDR on the AWS side of the VPN connection. Defaults to `::/0`.
+- `tags` (Map of String) AWS tags to be applied on resources created for VPN connection(s).
+- `tunnels` (Attributes Map) Tunnel settings for the VPN connection. Possible values for the map keys are `tunnel1` or `tunnel2`. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections--prod--tunnels))
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections--prod--gateway"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections.prod.gateway`
+
+Required:
+
+- `address_space` (List of String) The list of string CIDRs representing the address space(s) on the customer gateway (on-premises) side. Will be configured as static route(s).
+- `device_name` (String) A name for the customer gateway device.
+- `ip_address` (String) The IPv4 address for the customer gateway device's outside interface.
+
+Optional:
+
+- `bgp_asn` (Number) The gateway's Border Gateway Protocol (BGP) Autonomous System Number (ASN). Valid values are from `1` to `4294967295`, with certain values reserved. Changing the value will force creation of a new customer gateway resource. If provided, will overwrite the `aws_side_asn`.
+- `certificate_authentication_enabled` (Boolean) Indicates if the customer gateway will use certificate based authentication. If true, it requires the AWS Private CA setup.
+- `device_index` (Number) Unique (positive) number identifying this gateway across all gateways in the region. Changing the value will force creation of a new customer gateway resource. This MUST be provided if the bgp_asn attribute is not provided as it is used to compute the `aws_side_asn`. Conflicts with `bgp_asn`.
+- `static_routes_only` (Boolean) Whether the VPN connection uses static routes exclusively. Static routes must be used for devices that don't support BGP. Defaults to `false`.
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections--prod--tunnels"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections.prod.tunnels`
+
+Optional:
+
+- `dpd_timeout_action` (String) The action to take after DPD timeout occurs for the first VPN tunnel. Specify restart to restart the IKE initiation. Specify clear to end the IKE session. Valid values are `clear | none | restart`. Defaults to `clear`.
+- `dpd_timeout_seconds` (Number) The number of seconds after which a DPD timeout occurs for the first VPN tunnel. Valid value is equal or higher than `30`. Defaults to `30`.
+- `enable_tunnel_lifecycle_control` (Boolean) Turn on or off tunnel endpoint lifecycle control feature for the first VPN tunnel. Defaults to `false`.
+- `ike_versions` (List of String) The IKE versions that are permitted for the VPN tunnel(s). Valid values are `ikev1 | ikev2`. Defaults to `["ikev2"]`.
+- `inside_ipv4_cidr` (String) The CIDR block of the inside IP addresses for the first VPN tunnel. Valid value is a size /30 CIDR block from the 169.254.0.0/16 range.
+- `inside_ipv6_cidr` (String) The range of inside IPv6 addresses for the first VPN tunnel. Supports only Transit Gateway setup. Valid value is a size /126 CIDR block from the local fd00::/8 range.
+- `logging` (Attributes) Options for sending VPN tunnel logs to CloudWatch. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections--prod--tunnels--logging))
+- `phase1` (Attributes) Wrapper for IKE phase 1 options. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections--prod--tunnels--phase1))
+- `phase2` (Attributes) Wrapper for IKE phase 2 options. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections--prod--tunnels--phase2))
+- `preshared_key` (String, Sensitive) The preshared key of the second VPN tunnel. The preshared key must be between 8 and 64 characters in length and cannot start with zero(0). Allowed characters are alphanumeric characters, periods(.) and underscores(_).
+- `rekey_fuzz_percentage` (Number) The percentage of the rekey window for the VPN tunnel(s) (determined by rekey_margin_time_seconds) during which the rekey time is randomly selected. Valid value is between `0` and `100`. Defaults to `100`.
+- `rekey_margin_time_seconds` (Number) The margin time, in seconds, before the phase 2 lifetime expires, during which the AWS side of the first VPN connection performs an IKE rekey. The exact time of the rekey is randomly selected based on the value for `rekey_fuzz_percentage`. Valid value is between `60` and half of `phase2_lifetime_seconds`. Defaults to `540`.
+- `replay_window_size` (Number) The number of packets in an IKE replay window for the VPN tunnel(s). Valid value is between `64` and `2048`. Defaults to `1024`.
+- `startup_action` (String) The action to take when the establishing the tunnel(s) for the VPN connection. By default, your customer gateway device must initiate the IKE negotiation and bring up the tunnel. Specify start for AWS to initiate the IKE negotiation. Valid values are `add | start`. Defaults to `add`.
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections--prod--tunnels--logging"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections.prod.tunnels.logging`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables VPN tunnel logging feature. Defaults to `true`.
+- `format` (String) Set log format. Possible values are: `json | text`. Defaults to `json`.
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections--prod--tunnels--phase1"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections.prod.tunnels.phase1`
+
+Optional:
+
+- `dh_group_numbers` (List of Number) List of one or more Diffie-Hellman group numbers that are permitted for the VPN tunnel(s) for phase 1 IKE negotiations. Valid values are `2 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24`. Defaults to `[14]`.
+- `encryption_algorithms` (List of String) List of one or more encryption algorithms that are permitted for the first VPN tunnel(s) for phase 1 IKE negotiations. Valid values are `AES128 | AES256 | AES128-GCM-16 | AES256-GCM-16`. Defaults to `["AES256-GCM-16"]`.
+- `integrity_algorithms` (List of String) List of one or more integrity algorithms that are permitted for the VPN tunnel(s) for phase 1 IKE negotiations. Valid values are `SHA1 | SHA2-256 | SHA2-384 | SHA2-512`. Defaults to `["SHA2-256"]`.
+- `lifetime_seconds` (Number) The lifetime for phase 1 of the IKE negotiation for the VPN tunnel(s), in seconds. Valid value is between `900` and `28800`. Defaults to `28800`.
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections--prod--tunnels--phase2"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections.prod.tunnels.phase2`
+
+Optional:
+
+- `dh_group_numbers` (List of Number) List of one or more Diffie-Hellman group numbers that are permitted for the first VPN tunnel for phase 2 IKE negotiations. Valid values are `2 | 5 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24`. Defaults to `[14]`.
+- `encryption_algorithms` (List of String) List of one or more encryption algorithms that are permitted for the first VPN tunnel(s) for phase 2 IKE negotiations. Valid values are `AES128 | AES256 | AES128-GCM-16 | AES256-GCM-16`. Defaults to `["AES256"]`.
+- `integrity_algorithms` (List of String) List of one or more integrity algorithms that are permitted for the VPN tunnel(s) for phase 2 IKE negotiations. Valid values are `SHA1 | SHA2-256 | SHA2-384 | SHA2-512`. Defaults to `["SHA2-256"]`.
+- `lifetime_seconds` (Number) The lifetime for phase 1 of the IKE negotiation for the VPN tunnel(s), in seconds. Valid value is between `900` and `3600`. Defaults to `3600`.
+
+
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections--nonprod"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections.nonprod`
+
+Required:
+
+- `gateway` (Attributes) Creates a customer gateway inside a VPC. These objects can be connected to VPN gateways via VPN connections, and allow you to establish tunnels between your network and the VPC. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections--nonprod--gateway))
+
+Optional:
+
+- `local_ipv4_network_cidr` (String) The IPv4 CIDR on the customer gateway (on-premises) side of the VPN connection. Defaults to `0.0.0.0/0`.
+- `local_ipv6_network_cidr` (String) The IPv46 CIDR on the customer gateway (on-premises) side of the VPN connection. Defaults to `::/0`.
+- `remote_ipv4_network_cidr` (String) The IPv4 CIDR on the AWS side of the VPN connection. Defaults to `0.0.0.0/0`.
+- `remote_ipv6_network_cidr` (String) The IPv46 CIDR on the AWS side of the VPN connection. Defaults to `::/0`.
+- `tags` (Map of String) AWS tags to be applied on resources created for VPN connection(s).
+- `tunnels` (Attributes Map) Tunnel settings for the VPN connection. Possible values for the map keys are `tunnel1` or `tunnel2`. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections--nonprod--tunnels))
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections--nonprod--gateway"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections.nonprod.gateway`
+
+Required:
+
+- `address_space` (List of String) The list of string CIDRs representing the address space(s) on the customer gateway (on-premises) side. Will be configured as static route(s).
+- `device_name` (String) A name for the customer gateway device.
+- `ip_address` (String) The IPv4 address for the customer gateway device's outside interface.
+
+Optional:
+
+- `bgp_asn` (Number) The gateway's Border Gateway Protocol (BGP) Autonomous System Number (ASN). Valid values are from `1` to `4294967295`, with certain values reserved. Changing the value will force creation of a new customer gateway resource. If provided, will overwrite the `aws_side_asn`.
+- `certificate_authentication_enabled` (Boolean) Indicates if the customer gateway will use certificate based authentication. If true, it requires the AWS Private CA setup.
+- `device_index` (Number) Unique (positive) number identifying this gateway across all gateways in the region. Changing the value will force creation of a new customer gateway resource. This MUST be provided if the bgp_asn attribute is not provided as it is used to compute the `aws_side_asn`. Conflicts with `bgp_asn`.
+- `static_routes_only` (Boolean) Whether the VPN connection uses static routes exclusively. Static routes must be used for devices that don't support BGP. Defaults to `false`.
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections--nonprod--tunnels"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections.nonprod.tunnels`
+
+Optional:
+
+- `dpd_timeout_action` (String) The action to take after DPD timeout occurs for the first VPN tunnel. Specify restart to restart the IKE initiation. Specify clear to end the IKE session. Valid values are `clear | none | restart`. Defaults to `clear`.
+- `dpd_timeout_seconds` (Number) The number of seconds after which a DPD timeout occurs for the first VPN tunnel. Valid value is equal or higher than `30`. Defaults to `30`.
+- `enable_tunnel_lifecycle_control` (Boolean) Turn on or off tunnel endpoint lifecycle control feature for the first VPN tunnel. Defaults to `false`.
+- `ike_versions` (List of String) The IKE versions that are permitted for the VPN tunnel(s). Valid values are `ikev1 | ikev2`. Defaults to `["ikev2"]`.
+- `inside_ipv4_cidr` (String) The CIDR block of the inside IP addresses for the first VPN tunnel. Valid value is a size /30 CIDR block from the 169.254.0.0/16 range.
+- `inside_ipv6_cidr` (String) The range of inside IPv6 addresses for the first VPN tunnel. Supports only Transit Gateway setup. Valid value is a size /126 CIDR block from the local fd00::/8 range.
+- `logging` (Attributes) Options for sending VPN tunnel logs to CloudWatch. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections--nonprod--tunnels--logging))
+- `phase1` (Attributes) Wrapper for IKE phase 1 options. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections--nonprod--tunnels--phase1))
+- `phase2` (Attributes) Wrapper for IKE phase 2 options. (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--connections--nonprod--tunnels--phase2))
+- `preshared_key` (String, Sensitive) The preshared key of the second VPN tunnel. The preshared key must be between 8 and 64 characters in length and cannot start with zero(0). Allowed characters are alphanumeric characters, periods(.) and underscores(_).
+- `rekey_fuzz_percentage` (Number) The percentage of the rekey window for the VPN tunnel(s) (determined by rekey_margin_time_seconds) during which the rekey time is randomly selected. Valid value is between `0` and `100`. Defaults to `100`.
+- `rekey_margin_time_seconds` (Number) The margin time, in seconds, before the phase 2 lifetime expires, during which the AWS side of the first VPN connection performs an IKE rekey. The exact time of the rekey is randomly selected based on the value for `rekey_fuzz_percentage`. Valid value is between `60` and half of `phase2_lifetime_seconds`. Defaults to `540`.
+- `replay_window_size` (Number) The number of packets in an IKE replay window for the VPN tunnel(s). Valid value is between `64` and `2048`. Defaults to `1024`.
+- `startup_action` (String) The action to take when the establishing the tunnel(s) for the VPN connection. By default, your customer gateway device must initiate the IKE negotiation and bring up the tunnel. Specify start for AWS to initiate the IKE negotiation. Valid values are `add | start`. Defaults to `add`.
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections--nonprod--tunnels--logging"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections.nonprod.tunnels.logging`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables VPN tunnel logging feature. Defaults to `true`.
+- `format` (String) Set log format. Possible values are: `json | text`. Defaults to `json`.
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections--nonprod--tunnels--phase1"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections.nonprod.tunnels.phase1`
+
+Optional:
+
+- `dh_group_numbers` (List of Number) List of one or more Diffie-Hellman group numbers that are permitted for the VPN tunnel(s) for phase 1 IKE negotiations. Valid values are `2 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24`. Defaults to `[14]`.
+- `encryption_algorithms` (List of String) List of one or more encryption algorithms that are permitted for the first VPN tunnel(s) for phase 1 IKE negotiations. Valid values are `AES128 | AES256 | AES128-GCM-16 | AES256-GCM-16`. Defaults to `["AES256-GCM-16"]`.
+- `integrity_algorithms` (List of String) List of one or more integrity algorithms that are permitted for the VPN tunnel(s) for phase 1 IKE negotiations. Valid values are `SHA1 | SHA2-256 | SHA2-384 | SHA2-512`. Defaults to `["SHA2-256"]`.
+- `lifetime_seconds` (Number) The lifetime for phase 1 of the IKE negotiation for the VPN tunnel(s), in seconds. Valid value is between `900` and `28800`. Defaults to `28800`.
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--connections--nonprod--tunnels--phase2"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.connections.nonprod.tunnels.phase2`
+
+Optional:
+
+- `dh_group_numbers` (List of Number) List of one or more Diffie-Hellman group numbers that are permitted for the first VPN tunnel for phase 2 IKE negotiations. Valid values are `2 | 5 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24`. Defaults to `[14]`.
+- `encryption_algorithms` (List of String) List of one or more encryption algorithms that are permitted for the first VPN tunnel(s) for phase 2 IKE negotiations. Valid values are `AES128 | AES256 | AES128-GCM-16 | AES256-GCM-16`. Defaults to `["AES256"]`.
+- `integrity_algorithms` (List of String) List of one or more integrity algorithms that are permitted for the VPN tunnel(s) for phase 2 IKE negotiations. Valid values are `SHA1 | SHA2-256 | SHA2-384 | SHA2-512`. Defaults to `["SHA2-256"]`.
+- `lifetime_seconds` (Number) The lifetime for phase 1 of the IKE negotiation for the VPN tunnel(s), in seconds. Valid value is between `900` and `3600`. Defaults to `3600`.
+
+
+
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--gateway_attachment"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.gateway_attachment`
+
+Optional:
+
+- `transit` (Attributes) Attaches the VPN connection(s) to a Transit Gateway. Centralized network architecture and transit gateway setup MUST be enabled. It suports with or without direct connect setup. For more details about these architectures, see [AWS Transit Gateway + AWS Site-to-Site VPN](https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/aws-transit-gateway-vpn.html) or [AWS Direct Connect + AWS Transit Gateway + AWS Site-to-Site VPN](https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/aws-direct-connect-aws-transit-gateway-vpn.html). (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--gateway_attachment--transit))
+- `virtual_private` (Attributes) Attaches the VPN connection(s) to a Virtual Private Gateway. Distributed network architecture MUST be enabled. It suports with or without direct connect setup. For more details about these architectures, see [AWS Site-to-Site VPN](https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/aws-site-to-site-vpn.html) or [AWS Direct Connect + AWS Site-to-Site VPN](https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/aws-direct-connect-site-to-site-vpn.html). (see [below for nested schema](#nestedatt--configuration--accounts--network--vpn--s2s--gateway_attachment--virtual_private))
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--gateway_attachment--transit"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.gateway_attachment.transit`
+
+Required:
+
+- `enabled` (Boolean) If true, attaches the VPN connection(s) to the Transit Gateway.
+
+Optional:
+
+- `enable_acceleration` (Boolean) Indicate whether to enable acceleration for the VPN connection attached to the TGW.
+- `tunnel_inside_ip_version` (String) Indicate whether the VPN tunnels process IPv4 or IPv6 traffic. Valid values are `ipv4 | ipv6`. Defaults to `ipv4`.
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--gateway_attachment--virtual_private"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.gateway_attachment.virtual_private`
+
+Required:
+
+- `enabled` (Boolean) If true, attaches the VPN connection(s) to the Virtual Private gateway in the ingress VPC.
+
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--customer_gateway"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.customer_gateway`
+
+Optional:
+
+- `aws_side_asn` (Number) Private Autonomous System Number (ASN) for the Amazon side of a BGP session. The range is `64512` to `65534` for 16-bit ASNs and `4200000000` to `4294967294` for 32-bit ASNs. Changing the value will force creation of a new customer gateway resource. Each customer gateway provided will be assigned an asn by incrementing this number by 1 up to the total gateways specified in the `max_connections_per_region`. Defaults to `65000`.
+
+Read-Only:
+
+- `max_connections_per_region` (Number) The maximum number of AWS Customer Gateways that can be created in a region. This is used to calculate the aws_side_asn for other regions. Changing this value after create will cause the AWS Customer Gateway ASN numbers to change which will force new resource(s) (the customer gateway and any dependent resource like VPN connection) to be created. Defaults to `50`.
+
+
+<a id="nestedatt--configuration--accounts--network--vpn--s2s--direct_connect"></a>
+### Nested Schema for `configuration.accounts.network.vpn.s2s.direct_connect`
+
+Required:
+
+- `enabled` (Boolean) If true, creates the VPN connection(s) over Direct Connect.
+
+Optional:
+
+- `outside_ip_address_type` (String) Indicates if a Public S2S VPN or Private S2S VPN over AWS Direct Connect. Valid values are  `PrivateIpv4` | `PublicIpv4`. Defaults to `PublicIpv4`.
+
+
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services"></a>
+### Nested Schema for `configuration.accounts.shared_services`
+
+Required:
+
+- `alternate_contacts` (Attributes Map) Configuration of AWS Account alternate contacts. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--alternate_contacts))
+- `aws_account_close_on_delete` (Boolean) If `true`, this will close the AWS account on resource deletion, beginning the 90-day suspension period. Otherwise, the account will just be unenrolled from Control Tower.
+- `primary_contact` (Attributes) Configuration of AWS Account primary contact. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--primary_contact))
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--auditmanager_assessments))
+- `backup` (Attributes) AWS Backup configuration settings for the local account. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--backup))
+- `budgets` (Attributes List) A list of budget objects. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--budgets))
+- `config` (Attributes) AWS Config Conformance Packs Rules deployed for this AWS account only. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--config))
+- `directory_service` (Attributes) AWS Directory Service configuration settings for the Organization. When enabled, provide directory parameters for `ADConnector | MicrosoftAD | SimpleAD`. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--directory_service))
+- `ebs_encryption_by_default` (Boolean) Whether or not default EBS encryption is enabled. Defaults to `true`.
+- `s3_account_public_access_block` (Attributes) Manages S3 account-level Public Access Block configuration. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--s3_account_public_access_block))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with this AWS account. The object name MUST be unique across this account and any OU level definitions. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--sso_permission_sets))
+- `systems_manager` (Attributes) Configuration settings for AWS Systems Manager. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager))
+- `vpc` (Attributes) Configuration for the account VPC. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--vpc))
+
+<a id="nestedatt--configuration--accounts--shared_services--alternate_contacts"></a>
+### Nested Schema for `configuration.accounts.shared_services.alternate_contacts`
+
+Required:
+
+- `email` (String) An email address for the alternate contact.
+- `name` (String) Name of the alternate contact.
+- `phone` (String) Phone number for the alternate contact.
+- `title` (String) Title for the alternate contact.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--primary_contact"></a>
+### Nested Schema for `configuration.accounts.shared_services.primary_contact`
+
+Required:
+
+- `address_line_1` (String) The first line of the primary contact address.
+- `city` (String) The city of the primary contact address.
+- `country_code` (String) The ISO-3166 two-letter country code for the primary contact address.
+- `full_name` (String) The full name of the primary contact address.
+- `phone` (String) The phone number of the primary contact information. The number will be validated and, in some countries, checked for activation.
+- `postal_code` (String) The postal code of the primary contact address.
+
+Optional:
+
+- `address_line_2` (String) The second line of the primary contact address, if any.
+- `address_line_3` (String) The third line of the primary contact address, if any.
+- `company_name` (String) The name of the company associated with the primary contact information, if any.
+- `district_or_county` (String) The district or county of the primary contact address, if any.
+- `state_or_region` (String) The state or region of the primary contact address. If the mailing address is within the United States (US), the value in this field can be either a two character state code (for example, `NJ`) or the full state name (for example, `New Jersey`). This field is required in the following countries: `US, CA, GB, DE, JP, IN, and BR`.
+- `website_url` (String) The URL of the website associated with the primary contact information, if any.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--auditmanager_assessments"></a>
+### Nested Schema for `configuration.accounts.shared_services.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--accounts--shared_services--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.accounts.shared_services.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--backup"></a>
+### Nested Schema for `configuration.accounts.shared_services.backup`
+
+Optional:
+
+- `policies` (Attributes) Configuration settings for built-in backup policies. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--backup--policies))
+- `restore_testing` (Attributes) If enabled, it will create a restore testing plan with multiple resource type selections. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--backup--restore_testing))
+- `vault_lock` (Attributes) Configuration settings for the AWS Organization Backup Vault lock. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--backup--vault_lock))
+- `vault_notifications` (Attributes List) Configuration settings for the AWS Organization Backup Vault notifications. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--backup--vault_notifications))
+
+<a id="nestedatt--configuration--accounts--shared_services--backup--policies"></a>
+### Nested Schema for `configuration.accounts.shared_services.backup.policies`
+
+Optional:
+
+- `daily` (Attributes) Built-in daily backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--backup--policies--daily))
+- `monthly` (Attributes) Built-in monthly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--backup--policies--monthly))
+- `weekly` (Attributes) Built-in weekly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--backup--policies--weekly))
+- `yearly` (Attributes) Built-in yearly backup policy. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--backup--policies--yearly))
+
+<a id="nestedatt--configuration--accounts--shared_services--backup--policies--daily"></a>
+### Nested Schema for `configuration.accounts.shared_services.backup.policies.daily`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--backup--policies--monthly"></a>
+### Nested Schema for `configuration.accounts.shared_services.backup.policies.monthly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--backup--policies--weekly"></a>
+### Nested Schema for `configuration.accounts.shared_services.backup.policies.weekly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--backup--policies--yearly"></a>
+### Nested Schema for `configuration.accounts.shared_services.backup.policies.yearly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--backup--restore_testing"></a>
+### Nested Schema for `configuration.accounts.shared_services.backup.restore_testing`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables the AWS Backup restore testing plan for supported resources. Defaults to `true`.
+- `protected_resource_selection_tags` (Attributes List) A list of conditions that you define for resources in your restore testing plan using tags. Filters the values of your tagged resources for only those resources that you tagged with the same value. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--backup--restore_testing--protected_resource_selection_tags))
+- `protected_resource_selection_types` (List of String) The type of AWS resource included in a restore testing selection.
+- `recovery_point_selection` (Attributes) Configuration of recovery points for AWS Backup restore testing plan. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--backup--restore_testing--recovery_point_selection))
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a restore test. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 1 AM on the 15th of every month.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in UTC. You can modify this to a specified timezone.
+
+<a id="nestedatt--configuration--accounts--shared_services--backup--restore_testing--protected_resource_selection_tags"></a>
+### Nested Schema for `configuration.accounts.shared_services.backup.restore_testing.protected_resource_selection_tags`
+
+Optional:
+
+- `tag_key` (String) The selection tag key. Defaults to `RestoreTestingEnabled`.
+- `tag_value` (String) The selection tag value. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--backup--restore_testing--recovery_point_selection"></a>
+### Nested Schema for `configuration.accounts.shared_services.backup.restore_testing.recovery_point_selection`
+
+Optional:
+
+- `algorithm` (String) Acceptable values include `LATEST_WITHIN_WINDOW` or `RANDOM_WITHIN_WINDOW`.
+- `recovery_point_types` (List of String) Acceptable values include `CONTINUOUS` and `SNAPSHOT`.
+- `selection_window_days` (Number) Accepted values are integers from 1 to 365.
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--backup--vault_lock"></a>
+### Nested Schema for `configuration.accounts.shared_services.backup.vault_lock`
+
+Optional:
+
+- `changeable_for_days` (Number) The number of days before the lock date. If omitted creates a vault lock in governance mode, otherwise it will create a vault lock in compliance mode.
+- `max_retention_days` (Number) The maximum retention period that the vault retains its recovery points. Defaults to `90`.
+!!! warning
+    Changing this value causes the backup vault to be re-created.
+    CANNOT be changed after creation without destroying the backup vault and its data.<br>
+- `min_retention_days` (Number) The minimum retention period that the vault retains its recovery points. Defaults to `1`.
+!!! warning
+    Changing this value causes the backup vault to be re-created.
+    CANNOT be changed after creation without destroying the backup vault and its data.<br>
+
+
+<a id="nestedatt--configuration--accounts--shared_services--backup--vault_notifications"></a>
+### Nested Schema for `configuration.accounts.shared_services.backup.vault_notifications`
+
+Required:
+
+- `recipients` (Attributes) The recipients of the specified Backup Vault events. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--backup--vault_notifications--recipients))
+
+Optional:
+
+- `events` (List of String) An array of events that indicate the status of jobs to back up resources to the backup vault.
+- `filter_policy` (String) JSON String with the filter policy that will be used in the SNS subscription to filter messages seen by the target resource. Refer to the [SNS docs](https://docs.aws.amazon.com/sns/latest/dg/message-filtering.html) for more details.
+
+<a id="nestedatt--configuration--accounts--shared_services--backup--vault_notifications--recipients"></a>
+### Nested Schema for `configuration.accounts.shared_services.backup.vault_notifications.recipients`
+
+Optional:
+
+- `email` (List of String) List of email addresses.
+
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--budgets"></a>
+### Nested Schema for `configuration.accounts.shared_services.budgets`
+
+Required:
+
+- `name` (String) The name of a budget. The name must be unique within an account. MUST be lowercase alphanumeric or dash between 1 and 64 characters.
+- `time_unit` (String) The length of time until a budget resets the actual and forecasted spend. Valid values are: `MONTHLY | QUARTERLY | ANNUALLY | DAILY`.
+- `type` (String) Specifies whether this budget tracks costs, usage, RI utilization, RI coverage, Savings Plans utilization, or Savings Plans coverage.
+
+Optional:
+
+- `auto_adjust_data` (Attributes) The parameters that determine the budget amount for an auto-adjusting budget. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--budgets--auto_adjust_data))
+- `cost_filters` (Attributes List) A list of cost filters. Refer to [AWS CostFilter documentation](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-create-filters.html) and [API Documentation](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html#awscostmanagement-Type-budgets_Budget-CostFilters) for further detail. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--budgets--cost_filters))
+- `cost_types` (List of String) A list of cost types included in a budget, such as tax and subscriptions. Defaults to `["include_credit","include_discount","include_other_subscription","include_recurring","include_refund","include_subscription","include_support","include_tax","include_upfront"]`.
+- `limit` (Attributes) Object containing budget limit. Only one of `limit` and `planned_limits` MUST be defined. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--budgets--limit))
+- `notifications` (Attributes List) A list of objects containing Budget Notifications. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--budgets--notifications))
+- `planned_limits` (Attributes List) Object containing Planned Budget Limits. Can be used multiple times to plan more than one budget limit. See [PlannedBudgetLimits](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html#awscostmanagement-Type-budgets_Budget-PlannedBudgetLimits) documentation. Only one of `limit` and `planned_limits` MUST be defined. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--budgets--planned_limits))
+- `tags` (Map of String) Map of tags assigned to the resource.
+- `time_period` (Attributes) The period of time that's covered by a budget. If you create your budget and don't specify a start date, AWS defaults to the start of your chosen time period (DAILY, MONTHLY, QUARTERLY, or ANNUALLY). For example, if you created your budget on January 24, 2018, chose DAILY, and didn't set a start date, AWS set your start date to `01/24/18 00:00 UTC`. If you chose MONTHLY, AWS set your start date to `01/01/18 00:00 UTC`. If you didn't specify an end date, AWS set your end date to `06/15/87 00:00 UTC`. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--budgets--time_period))
+
+<a id="nestedatt--configuration--accounts--shared_services--budgets--auto_adjust_data"></a>
+### Nested Schema for `configuration.accounts.shared_services.budgets.auto_adjust_data`
+
+Required:
+
+- `auto_adjust_type` (String) The string that defines whether your budget auto-adjusts based on historical or forecasted data.
+
+Optional:
+
+- `historical_options` (Attributes) The string that defines whether your budget auto-adjusts based on historical or forecasted data. See further details in [AWS Documentation](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_HistoricalOptions.html). (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--budgets--auto_adjust_data--historical_options))
+- `last_auto_adjust_time` (String) The last time that your budget was auto-adjusted. MUST be in timestamp format.
+
+<a id="nestedatt--configuration--accounts--shared_services--budgets--auto_adjust_data--historical_options"></a>
+### Nested Schema for `configuration.accounts.shared_services.budgets.auto_adjust_data.historical_options`
+
+Required:
+
+- `budget_adjustment_period` (Number) The number of budget periods included in the moving-average calculation that determines your auto-adjusted budget amount.
+
+Optional:
+
+- `lookback_available_periods` (Number) The integer that describes how many budget periods in your BudgetAdjustmentPeriod are included in the calculation of your current budget limit. If the first budget period in your BudgetAdjustmentPeriod has no cost data, then that budget period isn’t included in the average that determines your budget limit. You can’t set your own LookBackAvailablePeriods. The value is automatically calculated from the `budget_adjustment_period` and your historical cost data.
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--budgets--cost_filters"></a>
+### Nested Schema for `configuration.accounts.shared_services.budgets.cost_filters`
+
+Required:
+
+- `name` (String) The name of the cost filter. Valid values are: `AZ | BillingEntity | CostCategory | InstanceType | InvoicingEntity | LegalEntityName | LinkedAccount | Operation | PurchaseType | Region | Service | TagKeyValue | UsageType | UsageTypeGroup`.
+- `values` (List of String) The list of values used for filtering.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--budgets--limit"></a>
+### Nested Schema for `configuration.accounts.shared_services.budgets.limit`
+
+Required:
+
+- `amount` (String) The cost or usage amount that's associated with a budget forecast, actual spend, or budget threshold.
+- `unit` (String) The unit of measurement that's used for the budget forecast, actual spend, or budget threshold, such as dollars or GB. See [Spend](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/data-type-spend.html) documentation.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--budgets--notifications"></a>
+### Nested Schema for `configuration.accounts.shared_services.budgets.notifications`
+
+Required:
+
+- `comparison_operator` (String) Comparison operator to use to evaluate the condition. Valid values are: `EQUAL_TO | GREATER_THAN | LESS_THAN`.
+- `email_addresses` (List of String) Lost of email addresses to notify.
+- `threshold` (String) Threshold when the notification should be sent.
+- `threshold_type` (String) What kind of threshold is defined. Valid values are: `ABSOLUTE_VALUE | PERCENTAGE`.
+- `type` (String) Comparison operator to use to evaluate the condition. Valid values are: `ACTUAL | FORECASTED`.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--budgets--planned_limits"></a>
+### Nested Schema for `configuration.accounts.shared_services.budgets.planned_limits`
+
+Required:
+
+- `amount` (String) The cost or usage amount that's associated with a budget forecast, actual spend, or budget threshold.
+- `start_time` (String) The start time of the budget limit. Format: `2017-01-01_12:00`.
+- `unit` (String) The unit of measurement that's used for the budget forecast, actual spend, or budget threshold, such as dollars or GB. See [Spend](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/data-type-spend.html) documentation.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--budgets--time_period"></a>
+### Nested Schema for `configuration.accounts.shared_services.budgets.time_period`
+
+Optional:
+
+- `end` (String) The end of the time period covered by the budget. Format: `2017-01-01_12:00`.
+- `start` (String) The start of the time period covered by the budget. Format: `2017-01-01_12:00`.
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--config"></a>
+### Nested Schema for `configuration.accounts.shared_services.config`
+
+Optional:
+
+- `conformance_packs` (Attributes) This resource configures the AWS Config Conformance packs provided by AWS [here](https://docs.aws.amazon.com/config/latest/developerguide/conformancepack-sample-templates.html). Please read the AWS guidance before deploying. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--config--conformance_packs))
+
+<a id="nestedatt--configuration--accounts--shared_services--config--conformance_packs"></a>
+### Nested Schema for `configuration.accounts.shared_services.config.conformance_packs`
+
+Optional:
+
+- `operational` (Attributes Map) AWS Config Conformance Packs for Operational Best Practices. Possible values for the key of the map are:
+	- `abs_ccigv2_material`: Operational Best Practices for ABS CCIGv2 Material Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ABS-CCIGv2-Material.html).
+	- `abs_ccigv2_standard`: Operational Best Practices for ABS CCIGv2 Standard Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ABS-CCIGv2-Standard.html).
+	- `acsc_essential8`: Operational Best Practices for ACSC Essential 8 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-acsc_essential_8.html).
+	- `acsc_ism`: Operational Best Practices for ACSC ISM Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-acsc-ism.html).
+	- `ai_and_ml`: Operational Best Practices for AI and ML Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-AI-and-ML.html).
+	- `api_gateway`: Operational Best Practices for Amazon API Gateway Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-API-gateway.html).
+	- `apra_cpg_234`: Operational Best Practices for APRA CPG 234 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-apra_cpg_234.html).
+	- `asset_management`: Operational Best Practices for Asset Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-asset-management.html).
+	- `backup`: Operational Best Practices for AWS Backup Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-backup.html).
+	- `bcp_and_dr`: Operational Best Practices for BCP and DR Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-BCP-and-DR.html).
+	- `bnm_rmit`: Operational Best Practices for BNM RMiT Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-bnm-rmit.html).
+	- `cccs_medium`: Operational Best Practices for Canadian Centre for Cyber Security (CCCS) Medium Cloud Control Profile Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cccs_medium.html).
+	- `ccn_ens_high`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) High Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens_high.html).
+	- `ccn_ens_low`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) Low Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens-low.html).
+	- `ccn_ens_medium`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) Medium Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens-medium.html).
+	- `cis`: Operational Best Practices for CIS Conformance Pack. See more details about this pack in [AWS sample](https://github.com/awslabs/aws-config-rules/blob/master/aws-config-conformance-packs/Operational-Best-Practices-for-CIS.yaml).
+	- `cis_aws_v1_4_level1`: Operational Best Practices for CIS AWS Foundations Benchmark v1.4 Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_aws_benchmark_level_1.html).
+	- `cis_aws_v1_4_level2`: Operational Best Practices for CIS AWS Foundations Benchmark v1.4 Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_aws_benchmark_level_2.html).
+	- `cis_critical_security_controls_v8_ig1`: Operational Best Practices for CIS Critical Security Controls v8 IG1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8.html).
+	- `cis_critical_security_controls_v8_ig2`: Operational Best Practices for CIS Critical Security Controls v8 IG2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8-ig2.html)
+	- `cis_critical_security_controls_v8_ig3`: Operational Best Practices for CIS Critical Security Controls v8 IG3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8-ig3.html).
+	- `cis_top20`: Operational Best Practices for CIS Top 20 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_top_20.html).
+	- `cisa_cyber_essentials`: Operational Best Practices for CISA Cyber Essentials Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cisa-ce.html).
+	- `cjis`: Operational Best Practices for Criminal Justice Information Services (CJIS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cjis.html).
+	- `cloudwatch`: Operational Best Practices for Amazon CloudWatch Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-cloudwatch.html).
+	- `cmmc_level1`: Operational Best Practices for CMMC Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_1.html).
+	- `cmmc_level2`: Operational Best Practices for CMMC Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_2.html).
+	- `cmmc_level3`: Operational Best Practices for CMMC Level 3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_3.html).
+	- `cmmc_level4`: Operational Best Practices for CMMC Level 4 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_4.html).
+	- `cmmc_level5`: Operational Best Practices for CMMC Level 5 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_5.html).
+	- `cmmc_2_0_level1`: Operational Best Practices for CMMC 2.0 Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_2.0_level_1.html).
+	- `cmmc_2_0_level2`: Operational Best Practices for CMMC 2.0 Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_2.0_level_2.html).
+	- `compute_services`: Operational Best Practices for Compute Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Compute-Services.html).
+	- `data_resiliency`: Operational Best Practices for Data Resiliency Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Data-Resiliency.html).
+	- `database_services`: Operational Best Practices for Databases Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Databases-Services.html).
+	- `datalakes_and_analytics_services`: Operational Best Practices for Data Lakes and Analytics Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Datalakes-and-Analytics-Services.html).
+	- `devops`: Operational Best Practices for DevOps Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-DevOps.html).
+	- `dynamodb`: Operational Best Practices for Amazon DynamoDB Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-dynamodb.html).
+	- `ec2`: Operational Best Practices for EC2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-EC2.html).
+	- `encryption_and_keys`: Operational Best Practices for Encryption and Key Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Encryption-and-Keys.html).
+	- `enisa_cybersecurity_guide`: Operational Best Practices for ENISA Cybersecurity guide for SMEs Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-enisa-cybersecurity-guide-for-smes.html).
+	- `fda_21cfr_part_11`: Operational Best Practices for FDA Title 21 CFR Part 11 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-FDA-21CFR-Part-11.html)
+	- `fedramp_highpart1`: Operational Best Practices for FedRAMP (High Part 1) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-high-part-1.html).
+	- `fedramp_highpart2`: Operational Best Practices for FedRAMP (High Part 2) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-high-part-2.html).
+	- `fedramp_low`: Operational Best Practices for FedRAMP(Low) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-low.html).
+	- `fedramp_moderate`: Operational Best Practices for FedRAMP(Moderate) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-moderate.html).
+	- `ffiec`: Operational Best Practices for FFIEC Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ffiec.html).
+	- `germany_c5`: Operational Best Practices for Germany Cloud Computing Compliance Criteria Catalog (C5) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-germany-c5.html).
+	- `glba`: Operational Best Practices for Gramm Leach Bliley Act (GLBA) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-gramm-leach-bliley-act.html).
+	- `gxp_eu_annex_11`: Operational Best Practices for GxP EU Annex 11 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-gxp-eu-annex-11.html).
+	- `hipaa_security`: Operational Best Practices for HIPAA Security Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-hipaa_security.html).
+	- `iam`: Operational Best Practices for AWS Identity And Access Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-identity-and-access-management.html).
+	- `irs_1075`: Operational Best Practices for IRS 1075 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-irs-1075.html).
+	- `kisms`: Operational Best Practices for K-ISMS Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-k-isms.html).
+	- `load_balancing`: Operational Best Practices for Load Balancing Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-load-balancing.html).
+	- `logging`: Operational Best Practices for Logging Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-logging.html).
+	- `management_governance_services`: Operational Best Practices for Management and Governance Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Management-and-Governance-Services.html).
+	- `mas_notice_655`: Operational Best Practices for MAS Notice 655 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-mas_notice_655.html).
+	- `mas_trmg`: Operational Best Practices for MAS TRMG Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-mas-trmg.html).
+	- `monitoring`: Operational Best Practices for Monitoring Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-monitoring.html).
+	- `nbc_trmg`: Operational Best Practices for NBC TRMG Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nbc-trmg.html).
+	- `ncsc_caf`: Operational Best Practices for NCSC Cyber Assesment Framework Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ncsc_cafv3.html).
+	- `ncsc_cloudsec_principles`: Operational Best Practices for NCSC Cloud Security Principles Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ncsc.html).
+	- `nerc_cip_bcsi`: Operational Best Practices for NERC CIP BCSI Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nerc.html).
+	- `networking_services`: Operational Best Practices for Networking and Content Delivery Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Networking-and-Content-Delivery-Services.html).
+	- `nist_csf`: Operational Best Practices for NIST CSF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-csf.html).
+	- `nist_privacy_framework_v1`: Operational Best Practices for NIST Privacy Framework v1.0 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_privacy_framework.html).
+	- `nist_800_53_rev_5`: Operational Best Practices for NIST 800-53 rev 5 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-800-53_rev_5.html).
+	- `nist_800_171`: Operational Best Practices for NIST 800 171 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-171.html).
+	- `nist_800_172`: Operational Best Practices for NIST 800 172 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-172.html).
+	- `nist_800_181`: Operational Best Practices for NIST 800 181 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-181.html).
+	- `nist_1800_25`: Operational Best Practices for NIST 1800 25 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_1800_25.html).
+	- `nydfs_23_nycrr_500`: Operational Best Practices for NYDFS 23 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-us_nydfs.html).
+	- `nzism`: Operational Best Practices for NZISM Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nzism.html).
+	- `pci_dss`: Operational Best Practices for PCI DSS Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-pci-dss.html).
+	- `publicly_accessible_resources`: Operational Best Practices for Publicly Accessible Resources Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Publicly-Accessible-Resources.html).
+	- `rbi_bcsf_ucb`: Operational Best Practices for RBI Cyber Security Framework for UCBs Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-rbi-bcsf-ucb.html).
+	- `rbi_md_itf`: Operational Best Practices for RBI MD-ITF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-rbi-md-itf.html).
+	- `security_services`: Operational Best Practices for Security, Identity, and Compliance Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Security-Identity-and-Compliance-Services.html).
+	- `serverless_services`: Operational Best Practices for Serverless Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-serverless.html).
+	- `storage_services`: Operational Best Practices for Storage Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Storage-Services.html).
+	- `swift_csp`: Operational Best Practices for SWIFT CSP Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-swift-csp.html).
+	- `s3`: Operational Best Practices for Amazon S3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-s3.html).
+	- `well_architected_reliability_pillar`: Operational Best Practices for AWS Well-Architected Framework Reliability Pillar Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-wa-Reliability-Pillar.html).
+	- `well_architected_security_pillar`: Operational Best Practices for AWS Well-Architected Framework Security Pillar Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-wa-Security-Pillar.html).
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--config--conformance_packs--operational))
+- `security` (Attributes Map) AWS Config Conformance Packs for Security Best Practices. Possible values for the key of the map are:
+	- `autoscaling`: Security Best Practices for AWS Auto Scaling Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-AutoScaling.html).
+	- `cloudfront`: Security Best Practices for Amazon CloudFront Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CloudFront.html).
+	- `cloudtrail`: Security Best Practices for AWS CloudTrail Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CloudTrail.html).
+	- `codebuild`: Security Best Practices for AWS CodeBuild Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CodeBuild.html).
+	- `ecr`: Security Best Practices for Amazon ECR Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-ECR.html).
+	- `ecs`: Security Best Practices for Amazon Elastic Container Service (Amazon ECS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-ECS.html).
+	- `efs`: Security Best Practices for Amazon Elastic File System (Amazon EFS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-EFS.html).
+	- `eks`: Security Best Practices for Amazon Elastic Kubernetes Service (Amazon EKS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-EKS.html).
+	- `lambda`: Security Best Practices for AWS Lambda Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Lambda.html).
+	- `network_firewall`: Security Best Practices for AWS Network Firewall Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Network-Firewall.html).
+	- `opensearch`: Security Best Practices for Amazon OpenSearch Service Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-OpenSearch.html).
+	- `rds`: Security Best Practices for Amazon Relational Database Service (Amazon RDS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-RDS.html).
+	- `redshift`: Security Best Practices for Amazon Redshift Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-redshift.html).
+	- `sagemaker`: Security Best Practices for Amazon SageMaker Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-SageMaker.html).
+	- `secrets_manager`: Security Best Practices for AWS Secrets Manager Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Secrets-Manager.html).
+	- `waf`: Security Best Practices for AWS WAF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-aws-waf.html).
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--config--conformance_packs--security))
+
+<a id="nestedatt--configuration--accounts--shared_services--config--conformance_packs--operational"></a>
+### Nested Schema for `configuration.accounts.shared_services.config.conformance_packs.operational`
+
+Required:
+
+- `enabled` (Boolean) Enables the Conformance Pack.
+
+Optional:
+
+- `parameters` (Map of String) The keys of the map are the parameters defined in the yaml file found in the AWS documentation linked to the Conformance Pack's description. The value of the map is a string that is supported by the parameter in the key. If no parameters are defined, the default values defined in the yaml file.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--config--conformance_packs--security"></a>
+### Nested Schema for `configuration.accounts.shared_services.config.conformance_packs.security`
+
+Required:
+
+- `enabled` (Boolean) Enables the Conformance Pack.
+
+Optional:
+
+- `parameters` (Map of String) The keys of the map are the parameters defined in the yaml file found in the AWS documentation linked to the Conformance Pack's description. The value of the map is a string that is supported by the parameter in the key. If no parameters are defined, the default values defined in the yaml file.
+
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--directory_service"></a>
+### Nested Schema for `configuration.accounts.shared_services.directory_service`
+
+Required:
+
+- `enabled` (Boolean) If true, enable AWS Directory Service and deploy one or more directories.
+
+Optional:
+
+- `ad_connector` (Attributes) Parameters for deploying AWS AD Connector directory. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--directory_service--ad_connector))
+- `tags` (Map of String) A map of tags to assign to the AWS Directory Service resources.
+
+<a id="nestedatt--configuration--accounts--shared_services--directory_service--ad_connector"></a>
+### Nested Schema for `configuration.accounts.shared_services.directory_service.ad_connector`
+
+Required:
+
+- `aws_secrets_manager_secret_name` (String) The AWS Secrets Manager Secret Name previously created in the shared services account and containing the required credentials for AD Connector to work. The secret MUST be JSON encoded and contain at least the service_account key and it's user_name/user_password attributes. If radius is enabled, it needs to have a radius key containing the secret. The secret name can contain ASCII letters, numbers, and the following characters: `/_+=.@-`. Example: `{"radius":null,"service_account":{"user_name":null,"user_password":null}}`
+- `dns_server_ips` (List of String) The DNS IP addresses of the domain to connect to.
+- `name` (String) The fully qualified name for the directory, such as corp.example.com.
+
+Optional:
+
+- `description` (String) A textual description for the directory.
+- `radius_settings` (Attributes) Manages a directory's multi-factor authentication (MFA) using a Remote Authentication Dial In User Service (RADIUS) server. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--directory_service--ad_connector--radius_settings))
+- `size` (String) The size of the directory. Valid values: `Large | Small`. Defaults to `Small`.
+
+<a id="nestedatt--configuration--accounts--shared_services--directory_service--ad_connector--radius_settings"></a>
+### Nested Schema for `configuration.accounts.shared_services.directory_service.ad_connector.radius_settings`
+
+Required:
+
+- `display_label` (String) Display label.
+- `port` (Number) The port that your RADIUS server is using for communications. Your radius server and the network path to it MUST allow inbound traffic over this port from the AWS Directory Service servers.
+- `retries` (Number) The maximum number of times that communication with the RADIUS server is attempted.
+- `servers` (List of String) An array of strings that contains the fully qualified domain name (FQDN) or IP addresses of the RADIUS server endpoints, or the FQDN or IP addresses of your RADIUS server load balancer.
+- `timeout` (Number) The amount of time, in seconds, to wait for the RADIUS server to respond.
+
+Optional:
+
+- `authentication_protocol` (String) The protocol specified for your RADIUS endpoints. Valid values: `CHAP | MS-CHAPv1 | MS-CHAPv2 | PAP`.
+
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--s3_account_public_access_block"></a>
+### Nested Schema for `configuration.accounts.shared_services.s3_account_public_access_block`
+
+Optional:
+
+- `block_public_acls` (Boolean) Optional) Whether Amazon S3 should block public bucket policies for buckets in this account. Defaults to `true`.
+- `block_public_policy` (Boolean) Whether Amazon S3 should block public bucket policies for buckets in this account. Defaults to `true`.
+- `ignore_public_acls` (Boolean) Whether Amazon S3 should ignore public ACLs for buckets in this account. Defaults to true.
+- `restrict_public_buckets` (Boolean) Whether Amazon S3 should restrict public bucket policies for buckets in this account. Defaults to true.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--sso_permission_sets"></a>
+### Nested Schema for `configuration.accounts.shared_services.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--accounts--shared_services--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.accounts.shared_services.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--accounts--shared_services--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.accounts.shared_services.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager`
+
+Optional:
+
+- `quick_setup` (Attributes) AWS Systems Manager QuickSetup configuration settings for the Organization. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup))
+- `session_preferences` (Attributes) Preferences for AWS Systems Manager Session Manager. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--session_preferences))
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup`
+
+Optional:
+
+- `enabled` (Boolean) If true, the AWS Systems Manager QuickSetup Integrated Systems Manager console for the Organization will be deployed. Defaults to `true`.
+- `ops_center` (Attributes) AWS Systems Manager QuickSetup Ops Center settings for the Organization. Supports the following configurations:
+	   - Delegated administrator account.<br>Defaults to (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--ops_center))
+- `patch_policy` (Attributes) AWS Systems Manager QuickSetup Patch Policy settings for the Organization. Supports the following configurations:
+	   - Scan for missing patches.
+	   - Update nodes based on default patch baselines.
+	   - Patching log output.
+	   - Nodes: All managed nodes.
+	   - The number or percentage of nodes to run the patch policy on at the same time.
+	   - The number or percentage of nodes to permit errors on before the patch policy fails.
+	   - IAM permissions for instance management and patching using Systems Manager.<br>Defaults to (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy))
+- `resource_scheduler` (Attributes) AWS Systems Manager QuickSetup Resource Schedule settings for the Organization. Supports the following configurations:
+	   - Target all instances with provider tag pair.
+	   - Targeted instances will be started and stopped as per provided schedule.
+<br>Defaults to (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--resource_scheduler))
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--ops_center"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.ops_center`
+
+Optional:
+
+- `enabled` (Boolean) If true, the AWS Systems Manager QuickSetup Ops Center will be deployed. Defaults to `false`.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.patch_policy`
+
+Optional:
+
+- `enabled` (Boolean) If true, the AWS Systems Manager QuickSetup Patch Policies will be deployed as defined in the OUs/Accounts input. Defaults to `true`.
+- `policies` (Attributes List) Systems Manager patch policies associated with with this AWS account. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy--policies))
+- `s3_log_enabled` (Boolean) If true, the command output logs are sent to Amazon S3. Defaults to `true`.
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy--policies"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.patch_policy.policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy--policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy--policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy--policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy--policies--patch_baseline"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.patch_policy.policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy--policies--patch_operation"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.patch_policy.policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy--policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy--policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy--policies--patch_operation--install"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.patch_policy.policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy--policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.patch_policy.policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--patch_policy--policies--rate_control"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.patch_policy.policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--resource_scheduler"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.resource_scheduler`
+
+Optional:
+
+- `enabled` (Boolean) If true, the AWS Systems Manager QuickSetup Resource Scheduler will be deployed as defined in the OUs/Accounts input. Defaults to `true`.
+- `schedules` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--resource_scheduler--schedules))
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--resource_scheduler--schedules"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.resource_scheduler.schedules`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--resource_scheduler--schedules--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--resource_scheduler--schedules--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--resource_scheduler--schedules--schedule"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.resource_scheduler.schedules.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--resource_scheduler--schedules--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--resource_scheduler--schedules--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.resource_scheduler.schedules.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--quick_setup--resource_scheduler--schedules--selection"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.quick_setup.resource_scheduler.schedules.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--session_preferences"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.session_preferences`
+
+Optional:
+
+- `encryption` (Boolean) If true, encrypt Session Manager session data. Defaults to `true`.
+- `idle_session_timeout` (Number) The amount of time to allow a user to be inactive before the system ends a session. You can modify this setting to specify that a session times out between `1` and `60` minutes of inactivity. Defaults to `15`.
+- `logging` (Attributes) Configure session logging destinations. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--session_preferences--logging))
+- `max_session_duration` (Number) The maximum duration of a session before it ends. The value you specify for maximum session duration must be between `1` and `1,440` minutes. Defaults to `480` minutes.
+- `run_as` (Attributes) Turn on Run As support for Linux and macOS managed nodes. If you choose, you can authenticate sessions using the credentials of an operating system (OS) user account, or a domain user for instances joined to an Active Directory. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--session_preferences--run_as))
+- `shell_profile` (Attributes) By allowing configurable shell profiles, you can customize preferences within sessions such as shell preferences, environment variables, working directories, and running multiple commands when a session is started. For more details check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-preferences-shell-config.html). (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--systems_manager--session_preferences--shell_profile))
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--session_preferences--logging"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.session_preferences.logging`
+
+Optional:
+
+- `cloudwatch` (Boolean) If true, send session logs to CloudWatch Logs in the local account. Defaults to `true`.
+
+Read-Only:
+
+- `s3` (Boolean) Send session logs to S3 bucket in log archive account. This is always `true` and CANNOT be changed.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--session_preferences--run_as"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.session_preferences.run_as`
+
+Required:
+
+- `enabled` (Boolean) If true, Run As support for Linux and macOS managed nodes will be turned on.
+
+Optional:
+
+- `default_user` (String) The name of the OS user account that you want to use to start sessions. Using this option, all sessions are run by the same OS user for all users in your AWS account who connect using Session Manager.
+
+
+<a id="nestedatt--configuration--accounts--shared_services--systems_manager--session_preferences--shell_profile"></a>
+### Nested Schema for `configuration.accounts.shared_services.systems_manager.session_preferences.shell_profile`
+
+Optional:
+
+- `linux` (String) Specify the environment variables, shell preferences, or commands you want to run when your session starts, formated as a string, where each command is separated by `;` or here doc properly escapped. Defaults to `timestamp=$(date '+%Y-%m-%dT%H:%M:%SZ');user=$(whoami);echo $timestamp && echo "Welcome $user"'!' && echo "Note that all session activity is being logged."`.
+- `windows` (String) Specify the environment variables, shell preferences, or commands you want to run when your session starts, formated as a string, where each command is separated by `;` or here doc properly escapped. Defaults to `$timestamp = (Get-Date).ToString("yyyy-MM-ddTH:mm:ssZ");$splitName = (whoami).Split("\");$user = $splitName[1];Write-Host $timestamp;Write-Host "Welcome $user!";Write-Host "Note that all session activity is being logged."`.
+
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--vpc"></a>
+### Nested Schema for `configuration.accounts.shared_services.vpc`
+
+Optional:
+
+- `deployment_architecture` (Attributes) Network deployment architecture specific to this acocunt. This is used in combination with the organization `network_deployment_architectures` attribute. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--vpc--deployment_architecture))
+- `enable_dns_hostnames` (Boolean) A boolean flag to enable/disable DNS hostnames in the VPC. Defaults to `true`.
+- `enable_dns_support` (Boolean) A boolean flag to enable/disable DNS support in the VPC. Defaults to `true`.
+- `enabled` (Boolean) A boolean flag to enable/disable the VPC. Defaults to `true`.
+- `instance_tenancy` (String) A tenancy option for instances launched into the VPC. Default is `default`, which ensures that EC2 instances launched in this VPC use the EC2 instance tenancy attribute specified when the EC2 instance is launched. The only other option is `dedicated`, which ensures that EC2 instances launched in this VPC are run on dedicated tenancy instances regardless of the tenancy attribute specified at launch.
+- `network_firewall` (Attributes) Configuration settings for AWS Network Firewall service. MUST be deployed only if the VPC template supports distributed architecture. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--vpc--network_firewall))
+
+<a id="nestedatt--configuration--accounts--shared_services--vpc--deployment_architecture"></a>
+### Nested Schema for `configuration.accounts.shared_services.vpc.deployment_architecture`
+
+Optional:
+
+- `egress_enabled` (Boolean) If true, enables account local egress access to internet. Defaults to `false`.
+- `ingress_enabled` (Boolean) If true, enables account local ingress access from internet. Defaults to `false`.
+- `private_endpoints` (Attributes) Configuration for AWS Services that support private endpoints configuration in the VPC. The subnet where these private endpoints are created is predetermined by the selected VPC template. For standard it will use app_tier subnet. For web_tier_only it will use the only available subnet. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--vpc--deployment_architecture--private_endpoints))
+- `template` (String) The VPC template determines what nacls, routing tables, routes and subnets are going to be created in the VPC. Defaults to `standard`.
+Possible values are:
+    - `standard_centralized`: Creates 2 tier subnets (private app_tier, private data_tier) with centralized public web_tier running in network account accessed using centralized Transit Gateway deployment. The minimum network mask for the VPC MUST be `/24`.
+    - `standard_centralized_and_distributed`: Creates 3 tier subnets (public web_tier, private app_tier, private data_tier) with 1 extra subnet to support centralized Transit Gateway deployment and 1 extra subnet to support distributed deployment with account firewall. The minimum network mask for the VPC MUST be `/23`.
+    - `standard_distributed`: Creates 3 tier subnets (public web_tier, private app_tier, private data_tier) with 1 extra subnet to support distributed deployment with account firewall. The minimum network mask for the VPC MUST be `/24`.
+    - `web_tier_centralized_and_distributed`: Create 1 public web_tier subnet with 1 extra subnet to support centralized Transit Gateway deployment and 1 extra subnet to support distributed deployment with account firewall. The minimum network mask for the VPC MUST be `/24`.
+    - `web_tier_distributed`: Create 1 public web_tier subnet with 1 extra subnet to support distributed deployment with account firewall. The minimum network mask for the VPC MUST be `/25`.<br>
+!!! warning
+    Changing this value causes the VPC to be re-created.
+    CANNOT be changed after creation without destroying everything running on top of the VPC first.<br>
+
+<a id="nestedatt--configuration--accounts--shared_services--vpc--deployment_architecture--private_endpoints"></a>
+### Nested Schema for `configuration.accounts.shared_services.vpc.deployment_architecture.private_endpoints`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables account local private endpoints for supported services. Defaults to `false`.
+- `gateway_services` (List of String) List of AWS services to create private endpoints of type gateway in the local account private endpoints VPC. For more details see [AWS documentation](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html). Valid values are: `dynamodb | s3`.
+- `interface_services` (List of String) List of AWS services to create private endpoints of type interface in the local/network account private endpoints VPC. The service name is derived from this ![aws-services-privatelink-support]https://docs.aws.amazon.com/vpc/latest/privatelink/aws-services-privatelink-support.html, by taking the service name after the region part. Valid values are: `[access-analyzer account acm-pca airflow.api api-fips env env-fips ops analytics-omics appconfig appconfigdata appmesh appmesh-envoy-management apprunner apprunner.requests applicationinsights application-autoscaling application-signals appstream.api appstream.streaming app-integrations apptest aps aps-workspaces arsenal-discovery athena auditmanager autoscaling autoscaling-plans awsconnector b2bi backup backup-gateway batch bcm-data-exports bedrock bedrock-agent bedrock-agent-runtime bedrock-runtime billing billingconductor braket cassandra cassandra-fips cases ce cleanrooms cleanrooms-ml cloudcontrolapi cloudcontrolapi-fips clouddirectory cloudformation cloudhsmv2 cloudtrail codeartifact.api codeartifact.repositories codebuild codebuild-fips codecommit codecommit-fips codeconnections.api codedeploy codedeploy-commands-secure codeguru-profiler codeguru-reviewer codepipeline codestar-connections.api codewhisperer comprehend comprehendmedical compute-optimizer config connect-campaigns console controlcatalog control-storage-omics cost-optimization-hub databrew dataexchange datasync data-servicediscovery data-servicediscovery-fips deadline.management deadline.scheduling deviceadvisor.iot devops-guru dicom-medical-imaging discovery dms dms-fips drs ds ds-data dynamodb dynamodb-fips ebs ec2 ec2messages ec2-fips ecr.api ecr.dkr ecs ecs-agent ecs-telemetry eks eks-auth elasticbeanstalk elasticbeanstalk-health elasticfilesystem elasticfilesystem-fips elasticloadbalancing elasticache elasticache-fips elasticmapreduce email-smtp emr-containers emr-serverless emr-serverless-services.livy emrwal.prod entityresolution events evidently evidently-dataplane execute-api experiments finspace finspace-api fis forecast forecast-fips forecastquery forecastquery-fips frauddetector freetier fsx fsx-fips git-codecommit git-codecommit-fips glue glue.dashboard grafana grafana-workspace greengrass groundstation guardduty guardduty-data guardduty-data-fips guardduty-fips healthlake iam identitystore imagebuilder inspector2 inspector-scan internetmonitor internetmonitor-fips iotfleetwise iotroborunner iotsitewise.api iotsitewise.data iottwinmaker.api iottwinmaker.data iotwireless.api iot.data iot.credentials iot.fleethub.api kafka kafka-fips kendra kendra-ranking kinesis-firehose kinesis-streams kinesis-streams-fips kms kms-fips lakeformation lambda launchwizard license-manager license-manager-fips license-manager-linux-subscriptions license-manager-linux-subscriptions-fips license-manager-user-subscriptions lightsail logs lookoutequipment lookoutmetrics lookoutvision lorawan.cups lorawan.lns m2 macie2 managedblockchain-query managedblockchain.bitcoin.mainnet managedblockchain.bitcoin.testnet mediaconnect medical-imaging memory-db memorydb-fips migrationhub-orchestrator migrationhub-strategy mgn models-v2-lex monitoring mq neptune-graph neptune-graph-data neptune-graph-fips network-firewall network-firewall-fips networkflowmonitor networkflowmonitorreports networkmonitor notebook observabilityadmin organizations organizations-fips outposts panorama partner-app payment-cryptography.controlplane payment-cryptography.dataplane pca-connector-ad pca-connector-scep pcs pcs-fips personalize personalize-events personalize-runtime pi pi-fips pinpoint pinpoint-sms-voice-v2 pipes pipes-data pipes-fips polly pricing.api private-networks profile proton q qapps qbusiness qldb.session quicksight-website ram rbin refactor-spaces rds rds-data redshift redshift-fips redshift-serverless redshift-serverless-fips redshift-data redshift-data-fips rekognition rekognition-fips repostspace resource-groups resource-groups-fips robomaker rolesanywhere rum rum-dataplane runtime-medical-imaging runtime-v2-lex s3 s3tables s3-global.accesspoint s3-outposts sagemaker.api sagemaker-data-science-assistant sagemaker.api-fips sagemaker.featurestore-runtime sagemaker.metrics sagemaker.runtime sagemaker.runtime-fips savingsplans schemas scn secretsmanager securityhub securitylake securitylake-fips serverlessrepo servicecatalog servicecatalog-appregistry servicediscovery servicediscovery-fips service.user-subscriptions signin simspaceweaver snow-device-management sns social-messaging sqs ssm ssm-contacts ssm-incidents ssm-quicksetup ssmmessages states storagegateway storage-omics streaming-rekognition streaming-rekognition-fips sts studio swf swf-fips sync-states synthetics synthetics-fips tagging tags-omics tax textract textract-fips thinclient.api timestream.ingest-cell timestream.query-cell timestream-influxdb timestream-influxdb-fips tnb transcribe transcribestreaming transfer transfer.server translate trustedadvisor verifiedpermissions voiceid vpc-lattice wellarchitected wisdom workflows-omics workmail workspaces workspaces-web workspaces-web-fips xray]`.
+
+
+
+<a id="nestedatt--configuration--accounts--shared_services--vpc--network_firewall"></a>
+### Nested Schema for `configuration.accounts.shared_services.vpc.network_firewall`
+
+Required:
+
+- `enabled` (Boolean) If true, creates AWS Network Firewalls in each AZ.
+
+Optional:
+
+- `vendor` (Attributes) The vendor of the network firewall and it's associated settings. Defaults to `aws`. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--vpc--network_firewall--vendor))
+
+<a id="nestedatt--configuration--accounts--shared_services--vpc--network_firewall--vendor"></a>
+### Nested Schema for `configuration.accounts.shared_services.vpc.network_firewall.vendor`
+
+Optional:
+
+- `aws` (Attributes) Settings for AWS Network Firewall. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--vpc--network_firewall--vendor--aws))
+
+<a id="nestedatt--configuration--accounts--shared_services--vpc--network_firewall--vendor--aws"></a>
+### Nested Schema for `configuration.accounts.shared_services.vpc.network_firewall.vendor.aws`
+
+Optional:
+
+- `managed_rule_groups` (Attributes) Settings for AWS Managed Rule Groups. (see [below for nested schema](#nestedatt--configuration--accounts--shared_services--vpc--network_firewall--vendor--aws--managed_rule_groups))
+
+<a id="nestedatt--configuration--accounts--shared_services--vpc--network_firewall--vendor--aws--managed_rule_groups"></a>
+### Nested Schema for `configuration.accounts.shared_services.vpc.network_firewall.vendor.aws.managed_rule_groups`
+
+Optional:
+
+- `domain_lists` (List of String) AWS Network Firewall managed domain and IP rule groups block HTTP/HTTPS traffic to domains identified as low-reputation, or that are known or suspected to be associated with malware or botnets.
+- `threat_signatures` (List of String) AWS Network Firewall managed threat signature rule groups support several categories of threat signatures to protect against various types of malware and exploits, denial of service attempts, botnets, web attacks, credential phishing, scanning tools, and mail or messaging attacks. There are also signatures for intrusion detection and to enforce fair use policies as well as guard against emerging threats.
+
+
+
+
+
+
+
+
+<a id="nestedatt--configuration--assume_role"></a>
+### Nested Schema for `configuration.assume_role`
+
+Required:
+
+- `account_id` (String) The AWS Management Account ID where Volo bootstrap Role was created from the AWS CloudFormation Template provided by the volocloud provider account resource.
+- `arn` (String) The Volo bootstrap Role ARN created from the AWS CloudFormation Template provided by the volocloud provider account resource.
+- `external_id` (String) The Volo AWS External ID created by the volocloud provider account resource.
+
+
+<a id="nestedatt--configuration--organization"></a>
+### Nested Schema for `configuration.organization`
+
+Required:
+
+- `backup` (Attributes) AWS Backup configuration settings for the AWS Organization. (see [below for nested schema](#nestedatt--configuration--organization--backup))
+
+Optional:
+
+- `compute_optimizer` (Attributes) Manages AWS Compute Optimizer enrollment for AWS Organization. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--compute_optimizer))
+- `config` (Attributes) AWS Config Conformance Packs and Rules deployed at AWS organization level, for all accounts in the organization. (see [below for nested schema](#nestedatt--configuration--organization--config))
+- `controltower` (Attributes) Settings for Controltower Landing Zone. (see [below for nested schema](#nestedatt--configuration--organization--controltower))
+- `cost_optimization_hub` (Attributes) Manages AWS Cost Optimization Hub enrollment for AWS Organization. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--cost_optimization_hub))
+- `network_deployment_architectures` (Attributes) Network deployment architectures for the AWS organization. The centralized patterns will determine what resources are created in the network account and how AWS organization accounts and their VPC will interact with the network account VPC. The distributed patterns, if enabled, could be used in an account VPC part of the AWS organization. (see [below for nested schema](#nestedatt--configuration--organization--network_deployment_architectures))
+- `password_policy` (Attributes) Manages Password Policy for the AWS Account. (see [below for nested schema](#nestedatt--configuration--organization--password_policy))
+- `policy_types` (List of String) The policy type that you want to enable. You can specify one of the following values: `AISERVICES_OPT_OUT_POLICY`, `BACKUP_POLICY `, `TAG_POLICY`. The `SERVICE_CONTROL_POLICY` is enabled by AWS Control Tower and cannot be disabled by this resource. Defaults to `BACKUP_POLICY`.
+- `private_certificate_authority` (Attributes) AWS Private Certificate Authority hierarchy deployed at AWS organization level, for all accounts in the organization. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority))
+- `reuse_existing` (Attributes) Reuse existing AWS Organizations and AWS Identity Center enabled in the provided management account. The AWS Organization must have ALL enabled features and the AWS Identity Center MUST be integrated with the organization. (see [below for nested schema](#nestedatt--configuration--organization--reuse_existing))
+
+<a id="nestedatt--configuration--organization--backup"></a>
+### Nested Schema for `configuration.organization.backup`
+
+Required:
+
+- `enabled` (Boolean) If true, will create Backup Vault in the Shared Services account that will be used for a centralized copy of each local backup vault.
+
+Optional:
+
+- `policies` (Attributes) Configuration settings for built-in backup policies. (see [below for nested schema](#nestedatt--configuration--organization--backup--policies))
+- `report_plan_templates` (List of String) Backup Report Plan Templates.
+- `vault_lock` (Attributes) Configuration settings for the AWS Organization Backup Vault lock. (see [below for nested schema](#nestedatt--configuration--organization--backup--vault_lock))
+- `vault_notifications` (Attributes List) Configuration settings for the AWS Organization Backup Vault notifications. (see [below for nested schema](#nestedatt--configuration--organization--backup--vault_notifications))
+
+<a id="nestedatt--configuration--organization--backup--policies"></a>
+### Nested Schema for `configuration.organization.backup.policies`
+
+Optional:
+
+- `daily` (Attributes) Built-in daily backup policy. (see [below for nested schema](#nestedatt--configuration--organization--backup--policies--daily))
+- `monthly` (Attributes) Built-in monthly backup policy. (see [below for nested schema](#nestedatt--configuration--organization--backup--policies--monthly))
+- `weekly` (Attributes) Built-in weekly backup policy. (see [below for nested schema](#nestedatt--configuration--organization--backup--policies--weekly))
+- `yearly` (Attributes) Built-in yearly backup policy. (see [below for nested schema](#nestedatt--configuration--organization--backup--policies--yearly))
+
+<a id="nestedatt--configuration--organization--backup--policies--daily"></a>
+### Nested Schema for `configuration.organization.backup.policies.daily`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 11 PM every day.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in `UTC`. This CANNOT be modified at this stage.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--organization--backup--policies--monthly"></a>
+### Nested Schema for `configuration.organization.backup.policies.monthly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 2 AM every first day of month.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in `UTC`. This CANNOT be modified at this stage.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--organization--backup--policies--weekly"></a>
+### Nested Schema for `configuration.organization.backup.policies.weekly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 12 AM every Sunday.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in `UTC`. This CANNOT be modified at this stage.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+<a id="nestedatt--configuration--organization--backup--policies--yearly"></a>
+### Nested Schema for `configuration.organization.backup.policies.yearly`
+
+Optional:
+
+- `backup_complete_window_minutes` (Number) A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by AWS Backup. Defaults to `1` day.
+- `backup_start_window_minutes` (Number) A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. If this value is included, it must be at least 60 minutes to avoid errors. Defaults to `60` minutes.
+- `copy_to_region` (String) Creates a copy action in the backup plan that will copy the backup to the organization backup vault specified by region. The specified region MUST have been defined in the `regions` attribute.
+- `delete_after_days` (Number) Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `move_to_cold_storage_after_days`.
+- `move_to_cold_storage_after_days` (Number) Specifies the number of days after creation that a recovery point is moved to cold storage.
+- `opt_in_to_archive_for_supported_resources` (Boolean) This setting will instruct your backup plan to transition supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+- `schedule_expression` (String) A cron expression in UTC specifying when AWS Backup initiates a backup job. For more information about AWS cron expressions, see [Cron expressions reference](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html) for Rules in the Amazon CloudWatch Events User Guide. If not specified, the policy will have a default start time at 4 AM every Jan 1st.
+- `schedule_expression_timezone` (String) This is the timezone in which the schedule expression is set. By default, `schedule_expression` is in `UTC`. This CANNOT be modified at this stage.
+- `selection_tag` (String) Specifies the tag key name to search for on resources to add to the backup plan. The value of this tag MUST be `true`.
+
+
+
+<a id="nestedatt--configuration--organization--backup--vault_lock"></a>
+### Nested Schema for `configuration.organization.backup.vault_lock`
+
+Optional:
+
+- `changeable_for_days` (Number) The number of days before the lock date. If omitted creates a vault lock in governance mode, otherwise it will create a vault lock in compliance mode.
+- `max_retention_days` (Number) The maximum retention period that the vault retains its recovery points. Defaults to `90`.
+- `min_retention_days` (Number) The minimum retention period that the vault retains its recovery points. Defaults to `1`.
+
+
+<a id="nestedatt--configuration--organization--backup--vault_notifications"></a>
+### Nested Schema for `configuration.organization.backup.vault_notifications`
+
+Required:
+
+- `recipients` (Attributes) The recipients of the specified Backup Vault events. (see [below for nested schema](#nestedatt--configuration--organization--backup--vault_notifications--recipients))
+
+Optional:
+
+- `events` (List of String) An array of events that indicate the status of jobs to back up resources to the backup vault.
+- `filter_policy` (String) JSON String with the filter policy that will be used in the SNS subscription to filter messages seen by the target resource. Refer to the [SNS docs](https://docs.aws.amazon.com/sns/latest/dg/message-filtering.html) for more details.
+
+<a id="nestedatt--configuration--organization--backup--vault_notifications--recipients"></a>
+### Nested Schema for `configuration.organization.backup.vault_notifications.recipients`
+
+Optional:
+
+- `email` (List of String) List of email addresses.
+
+
+
+
+<a id="nestedatt--configuration--organization--compute_optimizer"></a>
+### Nested Schema for `configuration.organization.compute_optimizer`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables AWS Compute Optimizer for all accounts in the AWS Organization. Defaults to `true`
+- `preferences` (Attributes Map) AWS Compute Optimizer recommendation preferences for each resource type defined as the map keys. Valid keys are: `auto_scaling_group | ec2_instance | rds_instance`. (see [below for nested schema](#nestedatt--configuration--organization--compute_optimizer--preferences))
+
+<a id="nestedatt--configuration--organization--compute_optimizer--preferences"></a>
+### Nested Schema for `configuration.organization.compute_optimizer.preferences`
+
+Optional:
+
+- `enhanced_infrastructure_metrics` (String) The status of the enhanced infrastructure metrics recommendation preference. Valid values are: `Active | Inactive`.
+- `external_metrics_preference` (Attributes) The provider of the external metrics recommendation preference. (see [below for nested schema](#nestedatt--configuration--organization--compute_optimizer--preferences--external_metrics_preference))
+- `inferred_workload_types` (String) The status of the inferred workload types recommendation preference. Valid values are: `Active | Inactive`.
+- `look_back_period` (String) The preference to control the number of days the utilization metrics of the AWS resource are analyzed. Valid values are: `DAYS_14 | DAYS_32 | DAYS_93`.
+- `preferred_resource` (Attributes) The preference to control which resource type values are considered when generating rightsizing recommendations. (see [below for nested schema](#nestedatt--configuration--organization--compute_optimizer--preferences--preferred_resource))
+- `savings_estimation_mode` (String) The status of the savings estimation mode preference. Valid values are: `AfterDiscounts | BeforeDiscounts`.
+- `utilization_preferences` (Attributes List) The preference to control the resource's CPU utilization threshold, CPU utilization headroom, and memory utilization headroom. (see [below for nested schema](#nestedatt--configuration--organization--compute_optimizer--preferences--utilization_preferences))
+
+<a id="nestedatt--configuration--organization--compute_optimizer--preferences--external_metrics_preference"></a>
+### Nested Schema for `configuration.organization.compute_optimizer.preferences.external_metrics_preference`
+
+Required:
+
+- `source` (String) The source options for external metrics preferences. Valid values are: `Datadog | Dynatrace | Instana | NewRelic`.
+
+
+<a id="nestedatt--configuration--organization--compute_optimizer--preferences--preferred_resource"></a>
+### Nested Schema for `configuration.organization.compute_optimizer.preferences.preferred_resource`
+
+Required:
+
+- `name` (String) The type of preferred resource to customize. Valid values are: `Ec2InstanceTypes`.
+
+Optional:
+
+- `exclude_list` (List of String) The preferred resource type values to exclude from the recommendation candidates. If this isn't specified, all supported resources are included by default.
+- `include_list` (List of String) The preferred resource type values to include in the recommendation candidates. You can specify the exact resource type value, such as "m5.large", or use wild card expressions, such as "m5". If this isn't specified, all supported resources are included by default.
+
+
+<a id="nestedatt--configuration--organization--compute_optimizer--preferences--utilization_preferences"></a>
+### Nested Schema for `configuration.organization.compute_optimizer.preferences.utilization_preferences`
+
+Required:
+
+- `metric_name` (String) The name of the resource utilization metric name to customize. Valid values are: `CpuUtilization | MemoryUtilization`.
+- `metric_parameters` (Attributes) The parameters to set when customizing the resource utilization thresholds. (see [below for nested schema](#nestedatt--configuration--organization--compute_optimizer--preferences--utilization_preferences--metric_parameters))
+
+<a id="nestedatt--configuration--organization--compute_optimizer--preferences--utilization_preferences--metric_parameters"></a>
+### Nested Schema for `configuration.organization.compute_optimizer.preferences.utilization_preferences.metric_parameters`
+
+Required:
+
+- `headroom` (String) The headroom value in percentage used for the specified metric parameter. Valid values are: `PERCENT_0 | PERCENT_10 | PERCENT_20 | PERCENT_30`.
+
+Optional:
+
+- `threshold` (String) The threshold value used for the specified metric parameter. You can only specify the threshold value for `CpuUtilization`. Valid values are: `P90 | P95 | P99_5`.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--config"></a>
+### Nested Schema for `configuration.organization.config`
+
+Optional:
+
+- `conformance_packs` (Attributes) This resource configures the AWS Config Conformance packs provided by AWS [here](https://docs.aws.amazon.com/config/latest/developerguide/conformancepack-sample-templates.html). Please read the AWS guidance before deploying. (see [below for nested schema](#nestedatt--configuration--organization--config--conformance_packs))
+
+<a id="nestedatt--configuration--organization--config--conformance_packs"></a>
+### Nested Schema for `configuration.organization.config.conformance_packs`
+
+Optional:
+
+- `operational` (Attributes Map) AWS Config Conformance Packs for Operational Best Practices. Possible values for the key of the map are:
+	- `abs_ccigv2_material`: Operational Best Practices for ABS CCIGv2 Material Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ABS-CCIGv2-Material.html).
+	- `abs_ccigv2_standard`: Operational Best Practices for ABS CCIGv2 Standard Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ABS-CCIGv2-Standard.html).
+	- `acsc_essential8`: Operational Best Practices for ACSC Essential 8 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-acsc_essential_8.html).
+	- `acsc_ism`: Operational Best Practices for ACSC ISM Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-acsc-ism.html).
+	- `ai_and_ml`: Operational Best Practices for AI and ML Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-AI-and-ML.html).
+	- `api_gateway`: Operational Best Practices for Amazon API Gateway Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-API-gateway.html).
+	- `apra_cpg_234`: Operational Best Practices for APRA CPG 234 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-apra_cpg_234.html).
+	- `asset_management`: Operational Best Practices for Asset Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-asset-management.html).
+	- `backup`: Operational Best Practices for AWS Backup Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-backup.html).
+	- `bcp_and_dr`: Operational Best Practices for BCP and DR Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-BCP-and-DR.html).
+	- `bnm_rmit`: Operational Best Practices for BNM RMiT Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-bnm-rmit.html).
+	- `cccs_medium`: Operational Best Practices for Canadian Centre for Cyber Security (CCCS) Medium Cloud Control Profile Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cccs_medium.html).
+	- `ccn_ens_high`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) High Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens_high.html).
+	- `ccn_ens_low`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) Low Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens-low.html).
+	- `ccn_ens_medium`: Operational Best Practices for Esquema Nacional de Seguridad (ENS) Medium Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ens-medium.html).
+	- `cis`: Operational Best Practices for CIS Conformance Pack. See more details about this pack in [AWS sample](https://github.com/awslabs/aws-config-rules/blob/master/aws-config-conformance-packs/Operational-Best-Practices-for-CIS.yaml).
+	- `cis_aws_v1_4_level1`: Operational Best Practices for CIS AWS Foundations Benchmark v1.4 Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_aws_benchmark_level_1.html).
+	- `cis_aws_v1_4_level2`: Operational Best Practices for CIS AWS Foundations Benchmark v1.4 Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_aws_benchmark_level_2.html).
+	- `cis_critical_security_controls_v8_ig1`: Operational Best Practices for CIS Critical Security Controls v8 IG1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8.html).
+	- `cis_critical_security_controls_v8_ig2`: Operational Best Practices for CIS Critical Security Controls v8 IG2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8-ig2.html)
+	- `cis_critical_security_controls_v8_ig3`: Operational Best Practices for CIS Critical Security Controls v8 IG3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis-critical-security-controls-v8-ig3.html).
+	- `cis_top20`: Operational Best Practices for CIS Top 20 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cis_top_20.html).
+	- `cisa_cyber_essentials`: Operational Best Practices for CISA Cyber Essentials Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cisa-ce.html).
+	- `cjis`: Operational Best Practices for Criminal Justice Information Services (CJIS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cjis.html).
+	- `cloudwatch`: Operational Best Practices for Amazon CloudWatch Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-cloudwatch.html).
+	- `cmmc_level1`: Operational Best Practices for CMMC Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_1.html).
+	- `cmmc_level2`: Operational Best Practices for CMMC Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_2.html).
+	- `cmmc_level3`: Operational Best Practices for CMMC Level 3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_3.html).
+	- `cmmc_level4`: Operational Best Practices for CMMC Level 4 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_4.html).
+	- `cmmc_level5`: Operational Best Practices for CMMC Level 5 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_level_5.html).
+	- `cmmc_2_0_level1`: Operational Best Practices for CMMC 2.0 Level 1 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_2.0_level_1.html).
+	- `cmmc_2_0_level2`: Operational Best Practices for CMMC 2.0 Level 2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-cmmc_2.0_level_2.html).
+	- `compute_services`: Operational Best Practices for Compute Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Compute-Services.html).
+	- `data_resiliency`: Operational Best Practices for Data Resiliency Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Data-Resiliency.html).
+	- `database_services`: Operational Best Practices for Databases Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Databases-Services.html).
+	- `datalakes_and_analytics_services`: Operational Best Practices for Data Lakes and Analytics Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Datalakes-and-Analytics-Services.html).
+	- `devops`: Operational Best Practices for DevOps Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-DevOps.html).
+	- `dynamodb`: Operational Best Practices for Amazon DynamoDB Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-dynamodb.html).
+	- `ec2`: Operational Best Practices for EC2 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-EC2.html).
+	- `encryption_and_keys`: Operational Best Practices for Encryption and Key Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Encryption-and-Keys.html).
+	- `enisa_cybersecurity_guide`: Operational Best Practices for ENISA Cybersecurity guide for SMEs Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-enisa-cybersecurity-guide-for-smes.html).
+	- `fda_21cfr_part_11`: Operational Best Practices for FDA Title 21 CFR Part 11 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-FDA-21CFR-Part-11.html)
+	- `fedramp_highpart1`: Operational Best Practices for FedRAMP (High Part 1) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-high-part-1.html).
+	- `fedramp_highpart2`: Operational Best Practices for FedRAMP (High Part 2) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-high-part-2.html).
+	- `fedramp_low`: Operational Best Practices for FedRAMP(Low) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-low.html).
+	- `fedramp_moderate`: Operational Best Practices for FedRAMP(Moderate) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-fedramp-moderate.html).
+	- `ffiec`: Operational Best Practices for FFIEC Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ffiec.html).
+	- `germany_c5`: Operational Best Practices for Germany Cloud Computing Compliance Criteria Catalog (C5) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-germany-c5.html).
+	- `glba`: Operational Best Practices for Gramm Leach Bliley Act (GLBA) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-gramm-leach-bliley-act.html).
+	- `gxp_eu_annex_11`: Operational Best Practices for GxP EU Annex 11 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-gxp-eu-annex-11.html).
+	- `hipaa_security`: Operational Best Practices for HIPAA Security Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-hipaa_security.html).
+	- `iam`: Operational Best Practices for AWS Identity And Access Management Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-identity-and-access-management.html).
+	- `irs_1075`: Operational Best Practices for IRS 1075 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-irs-1075.html).
+	- `kisms`: Operational Best Practices for K-ISMS Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-k-isms.html).
+	- `load_balancing`: Operational Best Practices for Load Balancing Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-load-balancing.html).
+	- `logging`: Operational Best Practices for Logging Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-logging.html).
+	- `management_governance_services`: Operational Best Practices for Management and Governance Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Management-and-Governance-Services.html).
+	- `mas_notice_655`: Operational Best Practices for MAS Notice 655 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-mas_notice_655.html).
+	- `mas_trmg`: Operational Best Practices for MAS TRMG Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-mas-trmg.html).
+	- `monitoring`: Operational Best Practices for Monitoring Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-monitoring.html).
+	- `nbc_trmg`: Operational Best Practices for NBC TRMG Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nbc-trmg.html).
+	- `ncsc_caf`: Operational Best Practices for NCSC Cyber Assesment Framework Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ncsc_cafv3.html).
+	- `ncsc_cloudsec_principles`: Operational Best Practices for NCSC Cloud Security Principles Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-ncsc.html).
+	- `nerc_cip_bcsi`: Operational Best Practices for NERC CIP BCSI Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nerc.html).
+	- `networking_services`: Operational Best Practices for Networking and Content Delivery Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Networking-and-Content-Delivery-Services.html).
+	- `nist_csf`: Operational Best Practices for NIST CSF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-csf.html).
+	- `nist_privacy_framework_v1`: Operational Best Practices for NIST Privacy Framework v1.0 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_privacy_framework.html).
+	- `nist_800_53_rev_5`: Operational Best Practices for NIST 800-53 rev 5 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-800-53_rev_5.html).
+	- `nist_800_171`: Operational Best Practices for NIST 800 171 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-171.html).
+	- `nist_800_172`: Operational Best Practices for NIST 800 172 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-172.html).
+	- `nist_800_181`: Operational Best Practices for NIST 800 181 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-181.html).
+	- `nist_1800_25`: Operational Best Practices for NIST 1800 25 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_1800_25.html).
+	- `nydfs_23_nycrr_500`: Operational Best Practices for NYDFS 23 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-us_nydfs.html).
+	- `nzism`: Operational Best Practices for NZISM Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nzism.html).
+	- `pci_dss`: Operational Best Practices for PCI DSS Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-pci-dss.html).
+	- `publicly_accessible_resources`: Operational Best Practices for Publicly Accessible Resources Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Publicly-Accessible-Resources.html).
+	- `rbi_bcsf_ucb`: Operational Best Practices for RBI Cyber Security Framework for UCBs Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-rbi-bcsf-ucb.html).
+	- `rbi_md_itf`: Operational Best Practices for RBI MD-ITF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-rbi-md-itf.html).
+	- `security_services`: Operational Best Practices for Security, Identity, and Compliance Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Security-Identity-and-Compliance-Services.html).
+	- `serverless_services`: Operational Best Practices for Serverless Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-serverless.html).
+	- `storage_services`: Operational Best Practices for Storage Services Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-Storage-Services.html).
+	- `swift_csp`: Operational Best Practices for SWIFT CSP Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-swift-csp.html).
+	- `s3`: Operational Best Practices for Amazon S3 Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-s3.html).
+	- `well_architected_reliability_pillar`: Operational Best Practices for AWS Well-Architected Framework Reliability Pillar Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-wa-Reliability-Pillar.html).
+	- `well_architected_security_pillar`: Operational Best Practices for AWS Well-Architected Framework Security Pillar Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-wa-Security-Pillar.html).
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--organization--config--conformance_packs--operational))
+- `security` (Attributes Map) AWS Config Conformance Packs for Security Best Practices. Possible values for the key of the map are:
+	- `autoscaling`: Security Best Practices for AWS Auto Scaling Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-AutoScaling.html).
+	- `cloudfront`: Security Best Practices for Amazon CloudFront Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CloudFront.html).
+	- `cloudtrail`: Security Best Practices for AWS CloudTrail Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CloudTrail.html).
+	- `codebuild`: Security Best Practices for AWS CodeBuild Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-CodeBuild.html).
+	- `ecr`: Security Best Practices for Amazon ECR Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-ECR.html).
+	- `ecs`: Security Best Practices for Amazon Elastic Container Service (Amazon ECS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-ECS.html).
+	- `efs`: Security Best Practices for Amazon Elastic File System (Amazon EFS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-EFS.html).
+	- `eks`: Security Best Practices for Amazon Elastic Kubernetes Service (Amazon EKS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-EKS.html).
+	- `lambda`: Security Best Practices for AWS Lambda Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Lambda.html).
+	- `network_firewall`: Security Best Practices for AWS Network Firewall Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Network-Firewall.html).
+	- `opensearch`: Security Best Practices for Amazon OpenSearch Service Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-OpenSearch.html).
+	- `rds`: Security Best Practices for Amazon Relational Database Service (Amazon RDS) Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-RDS.html).
+	- `redshift`: Security Best Practices for Amazon Redshift Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-redshift.html).
+	- `sagemaker`: Security Best Practices for Amazon SageMaker Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-SageMaker.html).
+	- `secrets_manager`: Security Best Practices for AWS Secrets Manager Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-Secrets-Manager.html).
+	- `waf`: Security Best Practices for AWS WAF Conformance Pack. See more details about this pack in [AWS documentation](https://docs.aws.amazon.com/config/latest/developerguide/security-best-practices-for-aws-waf.html).
+	- The value associated with these keys is the object. (see [below for nested schema](#nestedatt--configuration--organization--config--conformance_packs--security))
+
+<a id="nestedatt--configuration--organization--config--conformance_packs--operational"></a>
+### Nested Schema for `configuration.organization.config.conformance_packs.operational`
+
+Required:
+
+- `enabled` (Boolean) Enables the Conformance Pack.
+
+Optional:
+
+- `parameters` (Map of String) The keys of the map are the parameters defined in the yaml file found in the AWS documentation linked to the Conformance Pack's description. The value of the map is a string that is supported by the parameter in the key. If no parameters are defined, the default values defined in the yaml file.
+
+
+<a id="nestedatt--configuration--organization--config--conformance_packs--security"></a>
+### Nested Schema for `configuration.organization.config.conformance_packs.security`
+
+Required:
+
+- `enabled` (Boolean) Enables the Conformance Pack.
+
+Optional:
+
+- `parameters` (Map of String) The keys of the map are the parameters defined in the yaml file found in the AWS documentation linked to the Conformance Pack's description. The value of the map is a string that is supported by the parameter in the key. If no parameters are defined, the default values defined in the yaml file.
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower"></a>
+### Nested Schema for `configuration.organization.controltower`
+
+Optional:
+
+- `access_management` (Boolean) If enabled, AWS Control Tower will create a new AWS Identity Center instance integrated with the AWS Organization and will create/manage SSO roles and permion sets. It MUST be `true` if there is no AWS Organization/AWS Identity Center to reuse. It SHOULD be `false` if AWS Organizations/AWS Identity Center are reused or after tenancy has been created and either sso attribute is defined or you want to use the tenancy managed identity center groups. Defaults to `true`.
+- `central_logging` (Attributes) Settings for S3 bucket(s) used for central logging. (see [below for nested schema](#nestedatt--configuration--organization--controltower--central_logging))
+- `landing_zone_version` (String) AWS ControlTower Landing Zone version. Defaults to `3.3`
+- `org_units` (Attributes) Configuration for AWS ControlTower Organization Units. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units))
+- `security` (Attributes) Settings for security. (see [below for nested schema](#nestedatt--configuration--organization--controltower--security))
+
+<a id="nestedatt--configuration--organization--controltower--central_logging"></a>
+### Nested Schema for `configuration.organization.controltower.central_logging`
+
+Optional:
+
+- `retention_days` (Map of Number) Configures retention in days for provided S3 bucket.
+- `reuse_existing` (Attributes) Reuse AWS Account for Log Archive. (see [below for nested schema](#nestedatt--configuration--organization--controltower--central_logging--reuse_existing))
+
+<a id="nestedatt--configuration--organization--controltower--central_logging--reuse_existing"></a>
+### Nested Schema for `configuration.organization.controltower.central_logging.reuse_existing`
+
+Required:
+
+- `enabled` (Boolean) If enabled, it reuses an existing AWS Account for Log Archive.
+
+Optional:
+
+- `account_id` (String) AWS Account ID to use for Log Archive. MUST be provided if `enabled = true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units"></a>
+### Nested Schema for `configuration.organization.controltower.org_units`
+
+Optional:
+
+- `decommissioned` (String) The custom name to use for Decommissioned OU.
+- `sandbox` (String) The name for the Sandbox OU. This is only available at CREATE stage and cannot be changed after as the AWS Control Tower APIs doesn't support this update. Defaults to `Sandboxes`.
+- `security` (Attributes) The security OU created by Volo Cloud Foundations tenancy resource. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security))
+- `tenancy` (Attributes) Configuration for custom/default Organization Units created under the tenancy OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security`
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--auditmanager_assessments))
+- `name` (String) The name for the Security OU. This is only available at CREATE stage and cannot be changed after as the AWS Control Tower API doesn't support this update. Defaults to `Security`.
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--security--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--security--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.security.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy`
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--auditmanager_assessments))
+- `custom` (Attributes Map) Defines custom AWS Control Tower Organization Units to create under the tenancy root managed by this Landing Zone alongside the default OUs. It supports 3 nested levels under tenancy root. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom))
+- `default` (Attributes) Default OUs created by Volo Cloud Foundations tenancy resource. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default))
+- `name` (String) The name for the Tenancy OU. Defaults to `Tenancy`.
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom`
+
+Required:
+
+- `name` (String) The name of the new OU to create.
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--auditmanager_assessments))
+- `child_ous` (Attributes Map) Child OUs to create under this OU. Supports 2 more levels of nesting. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous))
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous`
+
+Required:
+
+- `name` (String) The name of the new OU to create.
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--auditmanager_assessments))
+- `child_ous` (Attributes Map) Child OUs to create under this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous))
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous`
+
+Required:
+
+- `name` (String) The name of the new OU to create.
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--auditmanager_assessments))
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--child_ous--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.child_ous.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--child_ous--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.child_ous.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--custom--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--custom--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.custom.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default`
+
+Optional:
+
+- `platform` (Attributes) The platform OUs created by Volo Cloud Foundations tenancy resource. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform))
+- `workloads` (Attributes) The workload environment OUs created by Volo Cloud Foundations tenancy resource. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform`
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--auditmanager_assessments))
+- `child_ous` (Attributes) Child OUs to create under platform OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous))
+- `name` (String) The name for the platform OU. Defaults to `Platform`.
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple levels (multiple OUs and/or AWS Accounts), its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. If a permission set is defined at multiple levels (multiple OUs and/or AWS Accounts), its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous`
+
+Optional:
+
+- `connectivity` (Attributes) The connectivity OU created by Volo Cloud Foundations tenancy resource. It supports a map of custom OUs to be created as children of this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity))
+- `management` (Attributes) The management OU created by Volo Cloud Foundations tenancy resource. It supports a map of custom OUs to be created as children of this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity`
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--auditmanager_assessments))
+- `child_ous` (Attributes Map) Child OUs to create under this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous))
+- `name` (String) The name for the connectivity OU. Defaults to `Connectivity`.
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous`
+
+Required:
+
+- `name` (String) The name of the new OU to create.
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--auditmanager_assessments))
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--child_ous--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.child_ous.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--connectivity--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.connectivity.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management`
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--auditmanager_assessments))
+- `child_ous` (Attributes Map) Child OUs to create under this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous))
+- `name` (String) The name for the management OU. Defaults to `Management`.
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous`
+
+Required:
+
+- `name` (String) The name of the new OU to create.
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--auditmanager_assessments))
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--child_ous--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.child_ous.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--child_ous--management--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.child_ous.management.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--platform--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.platform.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads`
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--auditmanager_assessments))
+- `child_ous` (Attributes) Child OUs to create under workloads OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous))
+- `name` (String) The name for the workloads OU. Defaults to `Workloads`.
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous`
+
+Optional:
+
+- `dev` (Attributes) The dev environment OU created by Volo Cloud Foundations tenancy resource. It supports a map of custom OUs to be created as children of this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev))
+- `prod` (Attributes) The prod environment OU created by Volo Cloud Foundations tenancy resource. It supports a map of custom OUs to be created as children of this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod))
+- `qa` (Attributes) The qa environment OU created by Volo Cloud Foundations tenancy resource. It supports a map of custom OUs to be created as children of this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa))
+- `test` (Attributes) The test environment OU created by Volo Cloud Foundations tenancy resource. It supports a map of custom OUs to be created as children of this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev`
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--auditmanager_assessments))
+- `child_ous` (Attributes Map) Child OUs to create under this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous))
+- `name` (String) The name for the dev environment OU. Defaults to `Development`.
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous`
+
+Required:
+
+- `name` (String) The name of the new OU to create.
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--auditmanager_assessments))
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--child_ous--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.child_ous.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--dev--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.dev.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod`
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--auditmanager_assessments))
+- `child_ous` (Attributes Map) Child OUs to create under this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous))
+- `name` (String) The name for the prod environment OU. Defaults to `Production`.
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous`
+
+Required:
+
+- `name` (String) The name of the new OU to create.
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--auditmanager_assessments))
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--child_ous--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.child_ous.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--prod--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.prod.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa`
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--auditmanager_assessments))
+- `child_ous` (Attributes Map) Child OUs to create under this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous))
+- `name` (String) The name for the qa environment OU. Defaults to `Pre-Production`.
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous`
+
+Required:
+
+- `name` (String) The name of the new OU to create.
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--auditmanager_assessments))
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--child_ous--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.child_ous.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--qa--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.qa.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test`
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--auditmanager_assessments))
+- `child_ous` (Attributes Map) Child OUs to create under this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous))
+- `name` (String) The name for the test environment OU. Defaults to `Test`.
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous`
+
+Required:
+
+- `name` (String) The name of the new OU to create.
+
+Optional:
+
+- `auditmanager_assessments` (Attributes List) A list of Audit Manager assessments. For more info about assessments see [AWS documentation](https://docs.aws.amazon.com/audit-manager/latest/userguide/assessments.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--auditmanager_assessments))
+- `ssm_patch_policies` (Attributes List) Systems Manager patch policies associated with all AWS accounts in this OU. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_patch_policies))
+- `ssm_resource_scheduler` (Attributes List) A list of AWS SSM QuickSetup Resource Scheduler schedules. For more info about resource scheduler see [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/quick-setup-scheduler.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_resource_scheduler))
+- `sso_permission_sets` (Attributes List) AWS Identity Center custom permission sets associated with all AWS accounts in this OU. If a permission set is defined at multiple OU levels its attributes (e.g. name, iam_policies, etc) MUST be the same at all levels. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--sso_permission_sets))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--auditmanager_assessments"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.auditmanager_assessments`
+
+Required:
+
+- `framework` (Attributes) Provides the name of an enabled framework to create the assessment from. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--auditmanager_assessments--framework))
+
+Optional:
+
+- `owners` (List of String) AWS IAM role(s) to be configured as the owners of the assessment. If not provided, the default owners will be used.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--auditmanager_assessments--framework"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.auditmanager_assessments.framework`
+
+Optional:
+
+- `aws_managed` (String) Must match one of the aws_managed frameworks map keys defined under the audit account.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--child_ous--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.child_ous.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--child_ous--test--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.child_ous.test.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--default--workloads--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.default.workloads.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_patch_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.ssm_patch_policies`
+
+Optional:
+
+- `attach_iam_policy_to_instance_profile` (Boolean) If true, the AWS System Manager Quick Setup attaches policies to instances profiles already associated with the target EC2 instances. Defaults to `true`.
+- `name` (String) A name for the patch policy. The value you provide is applied to target Amazon EC2 instances as a tag. MUST be lowercase alphanumeric or dash between 1 and 32 characters. Defaults to `patch-policy`.
+!!! warning
+    This value cannot be changed on update.
+    You MUST disabled entire patch_policy capability in the environment and re-add it with a new name.<br>
+- `patch_baseline` (Attributes) Patch baseline to be used in the policy. ONLY one of `custom` or `use_default` can be specified. Defaults to `use_default`. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_patch_policies--patch_baseline))
+- `patch_operation` (Attributes) Patch install/scan operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_patch_policies--patch_operation))
+- `rate_control` (Attributes) You can control the execution of an association on your nodes by specifying a concurrency value and an error threshold. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_patch_policies--rate_control))
+- `reboot` (String) Determines whether instances are rebooted after patches are installed. Valid values are `NoReboot | RebootIfNeeded`. Defaults to `NoReboot`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_patch_policies--patch_baseline"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.ssm_patch_policies.patch_baseline`
+
+Optional:
+
+- `custom` (List of String) A list of JSON objects (string encoded) containing the information for the patch baselines to include in your patch policy. Conflicts with `use_default`. For more info check [AWS Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-manage-patch-baselines.html).
+- `use_default` (Boolean) If true, the selected patch baselines are all AWS provided. Conflicts with `custom`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_patch_policies--patch_operation"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.ssm_patch_policies.patch_operation`
+
+Optional:
+
+- `install` (Attributes) Install patch operation scheduling. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_patch_policies--patch_operation--install))
+- `scan` (Attributes) Scan patch operation scheduling. Defaults to below object. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_patch_policies--patch_operation--scan))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_patch_policies--patch_operation--install"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.ssm_patch_policies.patch_operation.install`
+
+Required:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches.
+
+Optional:
+
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_patch_policies--patch_operation--scan"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.ssm_patch_policies.patch_operation.scan`
+
+Optional:
+
+- `cron` (String) A cron expression that is used as the schedule for when target EC2 instances install available patches. Defaults to `cron(0 1 * * ? *)`.
+- `next_interval` (Boolean) If true, the target EC2 instances should scan for available patches and install at the next cron interval. Defaults to `true`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_patch_policies--rate_control"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.ssm_patch_policies.rate_control`
+
+Optional:
+
+- `concurrency` (Number) Concurrency helps to limit the impact on your nodes by allowing you to specify that only a certain number of nodes can process an association at one time. You can specify as a percentage of the target set of nodes. Defaults to `10`.
+- `error_threshold` (Number) An error threshold specifies how many association executions are allowed to fail before Systems Manager sends a command to each node configured with that association. The command stops the association from running until the next scheduled execution. You can specify as a percentage of the target set. Defaults to `2`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_resource_scheduler"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.ssm_resource_scheduler`
+
+Required:
+
+- `name` (String) The name of the quicksetup resource scheduler schedule. MUST be unique across all schedules assigned at the same level (OU or Account). MUST must be lowercase alphanumeric or dash between 1 and 32 characters
+- `schedule` (Attributes) Input parameters required to create the iCalendar formatted string containing the schedule you want Change Manager to use. For more details about iCalendar strings see [here](https://icalendar.org/Home.html). (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_resource_scheduler--schedule))
+- `selection` (Attributes) The key/value pair for tagging instances you want to target with this schedule. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_resource_scheduler--selection))
+
+Optional:
+
+- `tags` (Map of String) You can use tags to search and filter your Quick Setup Configuration managers.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_resource_scheduler--schedule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.ssm_resource_scheduler.schedule`
+
+Required:
+
+- `end_time` (String) This is used to specify the time of day for the END operation part of the schedule.
+- `recurrence_rule` (Attributes) This is used to identify properties that contain a recurrence rule specification. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_resource_scheduler--schedule--recurrence_rule))
+- `start_time` (String) This is used to specify the time of day for the START operation part of the schedule.
+
+Optional:
+
+- `timezone` (String) Specifies the Time Zone, as defined in the public-domain TZ database [TZDB], which should be used, the possible values are defined [here](https://icalendar.org/iCalendar-RFC-5545/3-8-3-1-time-zone-identifier.html). Defaults to `UTC`.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_resource_scheduler--schedule--recurrence_rule"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.ssm_resource_scheduler.schedule.recurrence_rule`
+
+Required:
+
+- `byday` (List of String) This specifies a list of days of the week. Possible values are `SU` indicates Sunday, `MO` indicates Monday, `TU` indicates Tuesday, `WE` indicates Wednesday, `TH` indicates Thursday, `FR` indicates Friday and `SA` indicates Saturday.
+
+Optional:
+
+- `frequency` (String) This identifies the type of recurrence rule. Possible values are `WEEKLY`. Defaults to `WEEKLY`
+- `interval` (Number) This contains a positive integer representing at which intervals the recurrence rule repeats. Defaults to `1`.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--ssm_resource_scheduler--selection"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.ssm_resource_scheduler.selection`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--sso_permission_sets"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.sso_permission_sets`
+
+Required:
+
+- `iam_policies` (Attributes) AWS IAM policies to attach to the permission set. It supports a list of custom iam policy arns, the name of a managed policy or a session manager tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--sso_permission_sets--iam_policies))
+- `name` (String) The name of the permission set. MUST must be lowercase alphanumeric or dash between 1 and 20 characters.
+
+Optional:
+
+- `description` (String) Description for the permission set.
+- `duration` (Number) Permission set session duration (in hours) before the user requires to re-authenticate. If not provided it will default to `8` hours.
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--sso_permission_sets--iam_policies"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.sso_permission_sets.iam_policies`
+
+Optional:
+
+- `custom` (Map of String) A map of IAM policies, JSON encoded, to assign to the new permission set.
+- `managed` (Map of String) A map of aws managed policy ARNS to assign their policies to the new permission set.
+- `session_manager` (Attributes) If defined, this will allow Session Manager permissions for the provider tag pair. (see [below for nested schema](#nestedatt--configuration--organization--controltower--org_units--tenancy--sso_permission_sets--iam_policies--session_manager))
+
+<a id="nestedatt--configuration--organization--controltower--org_units--tenancy--sso_permission_sets--iam_policies--session_manager"></a>
+### Nested Schema for `configuration.organization.controltower.org_units.tenancy.sso_permission_sets.iam_policies.session_manager`
+
+Required:
+
+- `tag_key` (String) The tag key assigned to the instances you want to target.
+- `tag_value` (String) The value of the tag key assigned to the instances you want to target.
+
+
+
+
+
+
+<a id="nestedatt--configuration--organization--controltower--security"></a>
+### Nested Schema for `configuration.organization.controltower.security`
+
+Optional:
+
+- `reuse_existing` (Attributes) Reuse AWS Account for Audit. (see [below for nested schema](#nestedatt--configuration--organization--controltower--security--reuse_existing))
+
+<a id="nestedatt--configuration--organization--controltower--security--reuse_existing"></a>
+### Nested Schema for `configuration.organization.controltower.security.reuse_existing`
+
+Required:
+
+- `enabled` (Boolean) If enabled, it reuses an existing AWS Account for Audit.
+
+Optional:
+
+- `account_id` (String) AWS Account ID to use for Audit. MUST be provided if `enabled = true`.
+
+
+
+
+<a id="nestedatt--configuration--organization--cost_optimization_hub"></a>
+### Nested Schema for `configuration.organization.cost_optimization_hub`
+
+Optional:
+
+- `enabled` (Boolean) If true, enables AWS Cost Optimization Hub for all accounts in the AWS Organization. Defaults to `true`.
+- `preferences` (Attributes) AWS Cost Optimization Hub preferences. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--cost_optimization_hub--preferences))
+
+<a id="nestedatt--configuration--organization--cost_optimization_hub--preferences"></a>
+### Nested Schema for `configuration.organization.cost_optimization_hub.preferences`
+
+Optional:
+
+- `member_account_discount_visibility` (String) Customize whether the member accounts can see the "After Discounts" savings estimates. Valid values are: `All | None`. Defaults to `All`.
+- `savings_estimation_mode` (String) Customize how estimated monthly savings are calculated. Valid values are: `BeforeDiscounts | AfterDiscounts`. Defaults to `BeforeDiscounts`.
+
+
+
+<a id="nestedatt--configuration--organization--network_deployment_architectures"></a>
+### Nested Schema for `configuration.organization.network_deployment_architectures`
+
+Optional:
+
+- `centralized` (Attributes) Configuration for deployment of centralized architecture patterns in the network account. (see [below for nested schema](#nestedatt--configuration--organization--network_deployment_architectures--centralized))
+- `distributed` (Attributes) Configuration for deployment of distributed architecture patterns in the AWS organization accounts. (see [below for nested schema](#nestedatt--configuration--organization--network_deployment_architectures--distributed))
+
+<a id="nestedatt--configuration--organization--network_deployment_architectures--centralized"></a>
+### Nested Schema for `configuration.organization.network_deployment_architectures.centralized`
+
+Optional:
+
+- `availability_zones` (List of String) How many AZs to use for network account VPC(s)? The list MUST contain either 2 or 3 elements. It can be combination of any 2 items or all items from list: `[1, 2, 3]`. Defaults to `[1, 2]`.
+- `egress` (Attributes) Configuration for deployment of centralized egress architecture. (see [below for nested schema](#nestedatt--configuration--organization--network_deployment_architectures--centralized--egress))
+- `ingress` (Attributes) Configuration for deployment of centralized ingress architecture. (see [below for nested schema](#nestedatt--configuration--organization--network_deployment_architectures--centralized--ingress))
+- `private_endpoints` (Attributes) Configuration for deployment of centralized private endpoints architecture. (see [below for nested schema](#nestedatt--configuration--organization--network_deployment_architectures--centralized--private_endpoints))
+
+<a id="nestedatt--configuration--organization--network_deployment_architectures--centralized--egress"></a>
+### Nested Schema for `configuration.organization.network_deployment_architectures.centralized.egress`
+
+Optional:
+
+- `enabled` (Boolean) Allows deployment of centralized egress architecture. Defaults to true.
+
+
+<a id="nestedatt--configuration--organization--network_deployment_architectures--centralized--ingress"></a>
+### Nested Schema for `configuration.organization.network_deployment_architectures.centralized.ingress`
+
+Optional:
+
+- `enabled` (Boolean) Allows deployment of centralized ingress architecture. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--network_deployment_architectures--centralized--private_endpoints"></a>
+### Nested Schema for `configuration.organization.network_deployment_architectures.centralized.private_endpoints`
+
+Optional:
+
+- `enabled` (Boolean) Allows deployment of centralized private endpoints architecture. Defaults to `true`.
+- `interface_services` (List of String) List of AWS services to create private endpoints of type interface in the network account private endpoints VPC. The service name is derived from this [aws-services-privatelink-support](https://docs.aws.amazon.com/vpc/latest/privatelink/aws-services-privatelink-support.html), by taking the service name after the region part. Valid values are: `[access-analyzer account acm-pca airflow.api api-fips env env-fips ops analytics-omics appconfig appconfigdata appmesh appmesh-envoy-management apprunner apprunner.requests applicationinsights application-autoscaling application-signals appstream.api appstream.streaming app-integrations apptest aps aps-workspaces arsenal-discovery athena auditmanager autoscaling autoscaling-plans awsconnector b2bi backup backup-gateway batch bcm-data-exports bedrock bedrock-agent bedrock-agent-runtime bedrock-runtime billing billingconductor braket cassandra cassandra-fips cases ce cleanrooms cleanrooms-ml cloudcontrolapi cloudcontrolapi-fips clouddirectory cloudformation cloudhsmv2 cloudtrail codeartifact.api codeartifact.repositories codebuild codebuild-fips codecommit codecommit-fips codeconnections.api codedeploy codedeploy-commands-secure codeguru-profiler codeguru-reviewer codepipeline codestar-connections.api codewhisperer comprehend comprehendmedical compute-optimizer config connect-campaigns console controlcatalog control-storage-omics cost-optimization-hub databrew dataexchange datasync data-servicediscovery data-servicediscovery-fips deadline.management deadline.scheduling deviceadvisor.iot devops-guru dicom-medical-imaging discovery dms dms-fips drs ds ds-data dynamodb dynamodb-fips ebs ec2 ec2messages ec2-fips ecr.api ecr.dkr ecs ecs-agent ecs-telemetry eks eks-auth elasticbeanstalk elasticbeanstalk-health elasticfilesystem elasticfilesystem-fips elasticloadbalancing elasticache elasticache-fips elasticmapreduce email-smtp emr-containers emr-serverless emr-serverless-services.livy emrwal.prod entityresolution events evidently evidently-dataplane execute-api experiments finspace finspace-api fis forecast forecast-fips forecastquery forecastquery-fips frauddetector freetier fsx fsx-fips git-codecommit git-codecommit-fips glue glue.dashboard grafana grafana-workspace greengrass groundstation guardduty guardduty-data guardduty-data-fips guardduty-fips healthlake iam identitystore imagebuilder inspector2 inspector-scan internetmonitor internetmonitor-fips iotfleetwise iotroborunner iotsitewise.api iotsitewise.data iottwinmaker.api iottwinmaker.data iotwireless.api iot.data iot.credentials iot.fleethub.api kafka kafka-fips kendra kendra-ranking kinesis-firehose kinesis-streams kinesis-streams-fips kms kms-fips lakeformation lambda launchwizard license-manager license-manager-fips license-manager-linux-subscriptions license-manager-linux-subscriptions-fips license-manager-user-subscriptions lightsail logs lookoutequipment lookoutmetrics lookoutvision lorawan.cups lorawan.lns m2 macie2 managedblockchain-query managedblockchain.bitcoin.mainnet managedblockchain.bitcoin.testnet mediaconnect medical-imaging memory-db memorydb-fips migrationhub-orchestrator migrationhub-strategy mgn models-v2-lex monitoring mq neptune-graph neptune-graph-data neptune-graph-fips network-firewall network-firewall-fips networkflowmonitor networkflowmonitorreports networkmonitor notebook observabilityadmin organizations organizations-fips outposts panorama partner-app payment-cryptography.controlplane payment-cryptography.dataplane pca-connector-ad pca-connector-scep pcs pcs-fips personalize personalize-events personalize-runtime pi pi-fips pinpoint pinpoint-sms-voice-v2 pipes pipes-data pipes-fips polly pricing.api private-networks profile proton q qapps qbusiness qldb.session quicksight-website ram rbin refactor-spaces rds rds-data redshift redshift-fips redshift-serverless redshift-serverless-fips redshift-data redshift-data-fips rekognition rekognition-fips repostspace resource-groups resource-groups-fips robomaker rolesanywhere rum rum-dataplane runtime-medical-imaging runtime-v2-lex s3 s3tables s3-global.accesspoint s3-outposts sagemaker.api sagemaker-data-science-assistant sagemaker.api-fips sagemaker.featurestore-runtime sagemaker.metrics sagemaker.runtime sagemaker.runtime-fips savingsplans schemas scn secretsmanager securityhub securitylake securitylake-fips serverlessrepo servicecatalog servicecatalog-appregistry servicediscovery servicediscovery-fips service.user-subscriptions signin simspaceweaver snow-device-management sns social-messaging sqs ssm ssm-contacts ssm-incidents ssm-quicksetup ssmmessages states storagegateway storage-omics streaming-rekognition streaming-rekognition-fips sts studio swf swf-fips sync-states synthetics synthetics-fips tagging tags-omics tax textract textract-fips thinclient.api timestream.ingest-cell timestream.query-cell timestream-influxdb timestream-influxdb-fips tnb transcribe transcribestreaming transfer transfer.server translate trustedadvisor verifiedpermissions voiceid vpc-lattice wellarchitected wisdom workflows-omics workmail workspaces workspaces-web workspaces-web-fips xray]`.
+
+
+
+<a id="nestedatt--configuration--organization--network_deployment_architectures--distributed"></a>
+### Nested Schema for `configuration.organization.network_deployment_architectures.distributed`
+
+Optional:
+
+- `availability_zones` (List of String) How many AZs to use for all VPCs (except network account)? The list MUST contain either 2 or 3 elements. It can be combination of any 2 items or all items from list: `[1, 2, 3]`. Defaults to `[1, 2]`.
+- `egress_enabled` (Boolean) Allows deployment of distributed egress architecture. Defaults to `false`.
+- `ingress_enabled` (Boolean) Allows deployment of distributed ingress architecture. Defaults to `false`.
+- `private_endpoints_enabled` (Boolean) Allows deployment of distributed private endpoints architecture. Defaults to `false`.
+
+
+
+<a id="nestedatt--configuration--organization--password_policy"></a>
+### Nested Schema for `configuration.organization.password_policy`
+
+Optional:
+
+- `allow_users_to_change_password` (Boolean) Whether to allow users to change their own password. Defaults to true.
+- `hard_expiry` (Boolean) Whether users are prevented from setting a new password after their password has expired (i.e., require administrator reset). Defaults to false.
+- `max_password_age` (Number) The number of days that an user password is valid. Defaults to 90.
+- `minimum_password_length` (Number) Minimum length to require for user passwords. Defaults to 14.
+- `password_reuse_prevention` (Number) The number of previous passwords that users are prevented from reusing. Defaults to 24.
+- `require_lowercase_characters` (Boolean) Whether to require lowercase characters for user passwords.. Defaults to true.
+- `require_numbers` (Boolean) Whether to require numbers for user passwords. Defaults to true.
+- `require_symbols` (Boolean) Whether to require symbols for user passwords. Defaults to true.
+- `require_uppercase_characters` (Boolean) Whether to require uppercase characters for user passwords. Defaults to true.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority`
+
+Required:
+
+- `configuration` (Attributes) AWS Private Certificate Authority configuration. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--configuration))
+
+Optional:
+
+- `certificate_validity` (Number) Validity period of the certificate, in days. Validity period can be from 2010 days (5.5 years) to 4015 days (11 years). The CA cannot issue certificates for subordinates with their validity period exceeding the root CA validatidy period. Defaults to `4000`.
+- `enabled` (Boolean) Whether the certificate authority is enabled or disabled. Defaults to `true`. Can only be disabled if the CA is in an `ACTIVE` state.
+- `subordinates` (Attributes List) Level 2 subordinates CA under root. At least one subordinate MUST be specified and supports up to 20 subordinates. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates))
+- `tags` (Map of String) Key-value map of user-defined tags that are attached to the certificate authority.
+
+Read-Only:
+
+- `usage_mode` (String) The AWS Private Certificate Authority type. This can only be `GENERAL_PURPOSE` and cannot be changed.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--configuration"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.configuration`
+
+Required:
+
+- `subject` (Attributes) Nested argument that contains X.500 distinguished name information. At least one nested attribute must be specified. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--configuration--subject))
+
+Optional:
+
+- `key_algorithm` (String) Type of the public key algorithm and size, in bits, of the key pair that your key pair creates when it issues a certificate. Valid values can be found in the [ACM PCA Documentation](https://docs.aws.amazon.com/privateca/latest/APIReference/API_CertificateAuthorityConfiguration.html). Defaults to `RSA_4096`.
+- `key_storage_security_standard` (String) Cryptographic key management compliance standard used for handling CA keys. Valid values: `FIPS_140_2_LEVEL_2_OR_HIGHER` and `FIPS_140_2_LEVEL_3_OR_HIGHER`. Supported standard for each region can be found in the [Storage and security compliance of AWS Private CA private keys Documentation](https://docs.aws.amazon.com/privateca/latest/userguide/data-protection.html#private-keys). Defaults to `FIPS_140_2_LEVEL_3_OR_HIGHER`.
+- `permanent_deletion_time_in_days` (Number) Number of days to make a CA restorable after it has been deleted, must be between 7 to 30 days. Defaults to `30` days.
+- `revocation_configuration` (Attributes) Nested argument containing revocation configuration. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--configuration--revocation_configuration))
+- `signing_algorithm` (String) Name of the algorithm your private CA uses to sign certificate requests. Valid values can be found in the [ACM PCA Documentation](https://docs.aws.amazon.com/privateca/latest/APIReference/API_CertificateAuthorityConfiguration.html). Defaults to `SHA512WITHRSA`.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--configuration--subject"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.configuration.subject`
+
+Required:
+
+- `common_name` (String) Fully qualified domain name (FQDN) associated with the certificate subject. Must contain alphanumeric, dash, space, period and underscore characters and be less than or equal to 64 characters in length.
+
+Optional:
+
+- `standard_attributes` (Attributes) Standard attributes for ASN1Subject. See available attributes in [ACM PCA Documentation](https://docs.aws.amazon.com/privateca/latest/APIReference/API_ASN1Subject.html). (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--configuration--subject--standard_attributes))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--configuration--subject--standard_attributes"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.configuration.subject.standard_attributes`
+
+Optional:
+
+- `country` (String) Two digit code that specifies the country in which the certificate subject located. Must be less than or equal to 2 characters in length.
+- `distinguished_name_qualifier` (String) Disambiguating information for the certificate subject. Must be less than or equal to 64 characters in length.
+- `generation_qualifier` (String) Typically a qualifier appended to the name of an individual. Examples include Jr. for junior, Sr. for senior, and III for third. Must be less than or equal to 3 characters in length.
+- `given_name` (String) First name. Must be less than or equal to 16 characters in length.
+- `initials` (String) Concatenation that typically contains the first letter of the given_name, the first letter of the middle name if one exists, and the first letter of the surname. Must be less than or equal to 5 characters in length.
+- `locality` (String) Locality (such as a city or town) in which the certificate subject is located. Must be less than or equal to 128 characters in length.
+- `organization` (String) Legal name of the organization with which the certificate subject is affiliated. Must be less than or equal to 64 characters in length.
+- `organizational_unit` (String) Subdivision or unit of the organization (such as sales or finance) with which the certificate subject is affiliated. Must be less than or equal to 64 characters in length.
+- `pseudonym` (String) Typically a shortened version of a longer `given_name`. For example, Jonathan is often shortened to John. Elizabeth is often shortened to Beth, Liz, or Eliza. Must be less than or equal to 128 characters in length.
+- `state` (String) State in which the subject of the certificate is located. Must be less than or equal to 128 characters in length.
+- `surname` (String) Family name. In the US and the UK for example, the surname of an individual is ordered last. In Asian cultures the surname is typically ordered first. Must be less than or equal to 40 characters in length.
+- `title` (String) Title such as Mr. or Ms. which is pre-pended to the name to refer formally to the certificate subject. Must be less than or equal to 64 characters in length.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--configuration--revocation_configuration"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.configuration.revocation_configuration`
+
+Optional:
+
+- `crl` (Attributes) Nested argument containing configuration of the certificate revocation list (CRL), if any, maintained by the certificate authority. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--configuration--revocation_configuration--crl))
+- `ocsp` (Attributes) Nested argument containing configuration of the custom OCSP responder endpoint. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--configuration--revocation_configuration--ocsp))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--configuration--revocation_configuration--crl"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.configuration.revocation_configuration.crl`
+
+Optional:
+
+- `custom_cname` (String) Name inserted into the certificate CRL Distribution Points extension that enables the use of an alias for the CRL distribution point. Use this value if you don't want the name of your S3 bucket to be public. This will be used to create the correct CNAME entry in the production environment private DNS zone if exists, otherwise it's ignored. Must be less than or equal to 128 characters in length.
+- `enabled` (Boolean) Boolean value that specifies whether certificate revocation lists (CRLs) are enabled. Defaults to `false`.
+- `expiration_in_days` (Number) Number of days until a certificate expires. Must be between 1 and 5000. Defaults to `365` days.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--configuration--revocation_configuration--ocsp"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.configuration.revocation_configuration.ocsp`
+
+Optional:
+
+- `custom_cname` (String) CNAME specifying a customized OCSP domain. This will be used to create the correct CNAME entry in the production environment private DNS zone if exists, otherwise it's ignored.
+- `enabled` (Boolean) Boolean value that specifies whether a custom OCSP responder is enabled. Defaults to `true`.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates`
+
+Required:
+
+- `configuration` (Attributes) AWS Private Certificate Authority configuration. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--configuration))
+
+Optional:
+
+- `certificate_validity` (Number) Validity period of the certificate, in days. Validity period can be from 915 days (2.5 years) to 1915 days (5.25 years). Defaults to `1900`.
+- `connector` (Attributes) AWS ACM PCA Connector configuration for this subordinate CA. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector))
+- `enabled` (Boolean) Whether the certificate authority is enabled or disabled. Defaults to `true`. Can only be disabled if the CA is in an `ACTIVE` state.
+- `issued_certificate_template` (String) The template to use for the certificates issued by the subordinate CA. Valid values are: `BlankEndEntityCertificate_APIPassthrough/V1`, `BlankEndEntityCertificate_APICSRPassthrough/V1`, `EndEntityCertificate/V1`, `EndEntityClientAuthCertificate/V1`, `EndEntityServerAuthCertificate/V1`. Defaults to `BlankEndEntityCertificate_APICSRPassthrough/V1`.
+- `organization_share_enabled` (Boolean) Whether the certificate authority is shared with the AWS Organization. Defaults to `true`.
+- `subordinates` (Attributes List) Level 3 subordinates CA under level 2 subordinate of type `GENERAL_PURPOSE`. If provided, at least one subordinate MUST be specified and supports up to 20 subordinates. Conflicts with `issued_certificate_template`. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates))
+- `tags` (Map of String) Key-value map of user-defined tags that are attached to the certificate authority.
+- `usage_mode` (String) The AWS Private Certificate Authority type. Valid values: `GENERAL_PURPOSE` and `SHORT_LIVED_CERTIFICATE`. Defaults to `GENERAL_PURPOSE`.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--configuration"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.configuration`
+
+Required:
+
+- `subject` (Attributes) Nested argument that contains X.500 distinguished name information. At least one nested attribute must be specified. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--configuration--subject))
+
+Optional:
+
+- `key_algorithm` (String) Type of the public key algorithm and size, in bits, of the key pair that your key pair creates when it issues a certificate. Valid values can be found in the [ACM PCA Documentation](https://docs.aws.amazon.com/privateca/latest/APIReference/API_CertificateAuthorityConfiguration.html). Defaults to `RSA_4096`.
+- `key_storage_security_standard` (String) Cryptographic key management compliance standard used for handling CA keys. Valid values: `FIPS_140_2_LEVEL_2_OR_HIGHER` and `FIPS_140_2_LEVEL_3_OR_HIGHER`. Supported standard for each region can be found in the [Storage and security compliance of AWS Private CA private keys Documentation](https://docs.aws.amazon.com/privateca/latest/userguide/data-protection.html#private-keys). Defaults to `FIPS_140_2_LEVEL_3_OR_HIGHER`.
+- `permanent_deletion_time_in_days` (Number) Number of days to make a CA restorable after it has been deleted, must be between 7 to 30 days. Defaults to `30` days.
+- `revocation_configuration` (Attributes) Nested argument containing revocation configuration. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--configuration--revocation_configuration))
+- `signing_algorithm` (String) Name of the algorithm your private CA uses to sign certificate requests. Valid values can be found in the [ACM PCA Documentation](https://docs.aws.amazon.com/privateca/latest/APIReference/API_CertificateAuthorityConfiguration.html). Defaults to `SHA512WITHRSA`.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--configuration--subject"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.configuration.subject`
+
+Required:
+
+- `common_name` (String) Fully qualified domain name (FQDN) associated with the certificate subject. Must contain alphanumeric, dash, space, period and underscore characters and be less than or equal to 64 characters in length.
+
+Optional:
+
+- `standard_attributes` (Attributes) Standard attributes for ASN1Subject. See available attributes in [ACM PCA Documentation](https://docs.aws.amazon.com/privateca/latest/APIReference/API_ASN1Subject.html). (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--configuration--subject--standard_attributes))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--configuration--subject--standard_attributes"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.configuration.subject.standard_attributes`
+
+Optional:
+
+- `country` (String) Two digit code that specifies the country in which the certificate subject located. Must be less than or equal to 2 characters in length.
+- `distinguished_name_qualifier` (String) Disambiguating information for the certificate subject. Must be less than or equal to 64 characters in length.
+- `generation_qualifier` (String) Typically a qualifier appended to the name of an individual. Examples include Jr. for junior, Sr. for senior, and III for third. Must be less than or equal to 3 characters in length.
+- `given_name` (String) First name. Must be less than or equal to 16 characters in length.
+- `initials` (String) Concatenation that typically contains the first letter of the given_name, the first letter of the middle name if one exists, and the first letter of the surname. Must be less than or equal to 5 characters in length.
+- `locality` (String) Locality (such as a city or town) in which the certificate subject is located. Must be less than or equal to 128 characters in length.
+- `organization` (String) Legal name of the organization with which the certificate subject is affiliated. Must be less than or equal to 64 characters in length.
+- `organizational_unit` (String) Subdivision or unit of the organization (such as sales or finance) with which the certificate subject is affiliated. Must be less than or equal to 64 characters in length.
+- `pseudonym` (String) Typically a shortened version of a longer `given_name`. For example, Jonathan is often shortened to John. Elizabeth is often shortened to Beth, Liz, or Eliza. Must be less than or equal to 128 characters in length.
+- `state` (String) State in which the subject of the certificate is located. Must be less than or equal to 128 characters in length.
+- `surname` (String) Family name. In the US and the UK for example, the surname of an individual is ordered last. In Asian cultures the surname is typically ordered first. Must be less than or equal to 40 characters in length.
+- `title` (String) Title such as Mr. or Ms. which is pre-pended to the name to refer formally to the certificate subject. Must be less than or equal to 64 characters in length.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--configuration--revocation_configuration"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.configuration.revocation_configuration`
+
+Optional:
+
+- `crl` (Attributes) Nested argument containing configuration of the certificate revocation list (CRL), if any, maintained by the certificate authority. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--configuration--revocation_configuration--crl))
+- `ocsp` (Attributes) Nested argument containing configuration of the custom OCSP responder endpoint. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--configuration--revocation_configuration--ocsp))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--configuration--revocation_configuration--crl"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.configuration.revocation_configuration.crl`
+
+Optional:
+
+- `custom_cname` (String) Name inserted into the certificate CRL Distribution Points extension that enables the use of an alias for the CRL distribution point. Use this value if you don't want the name of your S3 bucket to be public. This will be used to create the correct CNAME entry in the production environment private DNS zone if exists, otherwise it's ignored. Must be less than or equal to 128 characters in length.
+- `enabled` (Boolean) Boolean value that specifies whether certificate revocation lists (CRLs) are enabled. Defaults to `false`.
+- `expiration_in_days` (Number) Number of days until a certificate expires. Must be between 1 and 5000. Defaults to `365` days.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--configuration--revocation_configuration--ocsp"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.configuration.revocation_configuration.ocsp`
+
+Optional:
+
+- `custom_cname` (String) CNAME specifying a customized OCSP domain. This will be used to create the correct CNAME entry in the production environment private DNS zone if exists, otherwise it's ignored.
+- `enabled` (Boolean) Boolean value that specifies whether a custom OCSP responder is enabled. Defaults to `true`.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector`
+
+Optional:
+
+- `ad` (Attributes) Create a Connector for AD associated with this subordinate CA. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad))
+- `scep` (Attributes) Create a Connector for SCEP associated with this subordinate CA. Either `general_purpose` or `intune` MUST be configured. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--scep))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad`
+
+Required:
+
+- `directory` (Attributes) The AWS Directory Service to use for the PCA connector. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--directory))
+- `enabled` (Boolean) Whether Connector for Active Directory is enabled or disabled.
+- `templates` (Attributes List) A list of templates to create for the PCA connector. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates))
+
+Optional:
+
+- `tags` (Map of String) Key-value map of user-defined tags to use for the PCA connector.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--directory"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.directory`
+
+Required:
+
+- `id` (String) The AWS Directory Service directory ID to use for the PCA connector.
+!!! warning
+    Changing this value causes the PCA connector to be replaced.
+    This will destroy and recreate the connector resource.<br>
+- `type` (String) The AWS Directory Service directory type to use for the PCA connector. Valid values: `ADConnector`, `MicrosoftAD`, `SimpleAD`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates`
+
+Required:
+
+- `group_access_control` (Attributes List) List of group access control entries. Allow or deny Active Directory groups from enrolling and/or autoenrolling with the template based on the group security identifiers (SIDs). (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--group_access_control))
+- `name` (String) Name of the templates. Template names must be unique.
+!!! warning
+    Changing this value causes the template to be replaced.
+    This will destroy and recreate the template resource.<br>
+
+Optional:
+
+- `definition` (Attributes) Template configuration to define the information included in certificates. Define certificate validity and renewal periods, certificate request handling and enrollment options, key usage extensions, application policies, and cryptography settings. Defaults to v4 template (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition))
+- `reenroll_all_certificate_holders` (Boolean) This setting allows the major version of a template to be increased automatically. All members of Active Directory groups that are allowed to enroll with a template will receive a new certificate issued using that template.
+!!! warning
+    This is a disruptive operation during updates.
+    All certificate holders will be re-enrolled and receive new certificates.<br>
+- `tags` (Map of String) Key-value map of user-defined tags to use for the PCA connector template.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--group_access_control"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.group_access_control`
+
+Required:
+
+- `display_name` (String) Name of the Active Directory group. This name does not need to match the group name in Active Directory.
+- `security_identifier` (String) Security identifier (SID) of the group object from Active Directory. The SID starts with `S-`. If changed it will replace the template.
+
+Optional:
+
+- `access_rights` (Attributes) Permissions to allow or deny an Active Directory group to enroll or autoenroll certificates issued against a template. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--group_access_control--access_rights))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--group_access_control--access_rights"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.group_access_control.access_rights`
+
+Optional:
+
+- `auto_enroll` (String) Allow or deny an Active Directory group from autoenrolling certificates issued against a template. The Active Directory group must be allowed to enroll to allow autoenrollment. Defaults to `ALLOW`.
+- `enroll` (String) Allow or deny an Active Directory group from enrolling certificates issued against a template. Defaults to `ALLOW`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition`
+
+Optional:
+
+- `v2` (Attributes) v2 template schema that uses Legacy Cryptographic Providers. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2))
+- `v3` (Attributes) (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3))
+- `v4` (Attributes) V4 template schema that uses either Legacy Cryptographic Providers or Key Storage Providers. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2`
+
+Required:
+
+- `certificate_validity` (Attributes) Certificate validity describes the validity and renewal periods of a certificate. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--certificate_validity))
+
+Optional:
+
+- `enrollment_flags` (Attributes) Enrollment flags describe the enrollment settings for certificates such as using the existing private key and deleting expired or revoked certificates. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--enrollment_flags))
+- `extensions` (Attributes) Extensions describe the key usage extensions and application policies for the template. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--extensions))
+- `general_flags` (Attributes) General flags describe whether the template is used for computers or users and if the template can be used with autoenrollment. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--general_flags))
+- `private_key_attributes` (Attributes) Private key attributes allow you to specify the minimal key length, key spec, and cryptographic providers for the private key of a certificate for v2 templates. V2 templates allow you to use Legacy Cryptographic Service Providers. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--private_key_attributes))
+- `private_key_flags` (Attributes) Private key flags for v2 templates specify the client compatibility, if the private key can be exported, and if user input is required when using a private key. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--private_key_flags))
+- `subject_name_flags` (Attributes) Subject name flags describe the subject name and subject alternate name that is included in a certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--subject_name_flags))
+- `superseded_templates` (List of String) List of templates in Active Directory that are superseded by this template.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--certificate_validity"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.certificate_validity`
+
+Required:
+
+- `renewal_period` (Attributes) Renewal period is the period of time before certificate expiration when a new certificate will be requested. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--certificate_validity--renewal_period))
+- `validity_period` (Attributes) Renewal period is the period of time before certificate expiration when a new certificate will be requested. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--certificate_validity--validity_period))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--certificate_validity--renewal_period"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.certificate_validity.renewal_period`
+
+Required:
+
+- `period` (Number) The numeric value for the validity period. Must be a number between `1` and `8766000`.
+- `period_type` (String) The unit of time. Valid values: `DAYS, HOURS, MONTHS, WEEKS, YEARS`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--certificate_validity--validity_period"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.certificate_validity.validity_period`
+
+Required:
+
+- `period` (Number) The numeric value for the validity period. Must be a number between `1` and `8766000`.
+- `period_type` (String) The unit of time. Valid values: `DAYS, HOURS, MONTHS, WEEKS, YEARS`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--enrollment_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.enrollment_flags`
+
+Optional:
+
+- `enable_key_reuse_on_nt_token_keyset_storage_full` (Boolean) Allow renewal using the same key. Defaults to `false`.
+- `include_symmetric_algorithms` (Boolean) Include symmetric algorithms allowed by the subject. Defaults to `false`.
+- `no_security_extension` (Boolean) This flag instructs the CA to not include the security extension szOID_NTDS_CA_SECURITY_EXT (OID:1.3.6.1.4.1.311.25.2), as specified in [MS-WCCE] sections 2.2.2.7.7.4 and 3.2.2.6.2.1.4.5.9, in the issued certificate. This addresses a Windows Kerberos elevation-of-privilege vulnerability. Defaults to `false`.
+- `remove_invalid_certificate_from_personal_store` (Boolean) Delete expired or revoked certificates instead of archiving them. Defaults to `false`.
+- `user_interaction_required` (Boolean) Require user interaction when the subject is enrolled and the private key associated with the certificate is used. Defaults to `false`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--extensions"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.extensions`
+
+Optional:
+
+- `application_policies` (Attributes) Application policies specify what the certificate is used for and its purpose. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--extensions--application_policies))
+- `key_usage` (Attributes) The key usage extension defines the purpose (e.g., encipherment, signature, certificate signing) of the key contained in the certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--extensions--key_usage))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--extensions--application_policies"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.extensions.application_policies`
+
+Optional:
+
+- `critical` (Boolean) Marks the application policy extension as critical. Defaults to `false`.
+- `policies` (Attributes List) Application policies describe what the certificate can be used for. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--extensions--application_policies--policies))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--extensions--application_policies--policies"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.extensions.application_policies.policies`
+
+Optional:
+
+- `policy_object_identifier` (String) The object identifier (OID) of an application policy.
+- `policy_type` (String) The type of application policy. Valid values: `ALL_APPLICATION_POLICIES | ANY_PURPOSE | ATTESTATION_IDENTITY_KEY_CERTIFICATE | CERTIFICATE_REQUEST_AGENT | CLIENT_AUTHENTICATION | CODE_SIGNING | CTL_USAGE | DIGITAL_RIGHTS | DIRECTORY_SERVICE_EMAIL_REPLICATION | DISALLOWED_LIST | DNS_SERVER_TRUST | DOCUMENT_ENCRYPTION | DOCUMENT_SIGNING | DYNAMIC_CODE_GENERATOR | EARLY_LAUNCH_ANTIMALWARE_DRIVER | EMBEDDED_WINDOWS_SYSTEM_COMPONENT_VERIFICATION | ENCLAVE | ENCRYPTING_FILE_SYSTEM | ENDORSEMENT_KEY_CERTIFICATE | FILE_RECOVERY | HAL_EXTENSION | IP_SECURITY_END_SYSTEM | IP_SECURITY_IKE_INTERMEDIATE | IP_SECURITY_TUNNEL_TERMINATION | IP_SECURITY_USER | ISOLATED_USER_MODE | KDC_AUTHENTICATION | KERNEL_MODE_CODE_SIGNING | KEY_PACK_LICENSES | KEY_RECOVERY | KEY_RECOVERY_AGENT | LICENSE_SERVER_VERIFICATION | LIFETIME_SIGNING | MICROSOFT_PUBLISHER | MICROSOFT_TIME_STAMPING | MICROSOFT_TRUST_LIST_SIGNING | OCSP_SIGNING | OEM_WINDOWS_SYSTEM_COMPONENT_VERIFICATION | PLATFORM_CERTIFICATE | PREVIEW_BUILD_SIGNING | PRIVATE_KEY_ARCHIVAL | PROTECTED_PROCESS_LIGHT_VERIFICATION | PROTECTED_PROCESS_VERIFICATION | QUALIFIED_SUBORDINATION | REVOKED_LIST_SIGNER | ROOT_PROGRAM_AUTO_UPDATE_CA_REVOCATION | ROOT_PROGRAM_AUTO_UPDATE_END_REVOCATION | ROOT_PROGRAM_NO_OSCP_FAILOVER_TO_CRL | ROOT_LIST_SIGNER | SECURE_EMAIL | SERVER_AUTHENTICATION | SMART_CARD_LOGIN | SPC_ENCRYPTED_DIGEST_RETRY_COUNT | SPC_RELAXED_PE_MARKER_CHECK | TIME_STAMPING | WINDOWS_HARDWARE_DRIVER_ATTESTED_VERIFICATION | WINDOWS_HARDWARE_DRIVER_EXTENDED_VERIFICATION | WINDOWS_HARDWARE_DRIVER_VERIFICATION | WINDOWS_HELLO_RECOVERY_KEY_ENCRYPTION | WINDOWS_KITS_COMPONENT | WINDOWS_RT_VERIFICATION | WINDOWS_SOFTWARE_EXTENSION_VERIFICATION | WINDOWS_STORE | WINDOWS_SYSTEM_COMPONENT_VERIFICATION | WINDOWS_TCB_COMPONENT | WINDOWS_THIRD_PARTY_APPLICATION_COMPONENT | WINDOWS_UPDATE`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--extensions--key_usage"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.extensions.key_usage`
+
+Optional:
+
+- `critical` (Boolean) Sets the key usage extension to critical. Defaults to `true`.
+- `usage_flags` (Attributes) The key usage flags represent the purpose (e.g., encipherment, signature) of the key contained in the certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--extensions--key_usage--usage_flags))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--extensions--key_usage--usage_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.extensions.key_usage.usage_flags`
+
+Optional:
+
+- `data_encipherment` (Boolean) DataEncipherment is asserted when the subject public key is used for directly enciphering raw user data without the use of an intermediate symmetric cipher. Defaults to `false`.
+- `digital_signature` (Boolean) The digitalSignature is asserted when the subject public key is used for verifying digital signatures. Defaults to `true`.
+- `key_agreement` (Boolean) KeyAgreement is asserted when the subject public key is used for key agreement. Defaults to `false`.
+- `key_encipherment` (Boolean) KeyEncipherment is asserted when the subject public key is used for enciphering private or secret keys, i.e., for key transport. Defaults to `true`.
+- `non_repudiation` (Boolean) NonRepudiation is asserted when the subject public key is used to verify digital signatures. Defaults to `false`.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--general_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.general_flags`
+
+Optional:
+
+- `auto_enrollment` (Boolean) Allows certificate issuance using autoenrollment. Set to TRUE to allow autoenrollment. Defaults to `true`.
+- `machine_type` (Boolean) Defines if the template is for machines or users. Set to TRUE if the template is for machines. Set to FALSE if the template is for users. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--private_key_attributes"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.private_key_attributes`
+
+Optional:
+
+- `crypto_providers` (List of String) Defines the cryptographic providers used to generate the private key.
+- `key_spec` (String) Defines the purpose of the private key. Valid values: `KEY_EXCHANGE | SIGNATURE`.
+- `minimal_key_length` (Number) Set the minimum key length of the private key. Minimum `1`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--private_key_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.private_key_flags`
+
+Optional:
+
+- `client_version` (String) Defines the minimum client compatibility. Valid values: `WINDOWS_SERVER_2003 | WINDOWS_SERVER_2008 | WINDOWS_SERVER_2008_R2 | WINDOWS_SERVER_2012 | WINDOWS_SERVER_2012_R2 | WINDOWS_SERVER_2016`.
+- `exportable_key` (Boolean) Allows the private key to be exported.
+- `strong_key_protection_required` (Boolean) Require user input when using the private key for enrollment.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v2--subject_name_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v2.subject_name_flags`
+
+Optional:
+
+- `require_common_name` (Boolean) Include the common name in the subject name. Defaults to `false`.
+- `require_directory_path` (Boolean) Include the directory path in the subject name. Defaults to `true`.
+- `require_dns_as_cn` (Boolean) Include the DNS as common name in the subject name. Defaults to `false`.
+- `require_email` (Boolean) Include the subject's email in the subject name. Defaults to `false`.
+- `san_require_directory_guid` (Boolean) Include the globally unique identifier (GUID) in the subject alternate name. Defaults to `false`.
+- `san_require_dns` (Boolean) Include the DNS in the subject alternate name. Defaults to `true`.
+- `san_require_domain_dns` (Boolean) Include the domain DNS in the subject alternate name. Defaults to `true`.
+- `san_require_email` (Boolean) Include the subject's email in the subject alternate name. Defaults to `false`.
+- `san_require_spn` (Boolean) Include the service principal name (SPN) in the subject alternate name. Defaults to `false`.
+- `san_require_upn` (Boolean) Include the user principal name (UPN) in the subject alternate name. Defaults to `false`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3`
+
+Required:
+
+- `certificate_validity` (Attributes) Certificate validity describes the validity and renewal periods of a certificate. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--certificate_validity))
+
+Optional:
+
+- `enrollment_flags` (Attributes) Enrollment flags describe the enrollment settings for certificates such as using the existing private key and deleting expired or revoked certificates. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--enrollment_flags))
+- `extensions` (Attributes) Extensions describe the key usage extensions and application policies for the template. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--extensions))
+- `general_flags` (Attributes) General flags describe whether the template is used for computers or users and if the template can be used with autoenrollment. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--general_flags))
+- `hash_algorithm` (String) Specifies the hash algorithm used to hash the private key. Valid values: `SHA256 | SHA384 | SHA512`.
+- `private_key_attributes` (Attributes) Private key attributes allow you to specify the algorithm, minimal key length, key spec, key usage, and cryptographic providers for the private key of a certificate for v3 templates. V3 templates allow you to use Key Storage Providers. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--private_key_attributes))
+- `private_key_flags` (Attributes) Private key flags for v3 templates specify the client compatibility, if the private key can be exported, if user input is required when using a private key, and if an alternate signature algorithm should be used. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--private_key_flags))
+- `subject_name_flags` (Attributes) Subject name flags describe the subject name and subject alternate name that is included in a certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--subject_name_flags))
+- `superseded_templates` (List of String) List of templates in Active Directory that are superseded by this template.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--certificate_validity"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.certificate_validity`
+
+Required:
+
+- `renewal_period` (Attributes) Renewal period is the period of time before certificate expiration when a new certificate will be requested. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--certificate_validity--renewal_period))
+- `validity_period` (Attributes) Renewal period is the period of time before certificate expiration when a new certificate will be requested. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--certificate_validity--validity_period))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--certificate_validity--renewal_period"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.certificate_validity.renewal_period`
+
+Required:
+
+- `period` (Number) The numeric value for the validity period. Must be a number between `1` and `8766000`.
+- `period_type` (String) The unit of time. Valid values: `DAYS, HOURS, MONTHS, WEEKS, YEARS`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--certificate_validity--validity_period"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.certificate_validity.validity_period`
+
+Required:
+
+- `period` (Number) The numeric value for the validity period. Must be a number between `1` and `8766000`.
+- `period_type` (String) The unit of time. Valid values: `DAYS, HOURS, MONTHS, WEEKS, YEARS`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--enrollment_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.enrollment_flags`
+
+Optional:
+
+- `enable_key_reuse_on_nt_token_keyset_storage_full` (Boolean) Allow renewal using the same key. Defaults to `false`.
+- `include_symmetric_algorithms` (Boolean) Include symmetric algorithms allowed by the subject. Defaults to `false`.
+- `no_security_extension` (Boolean) This flag instructs the CA to not include the security extension szOID_NTDS_CA_SECURITY_EXT (OID:1.3.6.1.4.1.311.25.2), as specified in [MS-WCCE] sections 2.2.2.7.7.4 and 3.2.2.6.2.1.4.5.9, in the issued certificate. This addresses a Windows Kerberos elevation-of-privilege vulnerability. Defaults to `false`.
+- `remove_invalid_certificate_from_personal_store` (Boolean) Delete expired or revoked certificates instead of archiving them. Defaults to `false`.
+- `user_interaction_required` (Boolean) Require user interaction when the subject is enrolled and the private key associated with the certificate is used. Defaults to `false`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--extensions"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.extensions`
+
+Optional:
+
+- `application_policies` (Attributes) Application policies specify what the certificate is used for and its purpose. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--extensions--application_policies))
+- `key_usage` (Attributes) The key usage extension defines the purpose (e.g., encipherment, signature, certificate signing) of the key contained in the certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--extensions--key_usage))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--extensions--application_policies"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.extensions.application_policies`
+
+Optional:
+
+- `critical` (Boolean) Marks the application policy extension as critical. Defaults to `false`.
+- `policies` (Attributes List) Application policies describe what the certificate can be used for. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--extensions--application_policies--policies))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--extensions--application_policies--policies"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.extensions.application_policies.policies`
+
+Optional:
+
+- `policy_object_identifier` (String) The object identifier (OID) of an application policy.
+- `policy_type` (String) The type of application policy. Valid values: `ALL_APPLICATION_POLICIES | ANY_PURPOSE | ATTESTATION_IDENTITY_KEY_CERTIFICATE | CERTIFICATE_REQUEST_AGENT | CLIENT_AUTHENTICATION | CODE_SIGNING | CTL_USAGE | DIGITAL_RIGHTS | DIRECTORY_SERVICE_EMAIL_REPLICATION | DISALLOWED_LIST | DNS_SERVER_TRUST | DOCUMENT_ENCRYPTION | DOCUMENT_SIGNING | DYNAMIC_CODE_GENERATOR | EARLY_LAUNCH_ANTIMALWARE_DRIVER | EMBEDDED_WINDOWS_SYSTEM_COMPONENT_VERIFICATION | ENCLAVE | ENCRYPTING_FILE_SYSTEM | ENDORSEMENT_KEY_CERTIFICATE | FILE_RECOVERY | HAL_EXTENSION | IP_SECURITY_END_SYSTEM | IP_SECURITY_IKE_INTERMEDIATE | IP_SECURITY_TUNNEL_TERMINATION | IP_SECURITY_USER | ISOLATED_USER_MODE | KDC_AUTHENTICATION | KERNEL_MODE_CODE_SIGNING | KEY_PACK_LICENSES | KEY_RECOVERY | KEY_RECOVERY_AGENT | LICENSE_SERVER_VERIFICATION | LIFETIME_SIGNING | MICROSOFT_PUBLISHER | MICROSOFT_TIME_STAMPING | MICROSOFT_TRUST_LIST_SIGNING | OCSP_SIGNING | OEM_WINDOWS_SYSTEM_COMPONENT_VERIFICATION | PLATFORM_CERTIFICATE | PREVIEW_BUILD_SIGNING | PRIVATE_KEY_ARCHIVAL | PROTECTED_PROCESS_LIGHT_VERIFICATION | PROTECTED_PROCESS_VERIFICATION | QUALIFIED_SUBORDINATION | REVOKED_LIST_SIGNER | ROOT_PROGRAM_AUTO_UPDATE_CA_REVOCATION | ROOT_PROGRAM_AUTO_UPDATE_END_REVOCATION | ROOT_PROGRAM_NO_OSCP_FAILOVER_TO_CRL | ROOT_LIST_SIGNER | SECURE_EMAIL | SERVER_AUTHENTICATION | SMART_CARD_LOGIN | SPC_ENCRYPTED_DIGEST_RETRY_COUNT | SPC_RELAXED_PE_MARKER_CHECK | TIME_STAMPING | WINDOWS_HARDWARE_DRIVER_ATTESTED_VERIFICATION | WINDOWS_HARDWARE_DRIVER_EXTENDED_VERIFICATION | WINDOWS_HARDWARE_DRIVER_VERIFICATION | WINDOWS_HELLO_RECOVERY_KEY_ENCRYPTION | WINDOWS_KITS_COMPONENT | WINDOWS_RT_VERIFICATION | WINDOWS_SOFTWARE_EXTENSION_VERIFICATION | WINDOWS_STORE | WINDOWS_SYSTEM_COMPONENT_VERIFICATION | WINDOWS_TCB_COMPONENT | WINDOWS_THIRD_PARTY_APPLICATION_COMPONENT | WINDOWS_UPDATE`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--extensions--key_usage"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.extensions.key_usage`
+
+Optional:
+
+- `critical` (Boolean) Sets the key usage extension to critical. Defaults to `true`.
+- `usage_flags` (Attributes) The key usage flags represent the purpose (e.g., encipherment, signature) of the key contained in the certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--extensions--key_usage--usage_flags))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--extensions--key_usage--usage_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.extensions.key_usage.usage_flags`
+
+Optional:
+
+- `data_encipherment` (Boolean) DataEncipherment is asserted when the subject public key is used for directly enciphering raw user data without the use of an intermediate symmetric cipher. Defaults to `false`.
+- `digital_signature` (Boolean) The digitalSignature is asserted when the subject public key is used for verifying digital signatures. Defaults to `true`.
+- `key_agreement` (Boolean) KeyAgreement is asserted when the subject public key is used for key agreement. Defaults to `false`.
+- `key_encipherment` (Boolean) KeyEncipherment is asserted when the subject public key is used for enciphering private or secret keys, i.e., for key transport. Defaults to `true`.
+- `non_repudiation` (Boolean) NonRepudiation is asserted when the subject public key is used to verify digital signatures. Defaults to `false`.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--general_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.general_flags`
+
+Optional:
+
+- `auto_enrollment` (Boolean) Allows certificate issuance using autoenrollment. Set to TRUE to allow autoenrollment. Defaults to `true`.
+- `machine_type` (Boolean) Defines if the template is for machines or users. Set to TRUE if the template is for machines. Set to FALSE if the template is for users. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--private_key_attributes"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.private_key_attributes`
+
+Optional:
+
+- `algorithm` (String) Defines the algorithm used to generate the private key. Valid values: `RSA | ECDH_P256 | ECDH_P384 | ECDH_P521`.
+- `crypto_providers` (List of String) Defines the cryptographic providers used to generate the private key.
+- `key_spec` (String) Defines the purpose of the private key. Valid values: `KEY_EXCHANGE | SIGNATURE`.
+- `key_usage_property` (Attributes) The key usage property defines the purpose of the private key contained in the certificate. You can specify specific purposes using property flags or all by using property type ALL. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--private_key_attributes--key_usage_property))
+- `minimal_key_length` (Number) Set the minimum key length of the private key.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--private_key_attributes--key_usage_property"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.private_key_attributes.key_usage_property`
+
+Optional:
+
+- `property_flags` (Attributes) You can specify key usage for encryption, key agreement, and signature. You can use property flags or property type but not both. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--private_key_attributes--key_usage_property--property_flags))
+- `property_type` (String) You can specify all key usages using property type `ALL`. You can use property type or property flags but not both.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--private_key_attributes--key_usage_property--property_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.private_key_attributes.key_usage_property.property_flags`
+
+Optional:
+
+- `decrypt` (Boolean) Allows key for encryption and decryption.
+- `key_agreement` (Boolean) Allows key exchange without encryption.
+- `sign` (Boolean) Allow key use for digital signature.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--private_key_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.private_key_flags`
+
+Optional:
+
+- `client_version` (String) Defines the minimum client compatibility. Valid values: `WINDOWS_SERVER_2008 | WINDOWS_SERVER_2008_R2 | WINDOWS_SERVER_2012 | WINDOWS_SERVER_2012_R2 | WINDOWS_SERVER_2016`.
+- `exportable_key` (Boolean) Allows the private key to be exported.
+- `require_alternate_signature_algorithm` (Boolean) Reguires the PKCS #1 v2.1 signature format for certificates. You should verify that your CA, objects, and applications can accept this signature format.
+- `strong_key_protection_required` (Boolean) Requirer user input when using the private key for enrollment.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v3--subject_name_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v3.subject_name_flags`
+
+Optional:
+
+- `require_common_name` (Boolean) Include the common name in the subject name. Defaults to `false`.
+- `require_directory_path` (Boolean) Include the directory path in the subject name. Defaults to `true`.
+- `require_dns_as_cn` (Boolean) Include the DNS as common name in the subject name. Defaults to `false`.
+- `require_email` (Boolean) Include the subject's email in the subject name. Defaults to `false`.
+- `san_require_directory_guid` (Boolean) Include the globally unique identifier (GUID) in the subject alternate name. Defaults to `false`.
+- `san_require_dns` (Boolean) Include the DNS in the subject alternate name. Defaults to `true`.
+- `san_require_domain_dns` (Boolean) Include the domain DNS in the subject alternate name. Defaults to `true`.
+- `san_require_email` (Boolean) Include the subject's email in the subject alternate name. Defaults to `false`.
+- `san_require_spn` (Boolean) Include the service principal name (SPN) in the subject alternate name. Defaults to `false`.
+- `san_require_upn` (Boolean) Include the user principal name (UPN) in the subject alternate name. Defaults to `false`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4`
+
+Required:
+
+- `certificate_validity` (Attributes) Certificate validity describes the validity and renewal periods of a certificate. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--certificate_validity))
+
+Optional:
+
+- `enrollment_flags` (Attributes) Enrollment flags describe the enrollment settings for certificates such as using the existing private key and deleting expired or revoked certificates. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--enrollment_flags))
+- `extensions` (Attributes) Extensions describe the key usage extensions and application policies for the template. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--extensions))
+- `general_flags` (Attributes) General flags describe whether the template is used for computers or users and if the template can be used with autoenrollment. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--general_flags))
+- `hash_algorithm` (String) Specifies the hash algorithm used to hash the private key. Valid values: `SHA256 | SHA384 | SHA512`. Defaults to `SHA512`.
+- `private_key_attributes` (Attributes) Private key attributes allow you to specify the minimal key length, key spec, key usage, and cryptographic providers for the private key of a certificate for v4 templates. V4 templates allow you to use either Key Storage Providers or Legacy Cryptographic Service Providers. You specify the cryptography provider category in private key flags. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--private_key_attributes))
+- `private_key_flags` (Attributes) Private key flags for v4 templates specify the client compatibility, if the private key can be exported, if user input is required when using a private key, if an alternate signature algorithm should be used, and if the same key should be used for renewal. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--private_key_flags))
+- `subject_name_flags` (Attributes) Subject name flags describe the subject name and subject alternate name that is included in a certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--subject_name_flags))
+- `superseded_templates` (List of String) List of templates in Active Directory that are superseded by this template.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--certificate_validity"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.certificate_validity`
+
+Required:
+
+- `renewal_period` (Attributes) Renewal period is the period of time before certificate expiration when a new certificate will be requested. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--certificate_validity--renewal_period))
+- `validity_period` (Attributes) Renewal period is the period of time before certificate expiration when a new certificate will be requested. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--certificate_validity--validity_period))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--certificate_validity--renewal_period"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.certificate_validity.renewal_period`
+
+Required:
+
+- `period` (Number) The numeric value for the validity period. Must be a number between `1` and `8766000`.
+- `period_type` (String) The unit of time. Valid values: `DAYS, HOURS, MONTHS, WEEKS, YEARS`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--certificate_validity--validity_period"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.certificate_validity.validity_period`
+
+Required:
+
+- `period` (Number) The numeric value for the validity period. Must be a number between `1` and `8766000`.
+- `period_type` (String) The unit of time. Valid values: `DAYS, HOURS, MONTHS, WEEKS, YEARS`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--enrollment_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.enrollment_flags`
+
+Optional:
+
+- `enable_key_reuse_on_nt_token_keyset_storage_full` (Boolean) Allow renewal using the same key. Defaults to `false`.
+- `include_symmetric_algorithms` (Boolean) Include symmetric algorithms allowed by the subject. Defaults to `false`.
+- `no_security_extension` (Boolean) This flag instructs the CA to not include the security extension szOID_NTDS_CA_SECURITY_EXT (OID:1.3.6.1.4.1.311.25.2), as specified in [MS-WCCE] sections 2.2.2.7.7.4 and 3.2.2.6.2.1.4.5.9, in the issued certificate. This addresses a Windows Kerberos elevation-of-privilege vulnerability. Defaults to `false`.
+- `remove_invalid_certificate_from_personal_store` (Boolean) Delete expired or revoked certificates instead of archiving them. Defaults to `false`.
+- `user_interaction_required` (Boolean) Require user interaction when the subject is enrolled and the private key associated with the certificate is used. Defaults to `false`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--extensions"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.extensions`
+
+Optional:
+
+- `application_policies` (Attributes) Application policies specify what the certificate is used for and its purpose. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--extensions--application_policies))
+- `key_usage` (Attributes) The key usage extension defines the purpose (e.g., encipherment, signature, certificate signing) of the key contained in the certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--extensions--key_usage))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--extensions--application_policies"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.extensions.application_policies`
+
+Optional:
+
+- `critical` (Boolean) Marks the application policy extension as critical. Defaults to `false`.
+- `policies` (Attributes List) Application policies describe what the certificate can be used for. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--extensions--application_policies--policies))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--extensions--application_policies--policies"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.extensions.application_policies.policies`
+
+Optional:
+
+- `policy_object_identifier` (String) The object identifier (OID) of an application policy.
+- `policy_type` (String) The type of application policy. Valid values: `ALL_APPLICATION_POLICIES | ANY_PURPOSE | ATTESTATION_IDENTITY_KEY_CERTIFICATE | CERTIFICATE_REQUEST_AGENT | CLIENT_AUTHENTICATION | CODE_SIGNING | CTL_USAGE | DIGITAL_RIGHTS | DIRECTORY_SERVICE_EMAIL_REPLICATION | DISALLOWED_LIST | DNS_SERVER_TRUST | DOCUMENT_ENCRYPTION | DOCUMENT_SIGNING | DYNAMIC_CODE_GENERATOR | EARLY_LAUNCH_ANTIMALWARE_DRIVER | EMBEDDED_WINDOWS_SYSTEM_COMPONENT_VERIFICATION | ENCLAVE | ENCRYPTING_FILE_SYSTEM | ENDORSEMENT_KEY_CERTIFICATE | FILE_RECOVERY | HAL_EXTENSION | IP_SECURITY_END_SYSTEM | IP_SECURITY_IKE_INTERMEDIATE | IP_SECURITY_TUNNEL_TERMINATION | IP_SECURITY_USER | ISOLATED_USER_MODE | KDC_AUTHENTICATION | KERNEL_MODE_CODE_SIGNING | KEY_PACK_LICENSES | KEY_RECOVERY | KEY_RECOVERY_AGENT | LICENSE_SERVER_VERIFICATION | LIFETIME_SIGNING | MICROSOFT_PUBLISHER | MICROSOFT_TIME_STAMPING | MICROSOFT_TRUST_LIST_SIGNING | OCSP_SIGNING | OEM_WINDOWS_SYSTEM_COMPONENT_VERIFICATION | PLATFORM_CERTIFICATE | PREVIEW_BUILD_SIGNING | PRIVATE_KEY_ARCHIVAL | PROTECTED_PROCESS_LIGHT_VERIFICATION | PROTECTED_PROCESS_VERIFICATION | QUALIFIED_SUBORDINATION | REVOKED_LIST_SIGNER | ROOT_PROGRAM_AUTO_UPDATE_CA_REVOCATION | ROOT_PROGRAM_AUTO_UPDATE_END_REVOCATION | ROOT_PROGRAM_NO_OSCP_FAILOVER_TO_CRL | ROOT_LIST_SIGNER | SECURE_EMAIL | SERVER_AUTHENTICATION | SMART_CARD_LOGIN | SPC_ENCRYPTED_DIGEST_RETRY_COUNT | SPC_RELAXED_PE_MARKER_CHECK | TIME_STAMPING | WINDOWS_HARDWARE_DRIVER_ATTESTED_VERIFICATION | WINDOWS_HARDWARE_DRIVER_EXTENDED_VERIFICATION | WINDOWS_HARDWARE_DRIVER_VERIFICATION | WINDOWS_HELLO_RECOVERY_KEY_ENCRYPTION | WINDOWS_KITS_COMPONENT | WINDOWS_RT_VERIFICATION | WINDOWS_SOFTWARE_EXTENSION_VERIFICATION | WINDOWS_STORE | WINDOWS_SYSTEM_COMPONENT_VERIFICATION | WINDOWS_TCB_COMPONENT | WINDOWS_THIRD_PARTY_APPLICATION_COMPONENT | WINDOWS_UPDATE`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--extensions--key_usage"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.extensions.key_usage`
+
+Optional:
+
+- `critical` (Boolean) Sets the key usage extension to critical. Defaults to `true`.
+- `usage_flags` (Attributes) The key usage flags represent the purpose (e.g., encipherment, signature) of the key contained in the certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--extensions--key_usage--usage_flags))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--extensions--key_usage--usage_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.extensions.key_usage.usage_flags`
+
+Optional:
+
+- `data_encipherment` (Boolean) DataEncipherment is asserted when the subject public key is used for directly enciphering raw user data without the use of an intermediate symmetric cipher. Defaults to `false`.
+- `digital_signature` (Boolean) The digitalSignature is asserted when the subject public key is used for verifying digital signatures. Defaults to `true`.
+- `key_agreement` (Boolean) KeyAgreement is asserted when the subject public key is used for key agreement. Defaults to `false`.
+- `key_encipherment` (Boolean) KeyEncipherment is asserted when the subject public key is used for enciphering private or secret keys, i.e., for key transport. Defaults to `true`.
+- `non_repudiation` (Boolean) NonRepudiation is asserted when the subject public key is used to verify digital signatures. Defaults to `false`.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--general_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.general_flags`
+
+Optional:
+
+- `auto_enrollment` (Boolean) Allows certificate issuance using autoenrollment. Set to TRUE to allow autoenrollment. Defaults to `true`.
+- `machine_type` (Boolean) Defines if the template is for machines or users. Set to TRUE if the template is for machines. Set to FALSE if the template is for users. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--private_key_attributes"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.private_key_attributes`
+
+Optional:
+
+- `algorithm` (String) Defines the algorithm used to generate the private key. Valid: `ECDH_P256 | ECDH_P384 | ECDH_P521 | RSA`. Defaults to `RSA`.
+- `crypto_providers` (List of String) Defines the cryptographic providers used to generate the private key.
+- `key_spec` (String) Defines the purpose of the private key. Valid values: `KEY_EXCHANGE | SIGNATURE`. Defaults to `KEY_EXCHANGE`.
+- `key_usage_property` (Attributes) The key usage property defines the purpose of the private key contained in the certificate. You can specify specific purposes using property flags or all by using property type ALL. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--private_key_attributes--key_usage_property))
+- `minimal_key_length` (Number) Set the minimum key length of the private key. Defaults to `2048`.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--private_key_attributes--key_usage_property"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.private_key_attributes.key_usage_property`
+
+Optional:
+
+- `property_flags` (Attributes) You can specify key usage for encryption, key agreement, and signature. You can use property flags or property type but not both. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--private_key_attributes--key_usage_property--property_flags))
+- `property_type` (String) You can specify all key usages using property type `ALL`. You can use property type or property flags but not both. Defaults to `ALL`.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--private_key_attributes--key_usage_property--property_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.private_key_attributes.key_usage_property.property_flags`
+
+Optional:
+
+- `decrypt` (Boolean) Allows key for encryption and decryption.
+- `key_agreement` (Boolean) Allows key exchange without encryption.
+- `sign` (Boolean) Allow key use for digital signature.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--private_key_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.private_key_flags`
+
+Optional:
+
+- `client_version` (String) Defines the minimum client compatibility. Valid values: ` WINDOWS_SERVER_2012 | WINDOWS_SERVER_2012_R2 | WINDOWS_SERVER_2016`. Defaults to `WINDOWS_SERVER_2016`.
+- `exportable_key` (Boolean) Allows the private key to be exported. Defaults to `false`.
+- `require_alternate_signature_algorithm` (Boolean) Requires the PKCS #1 v2.1 signature format for certificates. You should verify that your CA, objects, and applications can accept this signature format. Defaults to `false`.
+- `require_same_key_renewal` (Boolean) Renew certificate using the same private key. Defaults to `false`.
+- `strong_key_protection_required` (Boolean) Require user input when using the private key for enrollment. Defaults to `false`.
+- `use_legacy_provider` (Boolean) Specifies the cryptographic service provider category used to generate private keys. Set to TRUE to use Legacy Cryptographic Service Providers and FALSE to use Key Storage Providers. Defaults to `false`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--ad--templates--definition--v4--subject_name_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.ad.templates.definition.v4.subject_name_flags`
+
+Optional:
+
+- `require_common_name` (Boolean) Include the common name in the subject name. Defaults to `false`.
+- `require_directory_path` (Boolean) Include the directory path in the subject name. Defaults to `true`.
+- `require_dns_as_cn` (Boolean) Include the DNS as common name in the subject name. Defaults to `false`.
+- `require_email` (Boolean) Include the subject's email in the subject name. Defaults to `false`.
+- `san_require_directory_guid` (Boolean) Include the globally unique identifier (GUID) in the subject alternate name. Defaults to `false`.
+- `san_require_dns` (Boolean) Include the DNS in the subject alternate name. Defaults to `true`.
+- `san_require_domain_dns` (Boolean) Include the domain DNS in the subject alternate name. Defaults to `true`.
+- `san_require_email` (Boolean) Include the subject's email in the subject alternate name. Defaults to `false`.
+- `san_require_spn` (Boolean) Include the service principal name (SPN) in the subject alternate name. Defaults to `false`.
+- `san_require_upn` (Boolean) Include the user principal name (UPN) in the subject alternate name. Defaults to `false`.
+
+
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--scep"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.scep`
+
+Optional:
+
+- `general_purpose` (Attributes) Create a Connector for General-purpose SCEP associated with this subordinate CA. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--scep--general_purpose))
+- `intune` (Attributes) Create a Connector for Microsoft Intune SCEP associated with this subordinate CA. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--scep--intune))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--scep--general_purpose"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.scep.general_purpose`
+
+Required:
+
+- `enabled` (Boolean) Whether the Connector for General-purpose SCEP is enabled or disabled.
+
+Optional:
+
+- `challenge_validity` (Number) A period in days for the challenge password to be valid. A new challenge password will be replaced after this period when this resource triggers an update for the first time. The renewal is not automated. Defaults to `365`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--connector--scep--intune"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.connector.scep.intune`
+
+Required:
+
+- `azure_application_id` (String) The application (client) ID from your Microsoft Entra ID app registration.
+- `enabled` (Boolean) Whether the Connector for Microsoft Intune SCEP is enabled or disabled.
+
+Optional:
+
+- `domain` (String) The primary domain from your Microsoft Entra ID app registration.
+- `tenant_id` (String) The directory (tenant) ID from your Microsoft Entra ID app registration.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates`
+
+Required:
+
+- `configuration` (Attributes) AWS Private Certificate Authority configuration. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--configuration))
+
+Optional:
+
+- `certificate_validity` (Number) Validity period of the certificate, in days. Validity period can be from 395 days (13 months) to 815 days (2.25 years). Defaults to `800`.
+- `connector` (Attributes) AWS ACM PCA Connector configuration for this subordinate CA. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector))
+- `enabled` (Boolean) Whether the certificate authority is enabled or disabled. Defaults to `true`. Can only be disabled if the CA is in an `ACTIVE` state.
+- `issued_certificate_template` (String) The template to use for the certificates issued by the subordinate CA. Valid values are: `BlankEndEntityCertificate_APIPassthrough/V1`, `BlankEndEntityCertificate_APICSRPassthrough/V1`, `EndEntityCertificate/V1`, `EndEntityClientAuthCertificate/V1`, `EndEntityServerAuthCertificate/V1`. Defaults to `BlankEndEntityCertificate_APICSRPassthrough/V1`.
+- `organization_share_enabled` (Boolean) Whether the certificate authority is shared with the AWS Organization. Defaults to `true`.
+- `tags` (Map of String) Key-value map of user-defined tags that are attached to the certificate authority.
+- `usage_mode` (String) The AWS Private Certificate Authority type. Valid values: `GENERAL_PURPOSE` and `SHORT_LIVED_CERTIFICATE`. Defaults to `GENERAL_PURPOSE`.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--configuration"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.configuration`
+
+Required:
+
+- `subject` (Attributes) Nested argument that contains X.500 distinguished name information. At least one nested attribute must be specified. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--configuration--subject))
+
+Optional:
+
+- `key_algorithm` (String) Type of the public key algorithm and size, in bits, of the key pair that your key pair creates when it issues a certificate. Valid values can be found in the [ACM PCA Documentation](https://docs.aws.amazon.com/privateca/latest/APIReference/API_CertificateAuthorityConfiguration.html). Defaults to `RSA_4096`.
+- `key_storage_security_standard` (String) Cryptographic key management compliance standard used for handling CA keys. Valid values: `FIPS_140_2_LEVEL_2_OR_HIGHER` and `FIPS_140_2_LEVEL_3_OR_HIGHER`. Supported standard for each region can be found in the [Storage and security compliance of AWS Private CA private keys Documentation](https://docs.aws.amazon.com/privateca/latest/userguide/data-protection.html#private-keys). Defaults to `FIPS_140_2_LEVEL_3_OR_HIGHER`.
+- `permanent_deletion_time_in_days` (Number) Number of days to make a CA restorable after it has been deleted, must be between 7 to 30 days. Defaults to `30` days.
+- `revocation_configuration` (Attributes) Nested argument containing revocation configuration. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--configuration--revocation_configuration))
+- `signing_algorithm` (String) Name of the algorithm your private CA uses to sign certificate requests. Valid values can be found in the [ACM PCA Documentation](https://docs.aws.amazon.com/privateca/latest/APIReference/API_CertificateAuthorityConfiguration.html). Defaults to `SHA512WITHRSA`.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--configuration--subject"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.configuration.subject`
+
+Required:
+
+- `common_name` (String) Fully qualified domain name (FQDN) associated with the certificate subject. Must contain alphanumeric, dash, space, period and underscore characters and be less than or equal to 64 characters in length.
+
+Optional:
+
+- `standard_attributes` (Attributes) Standard attributes for ASN1Subject. See available attributes in [ACM PCA Documentation](https://docs.aws.amazon.com/privateca/latest/APIReference/API_ASN1Subject.html). (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--configuration--subject--standard_attributes))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--configuration--subject--standard_attributes"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.configuration.subject.standard_attributes`
+
+Optional:
+
+- `country` (String) Two digit code that specifies the country in which the certificate subject located. Must be less than or equal to 2 characters in length.
+- `distinguished_name_qualifier` (String) Disambiguating information for the certificate subject. Must be less than or equal to 64 characters in length.
+- `generation_qualifier` (String) Typically a qualifier appended to the name of an individual. Examples include Jr. for junior, Sr. for senior, and III for third. Must be less than or equal to 3 characters in length.
+- `given_name` (String) First name. Must be less than or equal to 16 characters in length.
+- `initials` (String) Concatenation that typically contains the first letter of the given_name, the first letter of the middle name if one exists, and the first letter of the surname. Must be less than or equal to 5 characters in length.
+- `locality` (String) Locality (such as a city or town) in which the certificate subject is located. Must be less than or equal to 128 characters in length.
+- `organization` (String) Legal name of the organization with which the certificate subject is affiliated. Must be less than or equal to 64 characters in length.
+- `organizational_unit` (String) Subdivision or unit of the organization (such as sales or finance) with which the certificate subject is affiliated. Must be less than or equal to 64 characters in length.
+- `pseudonym` (String) Typically a shortened version of a longer `given_name`. For example, Jonathan is often shortened to John. Elizabeth is often shortened to Beth, Liz, or Eliza. Must be less than or equal to 128 characters in length.
+- `state` (String) State in which the subject of the certificate is located. Must be less than or equal to 128 characters in length.
+- `surname` (String) Family name. In the US and the UK for example, the surname of an individual is ordered last. In Asian cultures the surname is typically ordered first. Must be less than or equal to 40 characters in length.
+- `title` (String) Title such as Mr. or Ms. which is pre-pended to the name to refer formally to the certificate subject. Must be less than or equal to 64 characters in length.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--configuration--revocation_configuration"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.configuration.revocation_configuration`
+
+Optional:
+
+- `crl` (Attributes) Nested argument containing configuration of the certificate revocation list (CRL), if any, maintained by the certificate authority. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--configuration--revocation_configuration--crl))
+- `ocsp` (Attributes) Nested argument containing configuration of the custom OCSP responder endpoint. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--configuration--revocation_configuration--ocsp))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--configuration--revocation_configuration--crl"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.configuration.revocation_configuration.crl`
+
+Optional:
+
+- `custom_cname` (String) Name inserted into the certificate CRL Distribution Points extension that enables the use of an alias for the CRL distribution point. Use this value if you don't want the name of your S3 bucket to be public. This will be used to create the correct CNAME entry in the production environment private DNS zone if exists, otherwise it's ignored. Must be less than or equal to 128 characters in length.
+- `enabled` (Boolean) Boolean value that specifies whether certificate revocation lists (CRLs) are enabled. Defaults to `false`.
+- `expiration_in_days` (Number) Number of days until a certificate expires. Must be between 1 and 5000. Defaults to `365` days.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--configuration--revocation_configuration--ocsp"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.configuration.revocation_configuration.ocsp`
+
+Optional:
+
+- `custom_cname` (String) CNAME specifying a customized OCSP domain. This will be used to create the correct CNAME entry in the production environment private DNS zone if exists, otherwise it's ignored.
+- `enabled` (Boolean) Boolean value that specifies whether a custom OCSP responder is enabled. Defaults to `true`.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector`
+
+Optional:
+
+- `ad` (Attributes) Create a Connector for AD associated with this subordinate CA. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad))
+- `scep` (Attributes) Create a Connector for SCEP associated with this subordinate CA. Either `general_purpose` or `intune` MUST be configured. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--scep))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad`
+
+Required:
+
+- `directory` (Attributes) The AWS Directory Service to use for the PCA connector. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--directory))
+- `enabled` (Boolean) Whether Connector for Active Directory is enabled or disabled.
+- `templates` (Attributes List) A list of templates to create for the PCA connector. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates))
+
+Optional:
+
+- `tags` (Map of String) Key-value map of user-defined tags to use for the PCA connector.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--directory"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.directory`
+
+Required:
+
+- `id` (String) The AWS Directory Service directory ID to use for the PCA connector.
+!!! warning
+    Changing this value causes the PCA connector to be replaced.
+    This will destroy and recreate the connector resource.<br>
+- `type` (String) The AWS Directory Service directory type to use for the PCA connector. Valid values: `ADConnector`, `MicrosoftAD`, `SimpleAD`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates`
+
+Required:
+
+- `group_access_control` (Attributes List) List of group access control entries. Allow or deny Active Directory groups from enrolling and/or autoenrolling with the template based on the group security identifiers (SIDs). (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--group_access_control))
+- `name` (String) Name of the templates. Template names must be unique.
+!!! warning
+    Changing this value causes the template to be replaced.
+    This will destroy and recreate the template resource.<br>
+
+Optional:
+
+- `definition` (Attributes) Template configuration to define the information included in certificates. Define certificate validity and renewal periods, certificate request handling and enrollment options, key usage extensions, application policies, and cryptography settings. Defaults to v4 template (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition))
+- `reenroll_all_certificate_holders` (Boolean) This setting allows the major version of a template to be increased automatically. All members of Active Directory groups that are allowed to enroll with a template will receive a new certificate issued using that template.
+!!! warning
+    This is a disruptive operation during updates.
+    All certificate holders will be re-enrolled and receive new certificates.<br>
+- `tags` (Map of String) Key-value map of user-defined tags to use for the PCA connector template.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--group_access_control"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.group_access_control`
+
+Required:
+
+- `display_name` (String) Name of the Active Directory group. This name does not need to match the group name in Active Directory.
+- `security_identifier` (String) Security identifier (SID) of the group object from Active Directory. The SID starts with `S-`. If changed it will replace the template.
+
+Optional:
+
+- `access_rights` (Attributes) Permissions to allow or deny an Active Directory group to enroll or autoenroll certificates issued against a template. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--group_access_control--access_rights))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--group_access_control--access_rights"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.group_access_control.access_rights`
+
+Optional:
+
+- `auto_enroll` (String) Allow or deny an Active Directory group from autoenrolling certificates issued against a template. The Active Directory group must be allowed to enroll to allow autoenrollment. Defaults to `ALLOW`.
+- `enroll` (String) Allow or deny an Active Directory group from enrolling certificates issued against a template. Defaults to `ALLOW`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition`
+
+Optional:
+
+- `v2` (Attributes) v2 template schema that uses Legacy Cryptographic Providers. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2))
+- `v3` (Attributes) (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3))
+- `v4` (Attributes) V4 template schema that uses either Legacy Cryptographic Providers or Key Storage Providers. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2`
+
+Required:
+
+- `certificate_validity` (Attributes) Certificate validity describes the validity and renewal periods of a certificate. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--certificate_validity))
+
+Optional:
+
+- `enrollment_flags` (Attributes) Enrollment flags describe the enrollment settings for certificates such as using the existing private key and deleting expired or revoked certificates. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--enrollment_flags))
+- `extensions` (Attributes) Extensions describe the key usage extensions and application policies for the template. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--extensions))
+- `general_flags` (Attributes) General flags describe whether the template is used for computers or users and if the template can be used with autoenrollment. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--general_flags))
+- `private_key_attributes` (Attributes) Private key attributes allow you to specify the minimal key length, key spec, and cryptographic providers for the private key of a certificate for v2 templates. V2 templates allow you to use Legacy Cryptographic Service Providers. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--private_key_attributes))
+- `private_key_flags` (Attributes) Private key flags for v2 templates specify the client compatibility, if the private key can be exported, and if user input is required when using a private key. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--private_key_flags))
+- `subject_name_flags` (Attributes) Subject name flags describe the subject name and subject alternate name that is included in a certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--subject_name_flags))
+- `superseded_templates` (List of String) List of templates in Active Directory that are superseded by this template.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--certificate_validity"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.certificate_validity`
+
+Required:
+
+- `renewal_period` (Attributes) Renewal period is the period of time before certificate expiration when a new certificate will be requested. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--certificate_validity--renewal_period))
+- `validity_period` (Attributes) Renewal period is the period of time before certificate expiration when a new certificate will be requested. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--certificate_validity--validity_period))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--certificate_validity--renewal_period"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.certificate_validity.renewal_period`
+
+Required:
+
+- `period` (Number) The numeric value for the validity period. Must be a number between `1` and `8766000`.
+- `period_type` (String) The unit of time. Valid values: `DAYS, HOURS, MONTHS, WEEKS, YEARS`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--certificate_validity--validity_period"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.certificate_validity.validity_period`
+
+Required:
+
+- `period` (Number) The numeric value for the validity period. Must be a number between `1` and `8766000`.
+- `period_type` (String) The unit of time. Valid values: `DAYS, HOURS, MONTHS, WEEKS, YEARS`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--enrollment_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.enrollment_flags`
+
+Optional:
+
+- `enable_key_reuse_on_nt_token_keyset_storage_full` (Boolean) Allow renewal using the same key. Defaults to `false`.
+- `include_symmetric_algorithms` (Boolean) Include symmetric algorithms allowed by the subject. Defaults to `false`.
+- `no_security_extension` (Boolean) This flag instructs the CA to not include the security extension szOID_NTDS_CA_SECURITY_EXT (OID:1.3.6.1.4.1.311.25.2), as specified in [MS-WCCE] sections 2.2.2.7.7.4 and 3.2.2.6.2.1.4.5.9, in the issued certificate. This addresses a Windows Kerberos elevation-of-privilege vulnerability. Defaults to `false`.
+- `remove_invalid_certificate_from_personal_store` (Boolean) Delete expired or revoked certificates instead of archiving them. Defaults to `false`.
+- `user_interaction_required` (Boolean) Require user interaction when the subject is enrolled and the private key associated with the certificate is used. Defaults to `false`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--extensions"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.extensions`
+
+Optional:
+
+- `application_policies` (Attributes) Application policies specify what the certificate is used for and its purpose. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--extensions--application_policies))
+- `key_usage` (Attributes) The key usage extension defines the purpose (e.g., encipherment, signature, certificate signing) of the key contained in the certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--extensions--key_usage))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--extensions--application_policies"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.extensions.application_policies`
+
+Optional:
+
+- `critical` (Boolean) Marks the application policy extension as critical. Defaults to `false`.
+- `policies` (Attributes List) Application policies describe what the certificate can be used for. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--extensions--application_policies--policies))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--extensions--application_policies--policies"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.extensions.application_policies.policies`
+
+Optional:
+
+- `policy_object_identifier` (String) The object identifier (OID) of an application policy.
+- `policy_type` (String) The type of application policy. Valid values: `ALL_APPLICATION_POLICIES | ANY_PURPOSE | ATTESTATION_IDENTITY_KEY_CERTIFICATE | CERTIFICATE_REQUEST_AGENT | CLIENT_AUTHENTICATION | CODE_SIGNING | CTL_USAGE | DIGITAL_RIGHTS | DIRECTORY_SERVICE_EMAIL_REPLICATION | DISALLOWED_LIST | DNS_SERVER_TRUST | DOCUMENT_ENCRYPTION | DOCUMENT_SIGNING | DYNAMIC_CODE_GENERATOR | EARLY_LAUNCH_ANTIMALWARE_DRIVER | EMBEDDED_WINDOWS_SYSTEM_COMPONENT_VERIFICATION | ENCLAVE | ENCRYPTING_FILE_SYSTEM | ENDORSEMENT_KEY_CERTIFICATE | FILE_RECOVERY | HAL_EXTENSION | IP_SECURITY_END_SYSTEM | IP_SECURITY_IKE_INTERMEDIATE | IP_SECURITY_TUNNEL_TERMINATION | IP_SECURITY_USER | ISOLATED_USER_MODE | KDC_AUTHENTICATION | KERNEL_MODE_CODE_SIGNING | KEY_PACK_LICENSES | KEY_RECOVERY | KEY_RECOVERY_AGENT | LICENSE_SERVER_VERIFICATION | LIFETIME_SIGNING | MICROSOFT_PUBLISHER | MICROSOFT_TIME_STAMPING | MICROSOFT_TRUST_LIST_SIGNING | OCSP_SIGNING | OEM_WINDOWS_SYSTEM_COMPONENT_VERIFICATION | PLATFORM_CERTIFICATE | PREVIEW_BUILD_SIGNING | PRIVATE_KEY_ARCHIVAL | PROTECTED_PROCESS_LIGHT_VERIFICATION | PROTECTED_PROCESS_VERIFICATION | QUALIFIED_SUBORDINATION | REVOKED_LIST_SIGNER | ROOT_PROGRAM_AUTO_UPDATE_CA_REVOCATION | ROOT_PROGRAM_AUTO_UPDATE_END_REVOCATION | ROOT_PROGRAM_NO_OSCP_FAILOVER_TO_CRL | ROOT_LIST_SIGNER | SECURE_EMAIL | SERVER_AUTHENTICATION | SMART_CARD_LOGIN | SPC_ENCRYPTED_DIGEST_RETRY_COUNT | SPC_RELAXED_PE_MARKER_CHECK | TIME_STAMPING | WINDOWS_HARDWARE_DRIVER_ATTESTED_VERIFICATION | WINDOWS_HARDWARE_DRIVER_EXTENDED_VERIFICATION | WINDOWS_HARDWARE_DRIVER_VERIFICATION | WINDOWS_HELLO_RECOVERY_KEY_ENCRYPTION | WINDOWS_KITS_COMPONENT | WINDOWS_RT_VERIFICATION | WINDOWS_SOFTWARE_EXTENSION_VERIFICATION | WINDOWS_STORE | WINDOWS_SYSTEM_COMPONENT_VERIFICATION | WINDOWS_TCB_COMPONENT | WINDOWS_THIRD_PARTY_APPLICATION_COMPONENT | WINDOWS_UPDATE`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--extensions--key_usage"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.extensions.key_usage`
+
+Optional:
+
+- `critical` (Boolean) Sets the key usage extension to critical. Defaults to `true`.
+- `usage_flags` (Attributes) The key usage flags represent the purpose (e.g., encipherment, signature) of the key contained in the certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--extensions--key_usage--usage_flags))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--extensions--key_usage--usage_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.extensions.key_usage.usage_flags`
+
+Optional:
+
+- `data_encipherment` (Boolean) DataEncipherment is asserted when the subject public key is used for directly enciphering raw user data without the use of an intermediate symmetric cipher. Defaults to `false`.
+- `digital_signature` (Boolean) The digitalSignature is asserted when the subject public key is used for verifying digital signatures. Defaults to `true`.
+- `key_agreement` (Boolean) KeyAgreement is asserted when the subject public key is used for key agreement. Defaults to `false`.
+- `key_encipherment` (Boolean) KeyEncipherment is asserted when the subject public key is used for enciphering private or secret keys, i.e., for key transport. Defaults to `true`.
+- `non_repudiation` (Boolean) NonRepudiation is asserted when the subject public key is used to verify digital signatures. Defaults to `false`.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--general_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.general_flags`
+
+Optional:
+
+- `auto_enrollment` (Boolean) Allows certificate issuance using autoenrollment. Set to TRUE to allow autoenrollment. Defaults to `true`.
+- `machine_type` (Boolean) Defines if the template is for machines or users. Set to TRUE if the template is for machines. Set to FALSE if the template is for users. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--private_key_attributes"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.private_key_attributes`
+
+Optional:
+
+- `crypto_providers` (List of String) Defines the cryptographic providers used to generate the private key.
+- `key_spec` (String) Defines the purpose of the private key. Valid values: `KEY_EXCHANGE | SIGNATURE`.
+- `minimal_key_length` (Number) Set the minimum key length of the private key. Minimum `1`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--private_key_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.private_key_flags`
+
+Optional:
+
+- `client_version` (String) Defines the minimum client compatibility. Valid values: `WINDOWS_SERVER_2003 | WINDOWS_SERVER_2008 | WINDOWS_SERVER_2008_R2 | WINDOWS_SERVER_2012 | WINDOWS_SERVER_2012_R2 | WINDOWS_SERVER_2016`.
+- `exportable_key` (Boolean) Allows the private key to be exported.
+- `strong_key_protection_required` (Boolean) Require user input when using the private key for enrollment.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v2--subject_name_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v2.subject_name_flags`
+
+Optional:
+
+- `require_common_name` (Boolean) Include the common name in the subject name. Defaults to `false`.
+- `require_directory_path` (Boolean) Include the directory path in the subject name. Defaults to `true`.
+- `require_dns_as_cn` (Boolean) Include the DNS as common name in the subject name. Defaults to `false`.
+- `require_email` (Boolean) Include the subject's email in the subject name. Defaults to `false`.
+- `san_require_directory_guid` (Boolean) Include the globally unique identifier (GUID) in the subject alternate name. Defaults to `false`.
+- `san_require_dns` (Boolean) Include the DNS in the subject alternate name. Defaults to `true`.
+- `san_require_domain_dns` (Boolean) Include the domain DNS in the subject alternate name. Defaults to `true`.
+- `san_require_email` (Boolean) Include the subject's email in the subject alternate name. Defaults to `false`.
+- `san_require_spn` (Boolean) Include the service principal name (SPN) in the subject alternate name. Defaults to `false`.
+- `san_require_upn` (Boolean) Include the user principal name (UPN) in the subject alternate name. Defaults to `false`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3`
+
+Required:
+
+- `certificate_validity` (Attributes) Certificate validity describes the validity and renewal periods of a certificate. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--certificate_validity))
+
+Optional:
+
+- `enrollment_flags` (Attributes) Enrollment flags describe the enrollment settings for certificates such as using the existing private key and deleting expired or revoked certificates. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--enrollment_flags))
+- `extensions` (Attributes) Extensions describe the key usage extensions and application policies for the template. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--extensions))
+- `general_flags` (Attributes) General flags describe whether the template is used for computers or users and if the template can be used with autoenrollment. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--general_flags))
+- `hash_algorithm` (String) Specifies the hash algorithm used to hash the private key. Valid values: `SHA256 | SHA384 | SHA512`.
+- `private_key_attributes` (Attributes) Private key attributes allow you to specify the algorithm, minimal key length, key spec, key usage, and cryptographic providers for the private key of a certificate for v3 templates. V3 templates allow you to use Key Storage Providers. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--private_key_attributes))
+- `private_key_flags` (Attributes) Private key flags for v3 templates specify the client compatibility, if the private key can be exported, if user input is required when using a private key, and if an alternate signature algorithm should be used. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--private_key_flags))
+- `subject_name_flags` (Attributes) Subject name flags describe the subject name and subject alternate name that is included in a certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--subject_name_flags))
+- `superseded_templates` (List of String) List of templates in Active Directory that are superseded by this template.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--certificate_validity"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.certificate_validity`
+
+Required:
+
+- `renewal_period` (Attributes) Renewal period is the period of time before certificate expiration when a new certificate will be requested. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--certificate_validity--renewal_period))
+- `validity_period` (Attributes) Renewal period is the period of time before certificate expiration when a new certificate will be requested. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--certificate_validity--validity_period))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--certificate_validity--renewal_period"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.certificate_validity.renewal_period`
+
+Required:
+
+- `period` (Number) The numeric value for the validity period. Must be a number between `1` and `8766000`.
+- `period_type` (String) The unit of time. Valid values: `DAYS, HOURS, MONTHS, WEEKS, YEARS`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--certificate_validity--validity_period"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.certificate_validity.validity_period`
+
+Required:
+
+- `period` (Number) The numeric value for the validity period. Must be a number between `1` and `8766000`.
+- `period_type` (String) The unit of time. Valid values: `DAYS, HOURS, MONTHS, WEEKS, YEARS`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--enrollment_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.enrollment_flags`
+
+Optional:
+
+- `enable_key_reuse_on_nt_token_keyset_storage_full` (Boolean) Allow renewal using the same key. Defaults to `false`.
+- `include_symmetric_algorithms` (Boolean) Include symmetric algorithms allowed by the subject. Defaults to `false`.
+- `no_security_extension` (Boolean) This flag instructs the CA to not include the security extension szOID_NTDS_CA_SECURITY_EXT (OID:1.3.6.1.4.1.311.25.2), as specified in [MS-WCCE] sections 2.2.2.7.7.4 and 3.2.2.6.2.1.4.5.9, in the issued certificate. This addresses a Windows Kerberos elevation-of-privilege vulnerability. Defaults to `false`.
+- `remove_invalid_certificate_from_personal_store` (Boolean) Delete expired or revoked certificates instead of archiving them. Defaults to `false`.
+- `user_interaction_required` (Boolean) Require user interaction when the subject is enrolled and the private key associated with the certificate is used. Defaults to `false`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--extensions"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.extensions`
+
+Optional:
+
+- `application_policies` (Attributes) Application policies specify what the certificate is used for and its purpose. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--extensions--application_policies))
+- `key_usage` (Attributes) The key usage extension defines the purpose (e.g., encipherment, signature, certificate signing) of the key contained in the certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--extensions--key_usage))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--extensions--application_policies"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.extensions.application_policies`
+
+Optional:
+
+- `critical` (Boolean) Marks the application policy extension as critical. Defaults to `false`.
+- `policies` (Attributes List) Application policies describe what the certificate can be used for. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--extensions--application_policies--policies))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--extensions--application_policies--policies"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.extensions.application_policies.policies`
+
+Optional:
+
+- `policy_object_identifier` (String) The object identifier (OID) of an application policy.
+- `policy_type` (String) The type of application policy. Valid values: `ALL_APPLICATION_POLICIES | ANY_PURPOSE | ATTESTATION_IDENTITY_KEY_CERTIFICATE | CERTIFICATE_REQUEST_AGENT | CLIENT_AUTHENTICATION | CODE_SIGNING | CTL_USAGE | DIGITAL_RIGHTS | DIRECTORY_SERVICE_EMAIL_REPLICATION | DISALLOWED_LIST | DNS_SERVER_TRUST | DOCUMENT_ENCRYPTION | DOCUMENT_SIGNING | DYNAMIC_CODE_GENERATOR | EARLY_LAUNCH_ANTIMALWARE_DRIVER | EMBEDDED_WINDOWS_SYSTEM_COMPONENT_VERIFICATION | ENCLAVE | ENCRYPTING_FILE_SYSTEM | ENDORSEMENT_KEY_CERTIFICATE | FILE_RECOVERY | HAL_EXTENSION | IP_SECURITY_END_SYSTEM | IP_SECURITY_IKE_INTERMEDIATE | IP_SECURITY_TUNNEL_TERMINATION | IP_SECURITY_USER | ISOLATED_USER_MODE | KDC_AUTHENTICATION | KERNEL_MODE_CODE_SIGNING | KEY_PACK_LICENSES | KEY_RECOVERY | KEY_RECOVERY_AGENT | LICENSE_SERVER_VERIFICATION | LIFETIME_SIGNING | MICROSOFT_PUBLISHER | MICROSOFT_TIME_STAMPING | MICROSOFT_TRUST_LIST_SIGNING | OCSP_SIGNING | OEM_WINDOWS_SYSTEM_COMPONENT_VERIFICATION | PLATFORM_CERTIFICATE | PREVIEW_BUILD_SIGNING | PRIVATE_KEY_ARCHIVAL | PROTECTED_PROCESS_LIGHT_VERIFICATION | PROTECTED_PROCESS_VERIFICATION | QUALIFIED_SUBORDINATION | REVOKED_LIST_SIGNER | ROOT_PROGRAM_AUTO_UPDATE_CA_REVOCATION | ROOT_PROGRAM_AUTO_UPDATE_END_REVOCATION | ROOT_PROGRAM_NO_OSCP_FAILOVER_TO_CRL | ROOT_LIST_SIGNER | SECURE_EMAIL | SERVER_AUTHENTICATION | SMART_CARD_LOGIN | SPC_ENCRYPTED_DIGEST_RETRY_COUNT | SPC_RELAXED_PE_MARKER_CHECK | TIME_STAMPING | WINDOWS_HARDWARE_DRIVER_ATTESTED_VERIFICATION | WINDOWS_HARDWARE_DRIVER_EXTENDED_VERIFICATION | WINDOWS_HARDWARE_DRIVER_VERIFICATION | WINDOWS_HELLO_RECOVERY_KEY_ENCRYPTION | WINDOWS_KITS_COMPONENT | WINDOWS_RT_VERIFICATION | WINDOWS_SOFTWARE_EXTENSION_VERIFICATION | WINDOWS_STORE | WINDOWS_SYSTEM_COMPONENT_VERIFICATION | WINDOWS_TCB_COMPONENT | WINDOWS_THIRD_PARTY_APPLICATION_COMPONENT | WINDOWS_UPDATE`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--extensions--key_usage"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.extensions.key_usage`
+
+Optional:
+
+- `critical` (Boolean) Sets the key usage extension to critical. Defaults to `true`.
+- `usage_flags` (Attributes) The key usage flags represent the purpose (e.g., encipherment, signature) of the key contained in the certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--extensions--key_usage--usage_flags))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--extensions--key_usage--usage_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.extensions.key_usage.usage_flags`
+
+Optional:
+
+- `data_encipherment` (Boolean) DataEncipherment is asserted when the subject public key is used for directly enciphering raw user data without the use of an intermediate symmetric cipher. Defaults to `false`.
+- `digital_signature` (Boolean) The digitalSignature is asserted when the subject public key is used for verifying digital signatures. Defaults to `true`.
+- `key_agreement` (Boolean) KeyAgreement is asserted when the subject public key is used for key agreement. Defaults to `false`.
+- `key_encipherment` (Boolean) KeyEncipherment is asserted when the subject public key is used for enciphering private or secret keys, i.e., for key transport. Defaults to `true`.
+- `non_repudiation` (Boolean) NonRepudiation is asserted when the subject public key is used to verify digital signatures. Defaults to `false`.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--general_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.general_flags`
+
+Optional:
+
+- `auto_enrollment` (Boolean) Allows certificate issuance using autoenrollment. Set to TRUE to allow autoenrollment. Defaults to `true`.
+- `machine_type` (Boolean) Defines if the template is for machines or users. Set to TRUE if the template is for machines. Set to FALSE if the template is for users. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--private_key_attributes"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.private_key_attributes`
+
+Optional:
+
+- `algorithm` (String) Defines the algorithm used to generate the private key. Valid values: `RSA | ECDH_P256 | ECDH_P384 | ECDH_P521`.
+- `crypto_providers` (List of String) Defines the cryptographic providers used to generate the private key.
+- `key_spec` (String) Defines the purpose of the private key. Valid values: `KEY_EXCHANGE | SIGNATURE`.
+- `key_usage_property` (Attributes) The key usage property defines the purpose of the private key contained in the certificate. You can specify specific purposes using property flags or all by using property type ALL. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--private_key_attributes--key_usage_property))
+- `minimal_key_length` (Number) Set the minimum key length of the private key.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--private_key_attributes--key_usage_property"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.private_key_attributes.key_usage_property`
+
+Optional:
+
+- `property_flags` (Attributes) You can specify key usage for encryption, key agreement, and signature. You can use property flags or property type but not both. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--private_key_attributes--key_usage_property--property_flags))
+- `property_type` (String) You can specify all key usages using property type `ALL`. You can use property type or property flags but not both.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--private_key_attributes--key_usage_property--property_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.private_key_attributes.key_usage_property.property_flags`
+
+Optional:
+
+- `decrypt` (Boolean) Allows key for encryption and decryption.
+- `key_agreement` (Boolean) Allows key exchange without encryption.
+- `sign` (Boolean) Allow key use for digital signature.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--private_key_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.private_key_flags`
+
+Optional:
+
+- `client_version` (String) Defines the minimum client compatibility. Valid values: `WINDOWS_SERVER_2008 | WINDOWS_SERVER_2008_R2 | WINDOWS_SERVER_2012 | WINDOWS_SERVER_2012_R2 | WINDOWS_SERVER_2016`.
+- `exportable_key` (Boolean) Allows the private key to be exported.
+- `require_alternate_signature_algorithm` (Boolean) Reguires the PKCS #1 v2.1 signature format for certificates. You should verify that your CA, objects, and applications can accept this signature format.
+- `strong_key_protection_required` (Boolean) Requirer user input when using the private key for enrollment.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v3--subject_name_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v3.subject_name_flags`
+
+Optional:
+
+- `require_common_name` (Boolean) Include the common name in the subject name. Defaults to `false`.
+- `require_directory_path` (Boolean) Include the directory path in the subject name. Defaults to `true`.
+- `require_dns_as_cn` (Boolean) Include the DNS as common name in the subject name. Defaults to `false`.
+- `require_email` (Boolean) Include the subject's email in the subject name. Defaults to `false`.
+- `san_require_directory_guid` (Boolean) Include the globally unique identifier (GUID) in the subject alternate name. Defaults to `false`.
+- `san_require_dns` (Boolean) Include the DNS in the subject alternate name. Defaults to `true`.
+- `san_require_domain_dns` (Boolean) Include the domain DNS in the subject alternate name. Defaults to `true`.
+- `san_require_email` (Boolean) Include the subject's email in the subject alternate name. Defaults to `false`.
+- `san_require_spn` (Boolean) Include the service principal name (SPN) in the subject alternate name. Defaults to `false`.
+- `san_require_upn` (Boolean) Include the user principal name (UPN) in the subject alternate name. Defaults to `false`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4`
+
+Required:
+
+- `certificate_validity` (Attributes) Certificate validity describes the validity and renewal periods of a certificate. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--certificate_validity))
+
+Optional:
+
+- `enrollment_flags` (Attributes) Enrollment flags describe the enrollment settings for certificates such as using the existing private key and deleting expired or revoked certificates. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--enrollment_flags))
+- `extensions` (Attributes) Extensions describe the key usage extensions and application policies for the template. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--extensions))
+- `general_flags` (Attributes) General flags describe whether the template is used for computers or users and if the template can be used with autoenrollment. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--general_flags))
+- `hash_algorithm` (String) Specifies the hash algorithm used to hash the private key. Valid values: `SHA256 | SHA384 | SHA512`. Defaults to `SHA512`.
+- `private_key_attributes` (Attributes) Private key attributes allow you to specify the minimal key length, key spec, key usage, and cryptographic providers for the private key of a certificate for v4 templates. V4 templates allow you to use either Key Storage Providers or Legacy Cryptographic Service Providers. You specify the cryptography provider category in private key flags. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--private_key_attributes))
+- `private_key_flags` (Attributes) Private key flags for v4 templates specify the client compatibility, if the private key can be exported, if user input is required when using a private key, if an alternate signature algorithm should be used, and if the same key should be used for renewal. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--private_key_flags))
+- `subject_name_flags` (Attributes) Subject name flags describe the subject name and subject alternate name that is included in a certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--subject_name_flags))
+- `superseded_templates` (List of String) List of templates in Active Directory that are superseded by this template.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--certificate_validity"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.certificate_validity`
+
+Required:
+
+- `renewal_period` (Attributes) Renewal period is the period of time before certificate expiration when a new certificate will be requested. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--certificate_validity--renewal_period))
+- `validity_period` (Attributes) Renewal period is the period of time before certificate expiration when a new certificate will be requested. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--certificate_validity--validity_period))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--certificate_validity--renewal_period"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.certificate_validity.renewal_period`
+
+Required:
+
+- `period` (Number) The numeric value for the validity period. Must be a number between `1` and `8766000`.
+- `period_type` (String) The unit of time. Valid values: `DAYS, HOURS, MONTHS, WEEKS, YEARS`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--certificate_validity--validity_period"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.certificate_validity.validity_period`
+
+Required:
+
+- `period` (Number) The numeric value for the validity period. Must be a number between `1` and `8766000`.
+- `period_type` (String) The unit of time. Valid values: `DAYS, HOURS, MONTHS, WEEKS, YEARS`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--enrollment_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.enrollment_flags`
+
+Optional:
+
+- `enable_key_reuse_on_nt_token_keyset_storage_full` (Boolean) Allow renewal using the same key. Defaults to `false`.
+- `include_symmetric_algorithms` (Boolean) Include symmetric algorithms allowed by the subject. Defaults to `false`.
+- `no_security_extension` (Boolean) This flag instructs the CA to not include the security extension szOID_NTDS_CA_SECURITY_EXT (OID:1.3.6.1.4.1.311.25.2), as specified in [MS-WCCE] sections 2.2.2.7.7.4 and 3.2.2.6.2.1.4.5.9, in the issued certificate. This addresses a Windows Kerberos elevation-of-privilege vulnerability. Defaults to `false`.
+- `remove_invalid_certificate_from_personal_store` (Boolean) Delete expired or revoked certificates instead of archiving them. Defaults to `false`.
+- `user_interaction_required` (Boolean) Require user interaction when the subject is enrolled and the private key associated with the certificate is used. Defaults to `false`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--extensions"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.extensions`
+
+Optional:
+
+- `application_policies` (Attributes) Application policies specify what the certificate is used for and its purpose. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--extensions--application_policies))
+- `key_usage` (Attributes) The key usage extension defines the purpose (e.g., encipherment, signature, certificate signing) of the key contained in the certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--extensions--key_usage))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--extensions--application_policies"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.extensions.application_policies`
+
+Optional:
+
+- `critical` (Boolean) Marks the application policy extension as critical. Defaults to `false`.
+- `policies` (Attributes List) Application policies describe what the certificate can be used for. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--extensions--application_policies--policies))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--extensions--application_policies--policies"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.extensions.application_policies.policies`
+
+Optional:
+
+- `policy_object_identifier` (String) The object identifier (OID) of an application policy.
+- `policy_type` (String) The type of application policy. Valid values: `ALL_APPLICATION_POLICIES | ANY_PURPOSE | ATTESTATION_IDENTITY_KEY_CERTIFICATE | CERTIFICATE_REQUEST_AGENT | CLIENT_AUTHENTICATION | CODE_SIGNING | CTL_USAGE | DIGITAL_RIGHTS | DIRECTORY_SERVICE_EMAIL_REPLICATION | DISALLOWED_LIST | DNS_SERVER_TRUST | DOCUMENT_ENCRYPTION | DOCUMENT_SIGNING | DYNAMIC_CODE_GENERATOR | EARLY_LAUNCH_ANTIMALWARE_DRIVER | EMBEDDED_WINDOWS_SYSTEM_COMPONENT_VERIFICATION | ENCLAVE | ENCRYPTING_FILE_SYSTEM | ENDORSEMENT_KEY_CERTIFICATE | FILE_RECOVERY | HAL_EXTENSION | IP_SECURITY_END_SYSTEM | IP_SECURITY_IKE_INTERMEDIATE | IP_SECURITY_TUNNEL_TERMINATION | IP_SECURITY_USER | ISOLATED_USER_MODE | KDC_AUTHENTICATION | KERNEL_MODE_CODE_SIGNING | KEY_PACK_LICENSES | KEY_RECOVERY | KEY_RECOVERY_AGENT | LICENSE_SERVER_VERIFICATION | LIFETIME_SIGNING | MICROSOFT_PUBLISHER | MICROSOFT_TIME_STAMPING | MICROSOFT_TRUST_LIST_SIGNING | OCSP_SIGNING | OEM_WINDOWS_SYSTEM_COMPONENT_VERIFICATION | PLATFORM_CERTIFICATE | PREVIEW_BUILD_SIGNING | PRIVATE_KEY_ARCHIVAL | PROTECTED_PROCESS_LIGHT_VERIFICATION | PROTECTED_PROCESS_VERIFICATION | QUALIFIED_SUBORDINATION | REVOKED_LIST_SIGNER | ROOT_PROGRAM_AUTO_UPDATE_CA_REVOCATION | ROOT_PROGRAM_AUTO_UPDATE_END_REVOCATION | ROOT_PROGRAM_NO_OSCP_FAILOVER_TO_CRL | ROOT_LIST_SIGNER | SECURE_EMAIL | SERVER_AUTHENTICATION | SMART_CARD_LOGIN | SPC_ENCRYPTED_DIGEST_RETRY_COUNT | SPC_RELAXED_PE_MARKER_CHECK | TIME_STAMPING | WINDOWS_HARDWARE_DRIVER_ATTESTED_VERIFICATION | WINDOWS_HARDWARE_DRIVER_EXTENDED_VERIFICATION | WINDOWS_HARDWARE_DRIVER_VERIFICATION | WINDOWS_HELLO_RECOVERY_KEY_ENCRYPTION | WINDOWS_KITS_COMPONENT | WINDOWS_RT_VERIFICATION | WINDOWS_SOFTWARE_EXTENSION_VERIFICATION | WINDOWS_STORE | WINDOWS_SYSTEM_COMPONENT_VERIFICATION | WINDOWS_TCB_COMPONENT | WINDOWS_THIRD_PARTY_APPLICATION_COMPONENT | WINDOWS_UPDATE`.
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--extensions--key_usage"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.extensions.key_usage`
+
+Optional:
+
+- `critical` (Boolean) Sets the key usage extension to critical. Defaults to `true`.
+- `usage_flags` (Attributes) The key usage flags represent the purpose (e.g., encipherment, signature) of the key contained in the certificate. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--extensions--key_usage--usage_flags))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--extensions--key_usage--usage_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.extensions.key_usage.usage_flags`
+
+Optional:
+
+- `data_encipherment` (Boolean) DataEncipherment is asserted when the subject public key is used for directly enciphering raw user data without the use of an intermediate symmetric cipher. Defaults to `false`.
+- `digital_signature` (Boolean) The digitalSignature is asserted when the subject public key is used for verifying digital signatures. Defaults to `true`.
+- `key_agreement` (Boolean) KeyAgreement is asserted when the subject public key is used for key agreement. Defaults to `false`.
+- `key_encipherment` (Boolean) KeyEncipherment is asserted when the subject public key is used for enciphering private or secret keys, i.e., for key transport. Defaults to `true`.
+- `non_repudiation` (Boolean) NonRepudiation is asserted when the subject public key is used to verify digital signatures. Defaults to `false`.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--general_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.general_flags`
+
+Optional:
+
+- `auto_enrollment` (Boolean) Allows certificate issuance using autoenrollment. Set to TRUE to allow autoenrollment. Defaults to `true`.
+- `machine_type` (Boolean) Defines if the template is for machines or users. Set to TRUE if the template is for machines. Set to FALSE if the template is for users. Defaults to `true`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--private_key_attributes"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.private_key_attributes`
+
+Optional:
+
+- `algorithm` (String) Defines the algorithm used to generate the private key. Valid: `ECDH_P256 | ECDH_P384 | ECDH_P521 | RSA`. Defaults to `RSA`.
+- `crypto_providers` (List of String) Defines the cryptographic providers used to generate the private key.
+- `key_spec` (String) Defines the purpose of the private key. Valid values: `KEY_EXCHANGE | SIGNATURE`. Defaults to `KEY_EXCHANGE`.
+- `key_usage_property` (Attributes) The key usage property defines the purpose of the private key contained in the certificate. You can specify specific purposes using property flags or all by using property type ALL. Defaults to below object (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--private_key_attributes--key_usage_property))
+- `minimal_key_length` (Number) Set the minimum key length of the private key. Defaults to `2048`.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--private_key_attributes--key_usage_property"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.private_key_attributes.key_usage_property`
+
+Optional:
+
+- `property_flags` (Attributes) You can specify key usage for encryption, key agreement, and signature. You can use property flags or property type but not both. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--private_key_attributes--key_usage_property--property_flags))
+- `property_type` (String) You can specify all key usages using property type `ALL`. You can use property type or property flags but not both. Defaults to `ALL`.
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--private_key_attributes--key_usage_property--property_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.private_key_attributes.key_usage_property.property_flags`
+
+Optional:
+
+- `decrypt` (Boolean) Allows key for encryption and decryption.
+- `key_agreement` (Boolean) Allows key exchange without encryption.
+- `sign` (Boolean) Allow key use for digital signature.
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--private_key_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.private_key_flags`
+
+Optional:
+
+- `client_version` (String) Defines the minimum client compatibility. Valid values: ` WINDOWS_SERVER_2012 | WINDOWS_SERVER_2012_R2 | WINDOWS_SERVER_2016`. Defaults to `WINDOWS_SERVER_2016`.
+- `exportable_key` (Boolean) Allows the private key to be exported. Defaults to `false`.
+- `require_alternate_signature_algorithm` (Boolean) Requires the PKCS #1 v2.1 signature format for certificates. You should verify that your CA, objects, and applications can accept this signature format. Defaults to `false`.
+- `require_same_key_renewal` (Boolean) Renew certificate using the same private key. Defaults to `false`.
+- `strong_key_protection_required` (Boolean) Require user input when using the private key for enrollment. Defaults to `false`.
+- `use_legacy_provider` (Boolean) Specifies the cryptographic service provider category used to generate private keys. Set to TRUE to use Legacy Cryptographic Service Providers and FALSE to use Key Storage Providers. Defaults to `false`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--ad--templates--definition--v4--subject_name_flags"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.ad.templates.definition.v4.subject_name_flags`
+
+Optional:
+
+- `require_common_name` (Boolean) Include the common name in the subject name. Defaults to `false`.
+- `require_directory_path` (Boolean) Include the directory path in the subject name. Defaults to `true`.
+- `require_dns_as_cn` (Boolean) Include the DNS as common name in the subject name. Defaults to `false`.
+- `require_email` (Boolean) Include the subject's email in the subject name. Defaults to `false`.
+- `san_require_directory_guid` (Boolean) Include the globally unique identifier (GUID) in the subject alternate name. Defaults to `false`.
+- `san_require_dns` (Boolean) Include the DNS in the subject alternate name. Defaults to `true`.
+- `san_require_domain_dns` (Boolean) Include the domain DNS in the subject alternate name. Defaults to `true`.
+- `san_require_email` (Boolean) Include the subject's email in the subject alternate name. Defaults to `false`.
+- `san_require_spn` (Boolean) Include the service principal name (SPN) in the subject alternate name. Defaults to `false`.
+- `san_require_upn` (Boolean) Include the user principal name (UPN) in the subject alternate name. Defaults to `false`.
+
+
+
+
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--scep"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.scep`
+
+Optional:
+
+- `general_purpose` (Attributes) Create a Connector for General-purpose SCEP associated with this subordinate CA. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--scep--general_purpose))
+- `intune` (Attributes) Create a Connector for Microsoft Intune SCEP associated with this subordinate CA. (see [below for nested schema](#nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--scep--intune))
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--scep--general_purpose"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.scep.general_purpose`
+
+Required:
+
+- `enabled` (Boolean) Whether the Connector for General-purpose SCEP is enabled or disabled.
+
+Optional:
+
+- `challenge_validity` (Number) A period in days for the challenge password to be valid. A new challenge password will be replaced after this period when this resource triggers an update for the first time. The renewal is not automated. Defaults to `365`.
+
+
+<a id="nestedatt--configuration--organization--private_certificate_authority--subordinates--subordinates--connector--scep--intune"></a>
+### Nested Schema for `configuration.organization.private_certificate_authority.subordinates.subordinates.connector.scep.intune`
+
+Required:
+
+- `azure_application_id` (String) The application (client) ID from your Microsoft Entra ID app registration.
+- `enabled` (Boolean) Whether the Connector for Microsoft Intune SCEP is enabled or disabled.
+
+Optional:
+
+- `domain` (String) The primary domain from your Microsoft Entra ID app registration.
+- `tenant_id` (String) The directory (tenant) ID from your Microsoft Entra ID app registration.
+
+
+
+
+
+
+
+<a id="nestedatt--configuration--organization--reuse_existing"></a>
+### Nested Schema for `configuration.organization.reuse_existing`
+
+Required:
+
+- `identity_store_id` (String) AWS Identity Center Identity Store ID deployed in the provided AWS management account.
+- `organization_id` (String) AWS Organizations Organization ID deployed in the provided AWS management account.
+
+
+
+<a id="nestedatt--configuration--regions"></a>
+### Nested Schema for `configuration.regions`
+
+Required:
+
+- `home` (Attributes) Home geography containing a pair of primary/secondary regions. (see [below for nested schema](#nestedatt--configuration--regions--home))
+
+Optional:
+
+- `other` (Attributes List) A list of Non-Home geographies containing a pair of primary/secondary regions in each geography. (see [below for nested schema](#nestedatt--configuration--regions--other))
+
+<a id="nestedatt--configuration--regions--home"></a>
+### Nested Schema for `configuration.regions.home`
+
+Required:
+
+- `primary` (Attributes) Primary Aws Region details. (see [below for nested schema](#nestedatt--configuration--regions--home--primary))
+
+Optional:
+
+- `secondary` (Attributes) Secondary Aws Region details. (see [below for nested schema](#nestedatt--configuration--regions--home--secondary))
+
+<a id="nestedatt--configuration--regions--home--primary"></a>
+### Nested Schema for `configuration.regions.home.primary`
+
+Required:
+
+- `location` (String) The Aws location of the region. Possible values are `[af-south-1 ap-east-1 ap-east-2 ap-northeast-1 ap-northeast-2 ap-northeast-3 ap-southeast-1 ap-southeast-2 ap-southeast-3 ap-southeast-4 ap-southeast-5 ap-southeast-6 ap-southeast-7 ap-south-1 ap-south-2 ca-central-1 ca-west-1 cn-north-1 cn-northwest-1 eu-central-1 eu-central-2 eu-north-1 eu-south-1 eu-south-2 eu-west-1 eu-west-2 eu-west-3 il-central-1 me-central-1 me-south-1 mx-central-1 sa-east-1 us-east-1 us-east-2 us-gov-east-1 us-gov-west-1 us-west-1 us-west-2]`.
+- `network` (Attributes) This information is used to deploy a network on top of the landing zone. A lot of other services depend on this. (see [below for nested schema](#nestedatt--configuration--regions--home--primary--network))
+- `region` (String) The Aws region code of the location. Possible values are `[afso1 apea1 apea2 apne1 apne2 apne3 apse1 apse2 apse3 apse4 apse5 apse6 apse7 apso1 apso2 cace1 cawe1 cnno1 cnnw1 euce1 euce2 euno1 euso1 euso2 euwe1 euwe2 euwe3 ilce1 mece1 meso1 mxce1 saea1 usea1 usea2 usge1 usgw1 uswe1 uswe2]`.
+
+<a id="nestedatt--configuration--regions--home--primary--network"></a>
+### Nested Schema for `configuration.regions.home.primary.network`
+
+Required:
+
+- `enabled` (Boolean) If enabled, it will deploy a network on top of the landing zone.
+
+Optional:
+
+- `ip_schema` (Attributes) (see [below for nested schema](#nestedatt--configuration--regions--home--primary--network--ip_schema))
+
+<a id="nestedatt--configuration--regions--home--primary--network--ip_schema"></a>
+### Nested Schema for `configuration.regions.home.primary.network.ip_schema`
+
+Optional:
+
+- `address` (String) The base IP Network for the entire region (e.g. x.x.x.x). It will be used to perform IPAM for the tenancy and it's tenancy accounts. CANNOT be changed after creation without destroying everything running on top of the network. Defaults to `172.16.0.0`.
+- `environments` (Attributes) The Network CIDR configuration for environments. (see [below for nested schema](#nestedatt--configuration--regions--home--primary--network--ip_schema--environments))
+- `mask` (Number) The base IP Network Mask for the entire region (e.g. `16`). It will be used to perform IPAM for the tenancy and it's tenancy accounts. It MUST be between `8` and `18`. CANNOT be changed after creation without destroying everything running on top of the network. Defaults to `16`
+
+<a id="nestedatt--configuration--regions--home--primary--network--ip_schema--environments"></a>
+### Nested Schema for `configuration.regions.home.primary.network.ip_schema.environments`
+
+Optional:
+
+- `core` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--home--primary--network--ip_schema--environments--core))
+- `dev` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--home--primary--network--ip_schema--environments--dev))
+- `prod` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--home--primary--network--ip_schema--environments--prod))
+- `qa` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--home--primary--network--ip_schema--environments--qa))
+- `test` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--home--primary--network--ip_schema--environments--test))
+
+<a id="nestedatt--configuration--regions--home--primary--network--ip_schema--environments--core"></a>
+### Nested Schema for `configuration.regions.home.primary.network.ip_schema.environments.core`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--home--primary--network--ip_schema--environments--dev"></a>
+### Nested Schema for `configuration.regions.home.primary.network.ip_schema.environments.dev`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--home--primary--network--ip_schema--environments--prod"></a>
+### Nested Schema for `configuration.regions.home.primary.network.ip_schema.environments.prod`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--home--primary--network--ip_schema--environments--qa"></a>
+### Nested Schema for `configuration.regions.home.primary.network.ip_schema.environments.qa`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--home--primary--network--ip_schema--environments--test"></a>
+### Nested Schema for `configuration.regions.home.primary.network.ip_schema.environments.test`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+
+
+
+
+<a id="nestedatt--configuration--regions--home--secondary"></a>
+### Nested Schema for `configuration.regions.home.secondary`
+
+Required:
+
+- `location` (String) The Aws location of the region. Possible values are `[af-south-1 ap-east-1 ap-east-2 ap-northeast-1 ap-northeast-2 ap-northeast-3 ap-southeast-1 ap-southeast-2 ap-southeast-3 ap-southeast-4 ap-southeast-5 ap-southeast-6 ap-southeast-7 ap-south-1 ap-south-2 ca-central-1 ca-west-1 cn-north-1 cn-northwest-1 eu-central-1 eu-central-2 eu-north-1 eu-south-1 eu-south-2 eu-west-1 eu-west-2 eu-west-3 il-central-1 me-central-1 me-south-1 mx-central-1 sa-east-1 us-east-1 us-east-2 us-gov-east-1 us-gov-west-1 us-west-1 us-west-2]`.
+- `network` (Attributes) This information is used to deploy a network on top of the landing zone. A lot of other services depend on this. (see [below for nested schema](#nestedatt--configuration--regions--home--secondary--network))
+- `region` (String) The Aws region code of the location. Possible values are `[afso1 apea1 apea2 apne1 apne2 apne3 apse1 apse2 apse3 apse4 apse5 apse6 apse7 apso1 apso2 cace1 cawe1 cnno1 cnnw1 euce1 euce2 euno1 euso1 euso2 euwe1 euwe2 euwe3 ilce1 mece1 meso1 mxce1 saea1 usea1 usea2 usge1 usgw1 uswe1 uswe2]`.
+
+<a id="nestedatt--configuration--regions--home--secondary--network"></a>
+### Nested Schema for `configuration.regions.home.secondary.network`
+
+Required:
+
+- `enabled` (Boolean) If enabled, it will deploy a network on top of the landing zone.
+
+Optional:
+
+- `ip_schema` (Attributes) (see [below for nested schema](#nestedatt--configuration--regions--home--secondary--network--ip_schema))
+
+<a id="nestedatt--configuration--regions--home--secondary--network--ip_schema"></a>
+### Nested Schema for `configuration.regions.home.secondary.network.ip_schema`
+
+Optional:
+
+- `address` (String) The base IP Network for the entire region (e.g. x.x.x.x). It will be used to perform IPAM for the tenancy and it's tenancy accounts. CANNOT be changed after creation without destroying everything running on top of the network. Defaults to `172.16.0.0`.
+- `environments` (Attributes) The Network CIDR configuration for environments. (see [below for nested schema](#nestedatt--configuration--regions--home--secondary--network--ip_schema--environments))
+- `mask` (Number) The base IP Network Mask for the entire region (e.g. `16`). It will be used to perform IPAM for the tenancy and it's tenancy accounts. It MUST be between `8` and `18`. CANNOT be changed after creation without destroying everything running on top of the network. Defaults to `16`
+
+<a id="nestedatt--configuration--regions--home--secondary--network--ip_schema--environments"></a>
+### Nested Schema for `configuration.regions.home.secondary.network.ip_schema.environments`
+
+Optional:
+
+- `core` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--home--secondary--network--ip_schema--environments--core))
+- `dev` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--home--secondary--network--ip_schema--environments--dev))
+- `prod` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--home--secondary--network--ip_schema--environments--prod))
+- `qa` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--home--secondary--network--ip_schema--environments--qa))
+- `test` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--home--secondary--network--ip_schema--environments--test))
+
+<a id="nestedatt--configuration--regions--home--secondary--network--ip_schema--environments--core"></a>
+### Nested Schema for `configuration.regions.home.secondary.network.ip_schema.environments.core`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--home--secondary--network--ip_schema--environments--dev"></a>
+### Nested Schema for `configuration.regions.home.secondary.network.ip_schema.environments.dev`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--home--secondary--network--ip_schema--environments--prod"></a>
+### Nested Schema for `configuration.regions.home.secondary.network.ip_schema.environments.prod`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--home--secondary--network--ip_schema--environments--qa"></a>
+### Nested Schema for `configuration.regions.home.secondary.network.ip_schema.environments.qa`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--home--secondary--network--ip_schema--environments--test"></a>
+### Nested Schema for `configuration.regions.home.secondary.network.ip_schema.environments.test`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+
+
+
+
+
+<a id="nestedatt--configuration--regions--other"></a>
+### Nested Schema for `configuration.regions.other`
+
+Required:
+
+- `primary` (Attributes) Primary Aws Region details. (see [below for nested schema](#nestedatt--configuration--regions--other--primary))
+
+Optional:
+
+- `secondary` (Attributes) Secondary Aws Region details. (see [below for nested schema](#nestedatt--configuration--regions--other--secondary))
+
+<a id="nestedatt--configuration--regions--other--primary"></a>
+### Nested Schema for `configuration.regions.other.primary`
+
+Required:
+
+- `location` (String) The Aws location of the region. Possible values are `[af-south-1 ap-east-1 ap-east-2 ap-northeast-1 ap-northeast-2 ap-northeast-3 ap-southeast-1 ap-southeast-2 ap-southeast-3 ap-southeast-4 ap-southeast-5 ap-southeast-6 ap-southeast-7 ap-south-1 ap-south-2 ca-central-1 ca-west-1 cn-north-1 cn-northwest-1 eu-central-1 eu-central-2 eu-north-1 eu-south-1 eu-south-2 eu-west-1 eu-west-2 eu-west-3 il-central-1 me-central-1 me-south-1 mx-central-1 sa-east-1 us-east-1 us-east-2 us-gov-east-1 us-gov-west-1 us-west-1 us-west-2]`.
+- `network` (Attributes) This information is used to deploy a network on top of the landing zone. A lot of other services depend on this. (see [below for nested schema](#nestedatt--configuration--regions--other--primary--network))
+- `region` (String) The Aws region code of the location. Possible values are `[afso1 apea1 apea2 apne1 apne2 apne3 apse1 apse2 apse3 apse4 apse5 apse6 apse7 apso1 apso2 cace1 cawe1 cnno1 cnnw1 euce1 euce2 euno1 euso1 euso2 euwe1 euwe2 euwe3 ilce1 mece1 meso1 mxce1 saea1 usea1 usea2 usge1 usgw1 uswe1 uswe2]`.
+
+<a id="nestedatt--configuration--regions--other--primary--network"></a>
+### Nested Schema for `configuration.regions.other.primary.network`
+
+Required:
+
+- `enabled` (Boolean) If enabled, it will deploy a network on top of the landing zone.
+
+Optional:
+
+- `ip_schema` (Attributes) (see [below for nested schema](#nestedatt--configuration--regions--other--primary--network--ip_schema))
+
+<a id="nestedatt--configuration--regions--other--primary--network--ip_schema"></a>
+### Nested Schema for `configuration.regions.other.primary.network.ip_schema`
+
+Optional:
+
+- `address` (String) The base IP Network for the entire region (e.g. x.x.x.x). It will be used to perform IPAM for the tenancy and it's tenancy accounts. CANNOT be changed after creation without destroying everything running on top of the network. Defaults to `172.16.0.0`.
+- `environments` (Attributes) The Network CIDR configuration for environments. (see [below for nested schema](#nestedatt--configuration--regions--other--primary--network--ip_schema--environments))
+- `mask` (Number) The base IP Network Mask for the entire region (e.g. `16`). It will be used to perform IPAM for the tenancy and it's tenancy accounts. It MUST be between `8` and `18`. CANNOT be changed after creation without destroying everything running on top of the network. Defaults to `16`
+
+<a id="nestedatt--configuration--regions--other--primary--network--ip_schema--environments"></a>
+### Nested Schema for `configuration.regions.other.primary.network.ip_schema.environments`
+
+Optional:
+
+- `core` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--other--primary--network--ip_schema--environments--core))
+- `dev` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--other--primary--network--ip_schema--environments--dev))
+- `prod` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--other--primary--network--ip_schema--environments--prod))
+- `qa` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--other--primary--network--ip_schema--environments--qa))
+- `test` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--other--primary--network--ip_schema--environments--test))
+
+<a id="nestedatt--configuration--regions--other--primary--network--ip_schema--environments--core"></a>
+### Nested Schema for `configuration.regions.other.primary.network.ip_schema.environments.core`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--other--primary--network--ip_schema--environments--dev"></a>
+### Nested Schema for `configuration.regions.other.primary.network.ip_schema.environments.dev`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--other--primary--network--ip_schema--environments--prod"></a>
+### Nested Schema for `configuration.regions.other.primary.network.ip_schema.environments.prod`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--other--primary--network--ip_schema--environments--qa"></a>
+### Nested Schema for `configuration.regions.other.primary.network.ip_schema.environments.qa`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--other--primary--network--ip_schema--environments--test"></a>
+### Nested Schema for `configuration.regions.other.primary.network.ip_schema.environments.test`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+
+
+
+
+<a id="nestedatt--configuration--regions--other--secondary"></a>
+### Nested Schema for `configuration.regions.other.secondary`
+
+Required:
+
+- `location` (String) The Aws location of the region. Possible values are `[af-south-1 ap-east-1 ap-east-2 ap-northeast-1 ap-northeast-2 ap-northeast-3 ap-southeast-1 ap-southeast-2 ap-southeast-3 ap-southeast-4 ap-southeast-5 ap-southeast-6 ap-southeast-7 ap-south-1 ap-south-2 ca-central-1 ca-west-1 cn-north-1 cn-northwest-1 eu-central-1 eu-central-2 eu-north-1 eu-south-1 eu-south-2 eu-west-1 eu-west-2 eu-west-3 il-central-1 me-central-1 me-south-1 mx-central-1 sa-east-1 us-east-1 us-east-2 us-gov-east-1 us-gov-west-1 us-west-1 us-west-2]`.
+- `network` (Attributes) This information is used to deploy a network on top of the landing zone. A lot of other services depend on this. (see [below for nested schema](#nestedatt--configuration--regions--other--secondary--network))
+- `region` (String) The Aws region code of the location. Possible values are `[afso1 apea1 apea2 apne1 apne2 apne3 apse1 apse2 apse3 apse4 apse5 apse6 apse7 apso1 apso2 cace1 cawe1 cnno1 cnnw1 euce1 euce2 euno1 euso1 euso2 euwe1 euwe2 euwe3 ilce1 mece1 meso1 mxce1 saea1 usea1 usea2 usge1 usgw1 uswe1 uswe2]`.
+
+<a id="nestedatt--configuration--regions--other--secondary--network"></a>
+### Nested Schema for `configuration.regions.other.secondary.network`
+
+Required:
+
+- `enabled` (Boolean) If enabled, it will deploy a network on top of the landing zone.
+
+Optional:
+
+- `ip_schema` (Attributes) (see [below for nested schema](#nestedatt--configuration--regions--other--secondary--network--ip_schema))
+
+<a id="nestedatt--configuration--regions--other--secondary--network--ip_schema"></a>
+### Nested Schema for `configuration.regions.other.secondary.network.ip_schema`
+
+Optional:
+
+- `address` (String) The base IP Network for the entire region (e.g. x.x.x.x). It will be used to perform IPAM for the tenancy and it's tenancy accounts. CANNOT be changed after creation without destroying everything running on top of the network. Defaults to `172.16.0.0`.
+- `environments` (Attributes) The Network CIDR configuration for environments. (see [below for nested schema](#nestedatt--configuration--regions--other--secondary--network--ip_schema--environments))
+- `mask` (Number) The base IP Network Mask for the entire region (e.g. `16`). It will be used to perform IPAM for the tenancy and it's tenancy accounts. It MUST be between `8` and `18`. CANNOT be changed after creation without destroying everything running on top of the network. Defaults to `16`
+
+<a id="nestedatt--configuration--regions--other--secondary--network--ip_schema--environments"></a>
+### Nested Schema for `configuration.regions.other.secondary.network.ip_schema.environments`
+
+Optional:
+
+- `core` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--other--secondary--network--ip_schema--environments--core))
+- `dev` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--other--secondary--network--ip_schema--environments--dev))
+- `prod` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--other--secondary--network--ip_schema--environments--prod))
+- `qa` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--other--secondary--network--ip_schema--environments--qa))
+- `test` (Attributes) The IP CIDR for environment. (see [below for nested schema](#nestedatt--configuration--regions--other--secondary--network--ip_schema--environments--test))
+
+<a id="nestedatt--configuration--regions--other--secondary--network--ip_schema--environments--core"></a>
+### Nested Schema for `configuration.regions.other.secondary.network.ip_schema.environments.core`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--other--secondary--network--ip_schema--environments--dev"></a>
+### Nested Schema for `configuration.regions.other.secondary.network.ip_schema.environments.dev`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--other--secondary--network--ip_schema--environments--prod"></a>
+### Nested Schema for `configuration.regions.other.secondary.network.ip_schema.environments.prod`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--other--secondary--network--ip_schema--environments--qa"></a>
+### Nested Schema for `configuration.regions.other.secondary.network.ip_schema.environments.qa`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+<a id="nestedatt--configuration--regions--other--secondary--network--ip_schema--environments--test"></a>
+### Nested Schema for `configuration.regions.other.secondary.network.ip_schema.environments.test`
+
+Optional:
+
+- `address` (String) The base IP Network for the environment. CANNOT be changed after creation without destroying everything running on top of the network.
+- `mask` (Number) The base IP Network Mask for the environment. It MUST be between `10` and `20`. CANNOT be changed after creation without destroying everything running on top of the network.
+
+
+
+
+
+
+
+
+<a id="nestedatt--configuration--idp"></a>
+### Nested Schema for `configuration.idp`
+
+Optional:
+
+- `external` (Attributes) IdP details for AWS Identity Center SSO.
+You need to manually configure the AWS Identity Center to use an external identity provider for this to work.
+Manually exchange the required info (SAML metadata and certificate) between external IdP and AWS Identity Center. (see [below for nested schema](#nestedatt--configuration--idp--external))
+- `internal` (Attributes) Configuration for AWS Identity Center to act as IdP. (see [below for nested schema](#nestedatt--configuration--idp--internal))
+- `sp` (Attributes) AWS Identity Center SSO Service Provider details to configure with provided external IdP.
+Since SP details are not known when idp (external) block is run for the first time,
+fill in with dummy information to create AWS Identity Center external IdP setup
+and update with correct values for a subsequent run. (see [below for nested schema](#nestedatt--configuration--idp--sp))
+
+<a id="nestedatt--configuration--idp--external"></a>
+### Nested Schema for `configuration.idp.external`
+
+Optional:
+
+- `microsoft_entra_id` (Attributes) Details required to setup Microsoft Entra ID as IdP. Includes creating AWS Single-Sign-On Enterprise Application, SSO and SCIM setup, groups per AWS account and association with AWS Identity Center permission sets. The client id required appropriate permissions. (see [below for nested schema](#nestedatt--configuration--idp--external--microsoft_entra_id))
+
+<a id="nestedatt--configuration--idp--external--microsoft_entra_id"></a>
+### Nested Schema for `configuration.idp.external.microsoft_entra_id`
+
+Optional:
+
+- `notification_email_addresses` (List of String) Provides a list of emails to receive notifications from the service principal associated with the AWS Single-Sign-On Enterprise Application.
+- `owners` (List of String) Provides a list of Microsoft Entra ID UPNs that would be configured as owners of the AWS Single-Sign-On Enterprise Application.
+
+
+
+<a id="nestedatt--configuration--idp--internal"></a>
+### Nested Schema for `configuration.idp.internal`
+
+Required:
+
+- `enabled` (Boolean) If enabled, configures AWS Identity Center to act as IdP for AWS Organizations.
+
+
+<a id="nestedatt--configuration--idp--sp"></a>
+### Nested Schema for `configuration.idp.sp`
+
+Required:
+
+- `acs_url` (String) AWS Identity Center Assertion Consumer Service URL.
+- `login_url` (String) AWS Identity Center Access Portal Login URL.
+- `scim_endpoint` (String) AWS Identity Center SCIM Endpoint.
+- `sp_url` (String) AWS Identity Center Service Provider URL.
+
+
+
+
+<a id="nestedatt--credentials"></a>
+### Nested Schema for `credentials`
+
+Optional:
+
+- `idp` (Attributes) Service Principal client ID configured in the target Azure tenant. (see [below for nested schema](#nestedatt--credentials--idp))
+
+<a id="nestedatt--credentials--idp"></a>
+### Nested Schema for `credentials.idp`
+
+Optional:
+
+- `external` (Attributes) External IdP credentials to configure with AWS Identity Centre SSO. (see [below for nested schema](#nestedatt--credentials--idp--external))
+- `sp` (Attributes) AWS Identity Centre SSO Service Provider credentials to configure with provided external IdP. (see [below for nested schema](#nestedatt--credentials--idp--sp))
+
+<a id="nestedatt--credentials--idp--external"></a>
+### Nested Schema for `credentials.idp.external`
+
+Optional:
+
+- `microsoft_entra_id` (Attributes) Credentials required to setup Microsoft Entra ID as IdP. (see [below for nested schema](#nestedatt--credentials--idp--external--microsoft_entra_id))
+
+<a id="nestedatt--credentials--idp--external--microsoft_entra_id"></a>
+### Nested Schema for `credentials.idp.external.microsoft_entra_id`
+
+Required:
+
+- `client_id` (String, Sensitive) Service Principal client ID configured in the target Microsoft Entra ID tenant.
+- `client_secret` (String, Sensitive) Service Principal client secret configured in the target Microsoft Entra ID tenant.
+- `tenant_id` (String, Sensitive) Target Microsoft Entra ID tenant ID.
+
+
+
+<a id="nestedatt--credentials--idp--sp"></a>
+### Nested Schema for `credentials.idp.sp`
+
+Required:
+
+- `scim_token` (String, Sensitive) AWS Identity Centre SCIM Token.
+
+## Import
+
+Import is supported using the following syntax:
+
+```terraform
+$ terraform import volocloud_tenancy_aws.example <resource ID>
+```
+!!! note
+
+    The <resource ID> format is: "account_id:tenancy_id"
