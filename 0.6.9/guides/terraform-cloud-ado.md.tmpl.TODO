@@ -1,0 +1,15 @@
+# TODO: Terraform Cloud + Azure DevOps Guide
+
+This guide should cover:
+
+- Creating/reusing a Terraform Cloud organization
+- Setting up a service account for TFC ownership
+- Creating an Azure DevOps organization and project
+- Linking ADO to Azure AD
+- Setting up VCS Provider integration (TFC <-> ADO OAuth)
+- Creating the bootstrap workspace (CLI-driven)
+- Configuring workspace variables/variable sets for providers (tfe, azuredevops, azuread, azurerm)
+- Default branch configuration (main)
+- 2FA setup for the service account
+
+Reference: Old wiki "as build" documentation for customer onboarding.
