@@ -1,0 +1,1173 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="This guide covers how to configure all Microsoft Fabric prerequisites required by the <no value> provider, including activating Fabric on the tenant, creating the admin security groups, and enabling the admin API toggle.">
+      
+      
+        <meta name="author" content="Volo support@volo.co.nz">
+      
+      
+        <link rel="canonical" href="https://tf.volo-global.com/v1/providers/volo/volocloud/0.6.18/guides/fabric-prerequisites/">
+      
+      
+        <link rel="prev" href="../azure-prerequisites/">
+      
+      
+        <link rel="next" href="../../resources/account/">
+      
+      
+      <link rel="icon" href="../../assets/volo_favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
+    
+    
+      
+        <title>Fabric Prerequisites - Volo Provider Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="data:text/css;charset=UTF-8, .md-content, .md-nav__item, .md-nav__link, .md-ellipsis { overflow-wrap: break-word !important; word-wrap: break-word !important; white-space: normal !important; }">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fabric-prerequisites" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Volo Provider Documentation" class="md-header__button md-logo" aria-label="Volo Provider Documentation" data-md-component="logo">
+      
+  <img src="../../assets/Volo_widerV_TextWhite.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Volo Provider Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Fabric Prerequisites
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="light-blue" data-md-color-accent="deep-orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Volo Provider Documentation" class="md-nav__button md-logo" aria-label="Volo Provider Documentation" data-md-component="logo">
+      
+  <img src="../../assets/Volo_widerV_TextWhite.svg" alt="logo">
+
+    </a>
+    Volo Provider Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Volocloud Provider
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../data-sources/account/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Data sources
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Guides
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aws-prerequisites/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AWS Prerequisites
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure-prerequisites/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Azure Prerequisites
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Fabric Prerequisites
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Fabric Prerequisites
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-activate-microsoft-fabric-on-the-tenant" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Activate Microsoft Fabric on the Tenant
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Activate Microsoft Fabric on the Tenant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-create-the-fabric-api-admin-security-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Create the Fabric API Admin Security Group
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Create the Fabric API Admin Security Group">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Naming Convention
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provider-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provider Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-azure-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using the Azure Portal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-azure-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using the Azure CLI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-create-the-fabric-admin-security-group-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Create the Fabric Admin Security Group (Optional)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Create the Fabric Admin Security Group (Optional)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#naming-convention_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Naming Convention
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-azure-portal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using the Azure Portal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-azure-cli_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using the Azure CLI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assign-the-fabric-administrator-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assign the Fabric Administrator Role
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provider-configuration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provider Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-enable-admin-api-access-for-service-principals" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Enable Admin API Access for Service Principals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Enable Admin API Access for Service Principals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#steps_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-github-pat-for-fabric-git-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. GitHub PAT for Fabric Git Integration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. GitHub PAT for Fabric Git Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pat-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      PAT Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saml-sso-authorization-required-for-emu-orgs" class="md-nav__link">
+    <span class="md-ellipsis">
+      SAML SSO Authorization (Required for EMU Orgs)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store-the-pat-in-key-vault" class="md-nav__link">
+    <span class="md-ellipsis">
+      Store the PAT in Key Vault
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-github-emu-entra-id-app-role-assignments-emu-orgs" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. GitHub EMU Entra ID App Role Assignments (EMU Orgs)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. GitHub EMU Entra ID App Role Assignments (EMU Orgs)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why This Is Required
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-customer-needs-to-ensure" class="md-nav__link">
+    <span class="md-ellipsis">
+      What the Customer Needs to Ensure
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-tenant-and-fabric-capacity-region-alignment-vnet-data-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Tenant and Fabric Capacity Region Alignment (VNet Data Gateway)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Tenant and Fabric Capacity Region Alignment (VNet Data Gateway)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-required_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why This Is Required
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-must-match" class="md-nav__link">
+    <span class="md-ellipsis">
+      What Must Match
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../resources/account/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Resources
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="fabric-prerequisites">Fabric Prerequisites</h1>
+<p>This guide provides step-by-step instructions for configuring Microsoft Fabric
+prerequisites required by the <no value> provider to manage Fabric tenant settings,
+domains, and workload resources via the <code>subscriptions.data.fabric</code> configuration block.</p>
+<p>These steps are in addition to the <a href="../azure-prerequisites/">Azure Prerequisites</a> and only
+required when the <code>subscriptions.data</code> block is configured on a tenancy.</p>
+<p>The following prerequisites must be completed before deploying the data subscription template:</p>
+<ol>
+<li><a href="#1-activate-microsoft-fabric-on-the-tenant">Activate Microsoft Fabric on the Tenant</a></li>
+<li><a href="#2-create-the-fabric-api-admin-security-group">Create the Fabric API Admin Security Group</a></li>
+<li><a href="#3-create-the-fabric-admin-security-group-optional">Create the Fabric Admin Security Group (Optional)</a></li>
+<li><a href="#4-enable-admin-api-access-for-service-principals">Enable Admin API Access for Service Principals</a></li>
+<li><a href="#5-github-pat-for-fabric-git-integration">GitHub PAT for Fabric Git Integration</a></li>
+<li><a href="#6-github-emu-entra-id-app-role-assignments-emu-orgs">GitHub EMU Entra ID App Role Assignments (EMU Orgs)</a></li>
+<li><a href="#7-tenant-and-fabric-capacity-region-alignment-vnet-data-gateway">Tenant and Fabric Capacity Region Alignment (VNet Data Gateway)</a></li>
+</ol>
+<p>Once these manual steps are completed, the data template handles everything else automatically
+(capacity creation, tenant settings, domains, workloads).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do NOT add any Power BI Service API permissions (Application or Delegated) to the Service
+Principal app registration used by <no value> provider. Admin-consent required permissions
+on Power BI Service block the SP from authenticating to the Fabric Admin API.
+The SP relies solely on the admin portal toggle and capacity admin membership for authentication.</p>
+</div>
+<hr />
+<h2 id="1-activate-microsoft-fabric-on-the-tenant">1. Activate Microsoft Fabric on the Tenant</h2>
+<p>Microsoft Fabric must be registered on the Entra ID tenant before the Fabric API
+(<code>https://api.fabric.microsoft.com</code>) becomes available.</p>
+<h3 id="steps">Steps</h3>
+<ol>
+<li>Sign in with a <strong>Global Administrator</strong> account to <a href="https://app.fabric.microsoft.com">https://app.fabric.microsoft.com</a></li>
+<li>Complete the self-service sign-up when prompted</li>
+</ol>
+<h3 id="notes">Notes</h3>
+<ul>
+<li>This is a <strong>one-time manual step</strong> per tenant</li>
+<li>The sign-up registers the tenant with Microsoft's Fabric backend</li>
+<li>No paid license or trial is required — the sign-up alone activates the Fabric API</li>
+<li>Without tenant registration, capacity creation via <code>azurerm_fabric_capacity</code> fails with "Tenant wasn't recognized by Microsoft Fabric"</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If self-service sign-up is disabled on the tenant (<code>AllowAdHocSubscriptions = false</code>), a Global Administrator must enable it first via PowerShell:
+<code>shell
+Set-MsolCompanySettings -AllowAdHocSubscriptions $true</code></p>
+</div>
+<hr />
+<h2 id="2-create-the-fabric-api-admin-security-group">2. Create the Fabric API Admin Security Group</h2>
+<p>Create a security group in Entra ID to hold the Service Principal that runs Terraform.
+This group is used in the next step to scope the admin API access.</p>
+<h3 id="naming-convention">Naming Convention</h3>
+<p>Recommended Use: <code>&lt;tenancy_abbreviation&gt;_microsoft_fabric_api_admin_role</code></p>
+<p>The <code>&lt;tenancy_abbreviation&gt;</code> is the value configured in <code>configuration.abbreviation</code> of the
+<code>&lt;no value&gt;_tenancy_azure</code> resource.</p>
+<p>This is separate from any human admin groups (e.g. <code>&lt;tenancy_abbreviation&gt;_microsoft_fabric_admin_role</code>) —
+it is specifically for programmatic API access by service principals.</p>
+<h3 id="provider-configuration">Provider Configuration</h3>
+<p>The group name must be specified in <code>subscriptions.data.fabric.admin_groups.api_admin</code>:</p>
+<pre><code class="language-hcl">fabric = {
+  admin_groups = {
+    api_admin = &quot;&lt;tenancy_abbreviation&gt;_microsoft_fabric_api_admin_role&quot;
+  }
+  # ... rest of fabric config
+}
+</code></pre>
+<h3 id="using-the-azure-portal">Using the Azure Portal</h3>
+<ol>
+<li>Navigate to <strong>Microsoft Entra ID</strong> &gt; <strong>Groups</strong> &gt; <strong>New group</strong></li>
+<li>Set the following values:<ul>
+<li><strong>Group type</strong>: Security</li>
+<li><strong>Group name</strong>: <code>&lt;tenancy_abbreviation&gt;_microsoft_fabric_api_admin_role</code></li>
+<li><strong>Group description</strong>: "Service principals allowed to manage Fabric via Admin API"</li>
+</ul>
+</li>
+<li>Click <strong>Create</strong></li>
+<li>Open the group &gt; <strong>Members</strong> &gt; <strong>Add members</strong></li>
+<li>Search for the Service Principal (e.g. <code>svp_terraform</code>) and add it</li>
+</ol>
+<h3 id="using-the-azure-cli">Using the Azure CLI</h3>
+<pre><code class="language-shell"># Create the security group
+az ad group create \
+  --display-name &quot;&lt;tenancy_abbreviation&gt;_microsoft_fabric_api_admin_role&quot; \
+  --mail-nickname &quot;&lt;tenancy_abbreviation&gt;-microsoft-fabric-api-admin-role&quot; \
+  --security-enabled true
+
+# Get the SP object ID
+SP_OBJECT_ID=$(az ad sp show --id &lt;service-principal-client-id&gt; --query id -o tsv)
+
+# Add the SP to the group
+az ad group member add \
+  --group &quot;&lt;tenancy_abbreviation&gt;_microsoft_fabric_api_admin_role&quot; \
+  --member-id &quot;${SP_OBJECT_ID}&quot;
+</code></pre>
+<hr />
+<h2 id="3-create-the-fabric-admin-security-group-optional">3. Create the Fabric Admin Security Group (Optional)</h2>
+<p>Create a security group for human administrators who need visibility and management
+access to Fabric connections and workspaces. Members of this group receive <strong>Owner</strong>
+role on all Fabric connections and <strong>Admin</strong> role on all Fabric workspaces created by
+the module.</p>
+<p>This group must be created manually because it requires <code>assignable_to_role = true</code>
+(for M365 role assignment), which needs <strong>Privileged Role Administrator</strong> permissions
+that the deployer service principal does not have.</p>
+<h3 id="naming-convention_1">Naming Convention</h3>
+<p>Recommended: <code>&lt;tenancy_abbreviation&gt;_microsoft_fabric_admin_role</code></p>
+<h3 id="using-the-azure-portal_1">Using the Azure Portal</h3>
+<ol>
+<li>Navigate to <strong>Microsoft Entra ID</strong> &gt; <strong>Groups</strong> &gt; <strong>New group</strong></li>
+<li>Set the following values:<ul>
+<li><strong>Group type</strong>: Security</li>
+<li><strong>Group name</strong>: <code>&lt;tenancy_abbreviation&gt;_microsoft_fabric_admin_role</code></li>
+<li><strong>Group description</strong>: "Human administrators for Fabric — Owner on connections, Admin on workspaces"</li>
+<li><strong>Microsoft Entra roles can be assigned to the group</strong>: <strong>Yes</strong></li>
+</ul>
+</li>
+<li>Click <strong>Create</strong></li>
+<li>Open the group &gt; <strong>Members</strong> &gt; <strong>Add members</strong></li>
+<li>Add the platform engineers / data engineers who need connection and workspace visibility</li>
+</ol>
+<h3 id="using-the-azure-cli_1">Using the Azure CLI</h3>
+<pre><code class="language-shell"># Create the security group (assignable to roles)
+az ad group create \
+  --display-name &quot;&lt;tenancy_abbreviation&gt;_microsoft_fabric_admin_role&quot; \
+  --mail-nickname &quot;&lt;tenancy_abbreviation&gt;-microsoft-fabric-admin-role&quot; \
+  --security-enabled true \
+  --is-assignable-to-role true
+</code></pre>
+<h3 id="assign-the-fabric-administrator-role">Assign the Fabric Administrator Role</h3>
+<p>Assign the <strong>Fabric Administrator</strong> Entra ID directory role to the group so its members
+can administer Fabric at the tenant level (view all workspaces, gateways, capacities, and
+tenant settings in the admin portal). This is why the group must be created with
+<code>assignable_to_role = true</code>.</p>
+<p>Using the Azure Portal:</p>
+<ol>
+<li>Navigate to <strong>Microsoft Entra ID</strong> &gt; <strong>Roles and administrators</strong></li>
+<li>Search for and select <strong>Fabric Administrator</strong></li>
+<li>Select <strong>Add assignments</strong></li>
+<li>Add the <code>&lt;tenancy_abbreviation&gt;_microsoft_fabric_admin_role</code> group</li>
+<li>Click <strong>Add</strong></li>
+</ol>
+<p>Using the Azure CLI:</p>
+<pre><code class="language-shell"># Get the group object ID
+GROUP_ID=$(az ad group show \
+  --group &quot;&lt;tenancy_abbreviation&gt;_microsoft_fabric_admin_role&quot; \
+  --query id -o tsv)
+
+# Assign the Fabric Administrator directory role to the group
+az rest --method POST \
+  --uri &quot;https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignments&quot; \
+  --headers &quot;Content-Type=application/json&quot; \
+  --body &quot;{
+    \&quot;principalId\&quot;: \&quot;${GROUP_ID}\&quot;,
+    \&quot;roleDefinitionId\&quot;: \&quot;a9ea8996-122f-4c74-9520-8edcd192826c\&quot;,
+    \&quot;directoryScopeId\&quot;: \&quot;/\&quot;
+  }&quot;
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>a9ea8996-122f-4c74-9520-8edcd192826c</code> is the well-known template ID for the
+<strong>Fabric Administrator</strong> role. Members of the group inherit the role, so you manage
+Fabric admins simply by adding or removing group members.</p>
+</div>
+<h3 id="provider-configuration_1">Provider Configuration</h3>
+<p>Add the group name to <code>subscriptions.data.fabric.admin_groups.fabric_admin</code>:</p>
+<pre><code class="language-hcl">fabric = {
+  admin_groups = {
+    api_admin    = &quot;&lt;tenancy_abbreviation&gt;_microsoft_fabric_api_admin_role&quot;
+    fabric_admin = &quot;&lt;tenancy_abbreviation&gt;_microsoft_fabric_admin_role&quot;
+  }
+  # ... rest of fabric config
+}
+</code></pre>
+<p>If omitted, no admin connection or workspace role assignments are created.</p>
+<hr />
+<h2 id="4-enable-admin-api-access-for-service-principals">4. Enable Admin API Access for Service Principals</h2>
+<p>Enable the Fabric Admin Portal toggle that allows service principals in the security
+group to call the admin APIs (read and update tenant settings).</p>
+<h3 id="steps_1">Steps</h3>
+<ol>
+<li>Sign in to <a href="https://app.fabric.microsoft.com">https://app.fabric.microsoft.com</a> as a <strong>Fabric Administrator</strong> or <strong>Global Administrator</strong></li>
+<li>Navigate to <strong>Admin portal</strong> &gt; <strong>Tenant settings</strong></li>
+<li>Scroll to <strong>Admin API settings</strong></li>
+<li>Expand <strong>"Service principals can access read-only admin APIs"</strong></li>
+<li>Set the toggle to <strong>Enabled</strong></li>
+<li>Select <strong>Specific security groups</strong></li>
+<li>Add the group created in Step 2 (e.g. <code>&lt;tenancy_abbreviation&gt;_microsoft_fabric_api_admin_role</code>)</li>
+<li>Click <strong>Apply</strong></li>
+<li>Expand <strong>"Service principals can access admin APIs used for updates"</strong></li>
+<li>Set the toggle to <strong>Enabled</strong></li>
+<li>Select <strong>Specific security groups</strong></li>
+<li>Add the same group</li>
+<li>Click <strong>Apply</strong></li>
+</ol>
+<h3 id="notes_1">Notes</h3>
+<ul>
+<li>This is a <strong>one-time manual configuration</strong> per tenant</li>
+<li>Both the <strong>read-only</strong> and <strong>update</strong> admin API toggles must be enabled for the security group</li>
+<li>These settings cannot be managed programmatically by the <no value> provider (chicken-and-egg — you need write access to enable write access)</li>
+<li>Once enabled, the <no value> provider can manage all other tenant settings</li>
+<li>Allow up to 15 minutes for the toggles to propagate before first deployment</li>
+</ul>
+<hr />
+<h2 id="5-github-pat-for-fabric-git-integration">5. GitHub PAT for Fabric Git Integration</h2>
+<p>When using GitHub as the git provider for Fabric workspaces, a Personal Access Token (PAT)
+must be created and stored in the data subscription Key Vault.</p>
+<h3 id="pat-requirements">PAT Requirements</h3>
+<ul>
+<li><strong>Token type</strong>: Personal access token (classic)</li>
+<li><strong>Scopes</strong>: <code>admin:org</code>, <code>delete_repo</code>, <code>repo</code></li>
+<li><strong>Expiration</strong>: Set an appropriate expiry (recommend 1 year, with rotation)</li>
+</ul>
+<h3 id="saml-sso-authorization-required-for-emu-orgs">SAML SSO Authorization (Required for EMU Orgs)</h3>
+<p>If the GitHub organization uses Enterprise Managed Users (EMU) with SAML SSO enforcement,
+the PAT must be authorized for the organization:</p>
+<ol>
+<li>Navigate to <strong>GitHub</strong> &gt; <strong>Settings</strong> &gt; <strong>Developer settings</strong> &gt; <strong>Personal access tokens</strong> &gt; <strong>Tokens (classic)</strong></li>
+<li>Find the PAT created for Fabric integration</li>
+<li>Click <strong>Configure SSO</strong></li>
+<li>Click <strong>Authorize</strong> next to the target organization</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Without SAML authorization, all Fabric GitHub operations (repo creation, team management,
+EMU group mappings) will fail with <code>403 Resource protected by organization SAML enforcement</code>.</p>
+</div>
+<h3 id="store-the-pat-in-key-vault">Store the PAT in Key Vault</h3>
+<p>Store the PAT in the data subscription Key Vault before first deployment:</p>
+<pre><code class="language-shell">az keyvault secret set \
+  --vault-name &quot;&lt;keyvault-name&gt;&quot; \
+  --name &quot;&lt;kv_secret_name&gt;&quot; \
+  --value '&lt;PAT-value&gt;'
+</code></pre>
+<p>The <code>kv_secret_name</code> must match the value configured in <code>fabric.git_provider.github.kv_secret_name</code>
+in the provider configuration. Secret names can only contain alphanumeric characters and dashes.</p>
+<hr />
+<h2 id="6-github-emu-entra-id-app-role-assignments-emu-orgs">6. GitHub EMU Entra ID App Role Assignments (EMU Orgs)</h2>
+<p>When using GitHub EMU, the Fabric workspace security groups created by the <no value>
+provider must be provisioned into GitHub so that workspace group members appear as members
+of the corresponding GitHub teams. This is a manual prerequisite the customer owns.</p>
+<h3 id="why-this-is-required">Why This Is Required</h3>
+<p>The <no value> provider creates Entra ID security groups per Fabric workspace role
+(admin, contributor, member, viewer). For SCIM to sync these groups and their members to
+GitHub, the groups must be assigned the "User" app role on the GitHub EMU (OIDC) enterprise
+application in Entra ID, and mapped to GitHub teams. Without this, users added to workspace
+groups won't appear as members of the corresponding GitHub teams.</p>
+<p>The provider cannot automate this — the GitHub EMU app is a Microsoft-published multi-tenant
+application, so the deployer service principal cannot own it or assign app roles on it.</p>
+<h3 id="what-the-customer-needs-to-ensure">What the Customer Needs to Ensure</h3>
+<p>The customer completes these two tasks using whatever method they prefer (Azure portal,
+CLI, Terraform, or their existing identity tooling):</p>
+<ol>
+<li><strong>Entra app role assignment</strong> — assign each Fabric workspace security group the "User"
+   app role on the GitHub EMU enterprise application, so SCIM provisions the groups into GitHub.</li>
+<li><strong>GitHub team mapping</strong> — map each provisioned group to its corresponding GitHub team
+   (external group mapping) so members flow through to the team.</li>
+</ol>
+<p>An org owner PAT (stored in Key Vault, per section 5) is required for the group-to-team
+mapping, since it reads external groups which needs organization owner permissions.</p>
+<hr />
+<h2 id="7-tenant-and-fabric-capacity-region-alignment-vnet-data-gateway">7. Tenant and Fabric Capacity Region Alignment (VNet Data Gateway)</h2>
+<p>When using the VNet Data Gateway for private connectivity to data sources, the
+<strong>Power Platform environment region</strong> must match the <strong>Fabric capacity region</strong> (and
+therefore the Azure VNET region).</p>
+<h3 id="why-this-is-required_1">Why This Is Required</h3>
+<p>The VNet Data Gateway runs inside a delegated subnet in your Azure VNET. The Power Platform
+backend only allows gateway creation in Azure regions that are associated with an existing
+Power Platform environment. If the Power Platform environment is in a different region than
+the VNET, the gateway creation will fail with
+<code>PowerPlatformVirtualNetworkSubnetNotConfiguredForDelegation</code>.</p>
+<h3 id="what-must-match">What Must Match</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Region</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Power Platform environment</td>
+<td>Must cover the Azure region</td>
+<td><code>australia</code></td>
+</tr>
+<tr>
+<td>Fabric capacity</td>
+<td>Azure region</td>
+<td><code>australiaeast</code></td>
+</tr>
+<tr>
+<td>Azure VNET + delegated subnet</td>
+<td>Same Azure region as capacity</td>
+<td><code>australiaeast</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="notes_2">Notes</h3>
+<ul>
+<li>Most Azure tenants already have a default Power Platform environment in the tenant's home region</li>
+<li>If the tenant's home region matches the Fabric capacity region (e.g. Australian tenant + Australia East capacity), the gateway works without any additional configuration</li>
+<li>If there is a mismatch (e.g. US-based tenant with an Australian capacity), a Power Platform environment must be manually created in the matching region via the <a href="https://admin.powerplatform.microsoft.com/environments">Power Platform admin center</a></li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright 2025 Volo
+    </div>
+  
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/company/volotechnologies/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.path", "navigation.prune", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "toc.follow", "toc.integrate"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>
