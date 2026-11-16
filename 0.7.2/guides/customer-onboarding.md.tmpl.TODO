@@ -1,0 +1,17 @@
+# TODO: Customer Onboarding Guide
+
+This guide should cover the end-to-end onboarding flow:
+
+- LZ Service Account creation (Azure AD member account with email capability)
+- AWS LZ Service Account creation (IAM user with AdministratorAccess)
+- Terraform Cloud/Enterprise organization setup
+- VCS integration (ADO or GitHub)
+- Bootstrap workspace creation and initial import of existing resources
+- Order of operations: account resource -> ARM/CloudFormation -> tenancy resource -> tenancy_account resources
+- Marketplace registration flow (AWS and Azure)
+- Required credentials collection and secure storage
+
+This is a broader guide covering the full customer journey, separate from the
+per-CSP prerequisite guides (azure-prerequisites, aws-prerequisites).
+
+Reference: Old wiki "as build" documentation.
